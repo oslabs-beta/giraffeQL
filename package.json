@@ -1,0 +1,21 @@
+{
+  "name": "graphitiql",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "./",
+  "main": "./electron/main.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "electron": "electron ."
+  },
+  "dependencies": {
+    "@zeit/next-sass": "^1.0.1",
+    "electron": "^11.2.1",
+    "next": "10.0.6",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "sass": "^1.32.6"
+  }
+}
