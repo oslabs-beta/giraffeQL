@@ -1,6 +1,4 @@
 const { Pool } = require("pg");
-// const URI = 
-
 
 const tableQuery = `SELECT tbs.table_name as name,
 	json_agg(json_build_object(
