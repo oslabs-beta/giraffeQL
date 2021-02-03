@@ -7,10 +7,12 @@ export default memo(({ data }) => {
 
     const props = data.label.props.children.props;
 
+    const colors=['#54478cff', '#2c699aff', '#048ba8ff', '#0db39eff', '#16db93ff', '#83e377ff', '#b9e769ff', '#efea5aff', '#f1c453ff', '#f29e4cff'];
+
     return (
         <div className='node'>
 
-            <div className='header'>{props.tablename}</div>
+            <div className='header' style={{backgroundColor: `${colors[props.IEnumerable % colors.length]}`}}>{props.tablename}</div>
             
             <div className='tables'>
                 {props.columns.map(column => <Column name={column.name} key={column.name} dataType={column.dataType} />)}
@@ -51,7 +53,6 @@ export default memo(({ data }) => {
                     border-top-left-radius: 8px;
                     border-top-right-radius: 8px;
                     text-align: center;
-                    background: linear-gradient(180deg, #FA9CDA 0%, #FF71CF 100%);
                 }
 
                 .tables{

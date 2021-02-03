@@ -29,7 +29,7 @@ const Canvas = (props) => {
           data: {
             label: (
               <div>
-                <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} />
+                <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} IEnumerable={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} />
               </div>
               ),
             },
