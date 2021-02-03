@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import ReactFlow, { Handle }  from 'react-flow-renderer';
+import { useEffect } from 'react'
 
 import Node from '../components/Node.js';
 
@@ -72,6 +73,18 @@ const graphStyles = { width: "100%", height: "100%px" };
 const BasicGraph = () => <ReactFlow nodeTypes={nodeTypes} elements={elements} style={graphStyles} onElementClick={onElementClick} onNodeDragStop={onNodeDragStop} />;
 
 export default function Home() {
+
+  const body = {
+    URI: "postgres://lfawycfl:yc837PGh-S4jP4YIHJlv6Ldh7C7P2xJw@suleiman.db.elephantsql.com:5432/lfawycfl"
+  }
+
+  useEffect(() => {
+    fetch(`/api/scrapedb`, {method: 'POST', headers: {'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
+      .then(res=>res.json())
+      .then(data=>console.log(data))
+      .catch(err => console.log(`Error sending survey to db: ${err}`));
+  });
+
   return (
     <div id="container">
       <BasicGraph />
