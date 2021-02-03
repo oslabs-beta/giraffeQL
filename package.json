@@ -14,6 +14,7 @@
     "@zeit/next-sass": "^1.0.1",
     "electron": "^11.2.1",
     "next": "10.0.6",
+    "pg": "^8.5.1",
     "react": "^17.0.1",
     "react-dom": "17.0.1",
     "react-flow-renderer": "^8.7.0",
