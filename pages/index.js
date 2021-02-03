@@ -1,87 +1,29 @@
-import Head from 'next/head'
-import ReactFlow, { Handle }  from 'react-flow-renderer';
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
-import Node from '../components/Node.js';
+const Home = (props) => {
 
-const onNodeDragStop = (event, node) => console.log('drag stop', node);
-const onElementClick = (event, element) => console.log('click', element);
+    const [URI, setURI] = useState('');
 
-const nodeTypes = {
-  selectorNode: Node,
-};
+    return (
+        <div id='home'>
+            <input type='text' placeholder='uri here' val={URI} onChange={e => setURI(e.target.value)} />
+            <Link href={{ pathname: '/canvas', query: { data: JSON.stringify(URI) } }}>
+                <button>Click to go to node canvas</button>
+            </Link>
 
-const data = {
-	tables: [
-		{ 
-			name: 'people',
-			columns: [
-				{
-					name: '_id',
-					dataType: 'Int',
-					required: true 
-				},
-				{
-					name: 'name',
-					dataType: 'string',
-					required: true 
-				},
-				{
-					name: 'age',
-					dataType: 'Int',
-					required: true
-				},
-				{
-					name: 'homeworld_id',
-					dataType: 'int',
-					required: false
-				}
-			] 
-		}
-  ],
-	connections: [ 
-		{ 
-			origin: 'people',
-			originKey:  'species_id',
-			destination: 'species',
-			destinationKey: '_id',
-		}
-	]
-}
+            <style jsx>{`
 
-const elements = [
-  {
-    id: "1",
-    type: "selectorNode",
-    data: {
-      label: (
-        <div>
-          <Node tablename={data.tables[0].name} columns={data.tables[0].columns} />
+            #home{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            `}</style>
         </div>
-        ),
-      },
-    position: { x: 50, y: 50 }
-  },
-  { id: "2", data: { label: "Node 2" }, position: { x: 100, y: 100 } },
-  { id: "3", data: { label: "Node 3" }, position: { x: 250, y: 150 } },
-  { id: "e1a-2", source: "1", target: "2", sourceHandle: "a", type: "smoothstep", animated: true },
-  { id: "e1b-3", source: "1", target: "3", sourceHandle: "b", type: "smoothstep", animated: true },
-];
-
-const graphStyles = { width: "100%", height: "100%px" };
-
-const BasicGraph = () => <ReactFlow nodeTypes={nodeTypes} elements={elements} style={graphStyles} onElementClick={onElementClick} onNodeDragStop={onNodeDragStop} />;
-
-export default function Home() {
-  return (
-    <div id="container">
-      <BasicGraph />
-      <style jsx>{`
-        #container{
-          width: 80vw;
-          height: 80vh;
-          border: 2px solid black;
-        }
-      `}</style>
-    </div>
-  )
+    );
 }
+
+export default Home;
