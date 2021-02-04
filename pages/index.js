@@ -14,14 +14,15 @@ const Home = (props) => {
 
             <style jsx>{`
 
-            #home{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
+                #home{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
 
             `}</style>
+            
         </div>
     );
 }
