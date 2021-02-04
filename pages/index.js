@@ -22,6 +22,7 @@ const Home = (props) => {
                 }
 
             `}</style>
+            
         </div>
     );
 }
