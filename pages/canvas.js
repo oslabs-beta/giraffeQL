@@ -1,4 +1,4 @@
-import ReactFlow, { Controls, Background, removeElements, addEdge }  from 'react-flow-renderer';
+import ReactFlow, { Controls, Background, removeElements, addEdge, getConnectedEdges, isNode }  from 'react-flow-renderer';
 import { useState, useEffect } from 'react'
 
 import Node from '../components/Node.js';
@@ -17,7 +17,7 @@ const Canvas = (props) => {
 
   //Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
   //NOTE: When rerendered, all of the existing nodes will have their state reset. This includes expand/collapse state.
-    //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
+  //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
   const [elements, setElements] = useState([]);
 
   //Zome prevention
@@ -29,7 +29,7 @@ const Canvas = (props) => {
 
   //Listeners for user interaction with nodes
   const onConnect = (params) => setElements((els) => addEdge(params, els));
-  const onNodeDragStop = (event, node) => selectNode(node);
+  const onNodeDragStop = (event, node) => (console.log(node), selectNode(node));
   const onElementClick = (event, element) => console.log('');
 
   //Runs only once when this page renders
@@ -162,7 +162,6 @@ const Canvas = (props) => {
           border: none;
           outline: none;
           z-index: 9999999999;
-
         }
 
       `}</style>
