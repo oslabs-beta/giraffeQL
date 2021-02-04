@@ -8,8 +8,8 @@ const Home = (props) => {
     return (
         <div id='home'>
             <input type='text' placeholder='uri here' val={URI} onChange={e => setURI(e.target.value)} />
-            <Link href={{ pathname: '/canvas', query: { data: JSON.stringify(URI) } }}>
-                <button>Click to go to node canvas</button>
+            <Link href={{ pathname: '/canvas', query: { data: URI } }}>
+                <button disabled={URI.length < 1 ? true : false}>Click to go to node canvas</button>
             </Link>
 
             <style jsx>{`

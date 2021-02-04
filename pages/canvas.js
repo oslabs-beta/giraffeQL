@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import ReactFlow, { Handle }  from 'react-flow-renderer';
+import ReactFlow, { Controls, Background }  from 'react-flow-renderer';
 import React, { useState, useEffect } from 'react'
 
 import Node from '../components/Node.js';
@@ -16,6 +16,7 @@ const graphStyles = { width: "100%", height: "100%px" };
 const Canvas = (props) => {
 
   const [elements, setElements] = useState([]);
+  const [zoomOnScroll, setZoomOnScroll] = useState(false);
 
   useEffect(() => {
 
@@ -44,7 +45,17 @@ const Canvas = (props) => {
         
   }, []);
 
-  const BasicGraph = () => <ReactFlow nodeTypes={nodeTypes} elements={elements} style={graphStyles} onElementClick={onElementClick} onNodeDragStop={onNodeDragStop} />;
+  const BasicGraph = () =>
+  
+
+  <ReactFlow zoomOnScroll={zoomOnScroll} nodeTypes={nodeTypes} elements={elements} style={graphStyles} onElementClick={onElementClick} onNodeDragStop={onNodeDragStop} >
+    <Controls />
+    <Background
+      variant="lines"
+      gap={64}
+      size={1}
+    />
+  </ReactFlow>;
 
   return (
     <div id="container">
@@ -54,16 +65,17 @@ const Canvas = (props) => {
           width: 80vw;
           height: 80vh;
           border: 2px solid black;
+          background-color: #f1f6f8;
         }
       `}</style>
     </div>
   )
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps({ query }) {
 
   const body = {
-    URI: "postgres://lfawycfl:yc837PGh-S4jP4YIHJlv6Ldh7C7P2xJw@suleiman.db.elephantsql.com:5432/lfawycfl"
+    URI: query.data
   }
 
   const res = await fetch(`http://localhost:3000/api/scrapedb`, {method: 'POST', headers: {'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
