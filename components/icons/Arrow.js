@@ -23,7 +23,8 @@ const Arrow = () =>{
                 height: 25px;
                 line-height: 25px;
                 margin-left: 8px;
-                transform: rotate(180deg);
+                transition: all .6s ease;
+                // transform: rotate(180deg);
             }
 
             svg{

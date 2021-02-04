@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import ReactFlow, { Handle }  from 'react-flow-renderer';
+import ReactFlow, { Controls, Background }  from 'react-flow-renderer';
 import React, { useState, useEffect } from 'react'
 
 import Node from '../components/Node.js';
@@ -16,6 +16,7 @@ const graphStyles = { width: "100%", height: "100%px" };
 const Canvas = (props) => {
 
   const [elements, setElements] = useState([]);
+  const [zoomOnScroll, setZoomOnScroll] = useState(false);
 
   useEffect(() => {
 
@@ -44,7 +45,17 @@ const Canvas = (props) => {
         
   }, []);
 
-  const BasicGraph = () => <ReactFlow nodeTypes={nodeTypes} elements={elements} style={graphStyles} onElementClick={onElementClick} onNodeDragStop={onNodeDragStop} />;
+  const BasicGraph = () =>
+  
+
+  <ReactFlow zoomOnScroll={zoomOnScroll} nodeTypes={nodeTypes} elements={elements} style={graphStyles} onElementClick={onElementClick} onNodeDragStop={onNodeDragStop} >
+    <Controls />
+    <Background
+      variant="lines"
+      gap={64}
+      size={1}
+    />
+  </ReactFlow>;
 
   return (
     <div id="container">

@@ -14,9 +14,8 @@ export default memo(({ data }) => {
         <div className='node' style={{minWidth: `${expand ? '500px' : '0px'}`}}>
 
             {/*<div className='header' style={{backgroundColor: `${colors[props.IEnumerable % colors.length]}`}} />*/}
-            <div className='tablename' style={{backgroundColor: `${colors[props.IEnumerable % colors.length]}`, borderBottomLeftRadius: `${expand ? '0px' : '8px'}`, borderBottomRightRadius: `${expand ? '0px' : '8px'}`, borderBottom: `${expand ? '8px solid #e4eaf1' : 'none' }`}} >
+            <div onDoubleClick={() => showTable(!expand)} className='tablename' style={{backgroundColor: `${colors[props.IEnumerable % colors.length]}`, borderBottomLeftRadius: `${expand ? '0px' : '8px'}`, borderBottomRightRadius: `${expand ? '0px' : '8px'}`, borderBottom: `${expand ? '8px solid #e4eaf1' : 'none' }`}} >
                 {props.tablename}
-                <div onClick={() => showTable(!expand)}><Arrow className='expandbtn' style={{transform: 'scaleY(-1)'}} /></div>
             </div>
             
             <div className='tables' style={{maxHeight: `${expand ? '250px' : '0px'}`}} >
@@ -34,7 +33,7 @@ export default memo(({ data }) => {
                     transition: all .6s ease;
                     font-family: 'Inter', sans-serif;
                     // font-family: 'Lato', sans-serif;
-                    font-family: 'Permanent Marker', cursive;
+                    // font-family: 'Permanent Marker', cursive;
                 }
 
                 .node{
@@ -44,6 +43,7 @@ export default memo(({ data }) => {
                     border-radius: 8px;
                     padding: 16px;
                     filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.15));
+                    cursor: default;
 
                     &:hover{
                         filter: drop-shadow(0px 8px 8px rgba(0, 0, 0, 0.15));
@@ -93,21 +93,13 @@ export default memo(({ data }) => {
 
                 ::-webkit-scrollbar {
                     width: 8px;
-                    background-color: transparent;
-                }
-
-                ::-webkit-scrollbar:hover {
-                    width: 8px;
+                    height: 100%;
                     background-color: #C4C4C4;
                 }
                   
                 ::-webkit-scrollbar-thumb {
-                    background-color: transparent;
-                    border-radius: 5px;
-                }
-
-                ::-webkit-scrollbar-thumb:hover {
                     background-color: #858585;
+                    height: 10%;
                     border-radius: 5px;
                 }
 
