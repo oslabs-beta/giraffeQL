@@ -15,6 +15,8 @@ const connectionStyles = { stroke: '#0373fc', strokeWidth: '5px'};
 const Canvas = (props) => {
 
   //Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
+  //NOTE: When rerendered, all of the existing nodes will have their state reset. This includes expand/collapse state.
+    //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
   const [elements, setElements] = useState([]);
 
   //Zome prevention
@@ -42,10 +44,14 @@ const Canvas = (props) => {
 
       //For each "column" from our data of tables, we assign the same object information that's expected from a Node element to render properly
       const column = {
+          //We need to assign every single element a numerical id.
+          //These cannot overlap/duplicate, and they cannot contain any other characters.
           id: `${i}`,
           //Our custom Node.js type
           type: "tableNode",
           data: {
+            //Our "label" holds all data that we pass into the element.
+            //In the case of our nodes, we pass in a Node.js component with all of the props from the associated table data index.
             label: (
               <div>
                 <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} IEnumerable={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} />
@@ -61,28 +67,42 @@ const Canvas = (props) => {
 
       }
     
+    //We replace our existing (or empty by default) elements state with the fetched elements
+    //NOTE: we must either always REPLACE the elements array, or ensure we are adding to the array without overlapping id's
     setElements([...newElements]);
 
   }, []);
 
+  //We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)
+  //Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app
   const BasicGraph = () =>
     <ReactFlow
+      //default zoom properties
       minZoom={0.25}
       maxZoom={1}
       defaultZoom={.4}
       zoomOnScroll={zoomOnScroll}
       zoomOnDoubleClick={zoomOnDoubleClick}
+
+      //Element removal callback
       onElementsRemove={onElementsRemove}
+
+      //Element connect, click, drag callbacks/listeners
       onConnect={onConnect}
+      onElementClick={onElementClick}
+      onNodeDragStop={onNodeDragStop}
+      
+      //Assigning our custom types to be rendered
       nodeTypes={nodeTypes}
       elements={elements}
       style={graphStyles}
-      onElementClick={onElementClick}
-      onNodeDragStop={onNodeDragStop}
+
       connectionLineType={'step'}
       connectionLineStyle={connectionStyles}
       >
+      {/* Bottom-left UI zoom and fit screen controls */}
       <Controls />
+      {/* Background pattern, can be lines or dots */}
       <Background
         variant="lines"
         gap={64}
@@ -114,6 +134,18 @@ export async function getServerSideProps({ query }) {
   }
 
   const res = await fetch(`http://localhost:3000/api/scrapedb`, {method: 'POST', headers: {'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
+  
+  //Check if we just fetched from a bad URI... don't want to crash the whole app!
+  if (res.status === 400) {
+    return {
+      redirect: {
+        //We redirect the user back to the root page.
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  
   const data = await res.json()
 
   if (!data) {

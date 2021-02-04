@@ -8,10 +8,17 @@ const Column = (props) => {
     return (
         <div className='container' onMouseOver={()=>selectColumn(true)} onMouseLeave={()=>selectColumn(false)}>
 
+            {/* Our Table component is split into two columns: the column name and it's associated Data Type.
+                Each of these also contains an input (target) and output (source) "Handle" component that allows
+                Nodes to connect.*/}
+
+            {/* TODO: Refactor positioning of Handles to allow for overflow-y scrolling */}
+
             <div className='column' className='left'>
 
                 <Handle type='target' position='left' id={`id-${props.index}`} key={`id-${props.index}`}
                 
+                /* Handle Styling */
                 style={{
                     position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'left', left: `${props.expanded ? '-40px' : '0%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
                 }}
@@ -19,14 +26,20 @@ const Column = (props) => {
                 onConnect={(params) => console.log('')}
                 
                 />
+
+                {/* Column Name */}
                 {props.name}
+
             </div>
 
             <div className='column' className='right'>
+            
+                {/* Data Type */}
                 {props.dataType}
 
                 <Handle type='source' position='right' id={`id-${props.index}`} key={`id-${props.index}`}
                 
+                /* Handle Styling */
                 style={{
                     position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'right', left: `${props.expanded ? '40px' : '90%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
                 }}
