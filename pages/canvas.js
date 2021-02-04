@@ -30,7 +30,7 @@ const Canvas = (props) => {
   //Listeners for user interaction with nodes
   const onConnect = (params) => setElements((els) => addEdge(params, els));
   const onNodeDragStop = (event, node) => selectNode(node);
-  const onElementClick = (event, element) => console.log('clicked something');
+  const onElementClick = (event, element) => console.log('');
 
   //Runs only once when this page renders
   useEffect(() => {
