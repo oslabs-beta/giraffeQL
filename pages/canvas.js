@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import ReactFlow, { Controls, Background, removeElements, addEdge }  from 'react-flow-renderer';
 import React, { useState, useEffect } from 'react'
 
@@ -11,7 +10,7 @@ const nodeTypes = {
 
 //Various stylings for ReactFlow properties
 const graphStyles = { width: '100%', height: '100%' };
-const connectionStyles = { stroke: '#0373fc', strokeWidth: '5px'}
+const connectionStyles = { stroke: '#0373fc', strokeWidth: '5px'};
 
 const Canvas = (props) => {
 
@@ -55,7 +54,7 @@ const Canvas = (props) => {
             },
           //The starting position of the node.
           //TODO: replace with smart layout-ing using dagre
-          position: { x: 50 + (i * 250), y: 50 + (i * 1)}
+          position: { x: 250 * i, y: 50}
         }
 
         newElements.push(column);
@@ -124,6 +123,10 @@ export async function getServerSideProps({ query }) {
   }
 
   return {
+    //The data we fetch from the database gets passed into our component as props
+    //We have two arrays inside of data:
+      //1. tables
+      //2. connections
     props: {data}, 
   }
 }

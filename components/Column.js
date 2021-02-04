@@ -5,10 +5,11 @@ const Column = (props) => {
         <div className='container'>
 
             <div className='column' className='left'>
+
                 <Handle type='target' position='left' id={`id-${props.index}`} key={`id-${props.index}`}
                 
                 style={{
-                    position: 'relative', float: 'left', left: -12, width: '16px', height: '16px', border: '5px solid #0373fc', backgroundColor: 'transparent'
+                    position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'left', left: `${props.expanded ? '-46px' : '0%'}`, width: '16px', height: '16px', border: `${props.expanded ? '5px solid #0373fc' : 'transparent'}`, backgroundColor: 'transparent'
                 }}
 
                 onConnect={(params) => console.log('')}
@@ -19,10 +20,11 @@ const Column = (props) => {
 
             <div className='column' className='right'>
                 {props.dataType}
+
                 <Handle type='source' position='right' id={`id-${props.index}`} key={`id-${props.index}`}
                 
                 style={{
-                    position: 'relative', float: 'right', left: 27, width: '16px', height: '16px', border: '5px solid #0373fc', backgroundColor: 'transparent'
+                    position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'right', left: `${props.expanded ? '62px' : '90%'}`, width: '16px', height: '16px', border: `${props.expanded ? '5px solid #0373fc' : 'transparent'}`, backgroundColor: 'transparent'
                 }}
 
                 onConnect={(params) => console.log('')}
@@ -52,7 +54,6 @@ const Column = (props) => {
                     padding: 8px;
                     border-top: .5px solid transparent;
                     border-bottom: .5px solid #e4eaf1;
-                    overflow: hidden;
                     flex-flow: row nowrap;
 
                     &:hover{
