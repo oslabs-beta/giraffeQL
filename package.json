@@ -19,5 +19,8 @@
     "react-dom": "17.0.1",
     "react-flow-renderer": "^8.7.0",
     "sass": "^1.32.6"
+  },
+  "devDependencies": {
+    "styled-jsx-plugin-sass": "^1.0.0"
   }
 }
