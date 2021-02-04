@@ -1,12 +1,15 @@
 const { Pool } = require('pg');
+import dynamic from "next/dynamic";
 
 module.exports = {
   connectToDB: async (URI) => {
     return new Promise((resolve) => {
       const pool = new Pool({ connectionString: URI });
+      const Redirect = dynamic(()=> import("../pages/index.js"))
       // test if db connection works
       pool.query("SELECT 1", (err, data) => {
-        if (err) return resolve(new Error(err));
+        if (err) return <Redirect />
+        // resolve(new Error(err));
         return resolve(pool);
       }); 
     });
