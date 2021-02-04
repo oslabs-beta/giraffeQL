@@ -27,8 +27,6 @@ const Inspector = (data) =>{
                     height: 100%;
                     width: 20%;
                     float: left;
-                    padding-left: 1%;
-                    padding-right: .5%;
                     background-color: white;
                     z-index: 999999998;
                     border-right: 4px solid #e4eaf1;

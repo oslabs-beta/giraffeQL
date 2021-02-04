@@ -1,7 +1,6 @@
 import React, { useState, memo } from 'react';
 
 import Column from './Column.js';
-import Arrow from './icons/Arrow.js';
 
 //By default custom Nodes use React.memo() so that their data becomes memoized.
 export default memo(({ data }) => {
@@ -12,7 +11,7 @@ export default memo(({ data }) => {
 
     //State for expand/collapse functionality
     //TODO: Move upwards to parent state
-    const [expand, showTable] = useState(true);
+    const [expand, showTable] = useState(false);
 
     //Array of possible header colors
     //TOOD: Expand, make editable
@@ -29,6 +28,9 @@ export default memo(({ data }) => {
             <div className='tables' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0s'}`}} >
                 {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} index={i} dataType={column.dataType} expanded={expand} />)}
             </div>
+
+            <div className='nodecontainer' />
+            <div className='outline' style={{visibility: `${expand ? 'visible' : 'hidden'}`}} />
 
             <style jsx>{`
 
@@ -47,16 +49,44 @@ export default memo(({ data }) => {
                 .node{
                     position: relative;
                     min-width: 500px;
-                    background: #FAFAFA;
+                    background-color: #FAFAFA;
                     border-radius: 8px;
                     padding: 16px;
                     filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.15));
                     cursor: default;
+                    overflow: visible;
+                    z-index: 100000;
 
                     &:hover{
                         filter: drop-shadow(0px 8px 8px rgba(0, 0, 0, 0.15));
                     }
                     
+                }
+
+                .nodecontainer{
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background-color: #FAFAFA;
+                    top: 0;
+                    left: 0;
+                    border-radius: 8px;
+                    z-index: -999999998;
+                }
+
+                .outline {
+                    transition: 0s;
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background-color: #0373fc;
+                    top: -48px;
+                    left: -16px;
+                    padding: 32px 16px;
+                    border-radius: 16px;
+
+                    z-index: -999999999;
+
                 }
 
                 .tablename{
@@ -82,6 +112,8 @@ export default memo(({ data }) => {
                     margin-top: 16px;
                     margin-bottom: 0px;
                     overflow-y: auto;
+                    background-color: #FAFAFA;
+                    z-index: 1000;
                     // overflow: visible;
                 }
 

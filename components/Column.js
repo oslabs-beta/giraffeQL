@@ -5,6 +5,8 @@ const Column = (props) => {
 
     const [selected, selectColumn] = useState(false);
 
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
     return (
         <div className='container' onMouseOver={()=>selectColumn(true)} onMouseLeave={()=>selectColumn(false)}>
 
@@ -16,14 +18,12 @@ const Column = (props) => {
 
             <div className='column' className='left'>
 
-                <Handle type='target' position='left' id={`id-${props.index}`} key={`id-${props.index}`}
+                <Handle type='target' position='left' id={alphabet[props.index]} key={`id-${props.index}`}
                 
-                /* Handle Styling */
-                style={{
-                    position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'left', left: `${props.expanded ? '-40px' : '0%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
-                }}
-
-                onConnect={(params) => console.log('')}
+                    /* Handle Styling */
+                    style={{
+                        position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'left', left: `${props.expanded ? '-40px' : '0%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
+                    }}
                 
                 />
 
@@ -37,14 +37,12 @@ const Column = (props) => {
                 {/* Data Type */}
                 {props.dataType}
 
-                <Handle type='source' position='right' id={`id-${props.index}`} key={`id-${props.index}`}
+                <Handle type='source' position='right' id={alphabet[props.index]} key={`id-${props.index}`}
                 
-                /* Handle Styling */
-                style={{
-                    position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'right', left: `${props.expanded ? '40px' : '90%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
-                }}
-
-                onConnect={(params) => console.log('')}
+                    /* Handle Styling */
+                    style={{
+                        position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'right', left: `${props.expanded ? '40px' : '90%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
+                    }}
 
                 />
             </div>
