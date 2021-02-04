@@ -1,20 +1,23 @@
-const { tableQuery, connectionQuery } = require('../../storage/query.js');
+const { dbDataQuery } = require('../../storage/query.js');
 const { connectToDB, asyncQuery, errorHandler } = require('../../controller/controller.js');
 
 // POST request turn re-orangized database back to frontend
 export default async (req, res) => {
     if (req.method === 'POST') {
+        // connect to db and verify connections
         const pool = await connectToDB(req.body.URI);
         if (pool instanceof Error) return errorHandler(res, pool);
-        const tables = await asyncQuery(pool, tableQuery);
-        if (tables instanceof Error) return errorHandler(res, tables);
-        const connections = await asyncQuery(pool, connectionQuery);
-        if (connections instanceof Error) return errorHandler(res, connections);
-        res.status(200).json({
-                        tables: tables.rows,
-                        connections: connections.rows,
-                    });
+        // query for db data and check for errors
+        const dbData = await asyncQuery(pool, dbDataQuery);
+        if (dbData instanceof Error) return errorHandler(res, dbData);
+        // convert [null] connections arrays to []
+        const tables = dbData.rows.map(obj => {
+            if (obj.connections[0] === null) obj.connections = [];
+            return obj;
+        });
+        // return data
+        res.status(200).json({ tables: tables });
     } else {
-        res.status(400).json(`${req.method} is not handle!`);
+        res.status(400).json(`${req.method} is not handled!`);
     }
 }
