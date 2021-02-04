@@ -2,6 +2,7 @@ import ReactFlow, { Controls, Background, removeElements, addEdge }  from 'react
 import { useState, useEffect } from 'react'
 
 import Node from '../components/Node.js';
+import Inspector from '../components/Inspector.js';
 
 //Set our custom node component from Node.js
 const nodeTypes = {
@@ -28,12 +29,8 @@ const Canvas = (props) => {
   const [activeNode, selectNode] = useState(null);
 
   //Listeners for user interaction with nodes
-  const onNodeDragStop = (event, node) => console.log('');
-  const onElementClick = (event, element) => {
-    if (activeNode == element)
-      return;
-    console.log('');
-  };
+  const onNodeDragStop = (event, node) => selectNode(node);
+  const onElementClick = (event, element) => console.log('clicked something');
 
   //Runs only once when this page renders
   useEffect(() => {
@@ -101,7 +98,7 @@ const Canvas = (props) => {
       connectionLineStyle={connectionStyles}
       >
       {/* Bottom-left UI zoom and fit screen controls */}
-      <Controls />
+      <Controls style={{zIndex: '999999999'}} />
       {/* Background pattern, can be lines or dots */}
       <Background
         variant="lines"
@@ -110,16 +107,38 @@ const Canvas = (props) => {
       />
     </ReactFlow>;
 
+  const inspector =  activeNode ? <Inspector data={activeNode} /> : <div />;
+
   return (
     <div id="container">
+    
+      <button id='exitinspectorbtn' onClick={() => selectNode(null)} style={{visibility: `${activeNode ? 'visible' : 'hidden'}`}}>x</button>
+      {inspector}
       <BasicGraph />
+
       <style jsx>{`
+
         #container{
           overflow: hidden;
           width: 100vw;
           height: 100vh;
           background-color: #f1f6f8;
         }
+
+        #exitinspectorbtn{
+          font-size: 24px;
+          transition: all 0s ease;
+          font-family: 'Inter', sans-serif;
+          position: fixed;
+          padding: 4px 8px;
+          margin-left: 19.6%;
+          background-color: #e4eaf1;
+          border: none;
+          outline: none;
+          z-index: 9999999999;
+
+        }
+
       `}</style>
     </div>
   )

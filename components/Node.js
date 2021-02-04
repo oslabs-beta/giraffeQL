@@ -12,7 +12,7 @@ export default memo(({ data }) => {
 
     //State for expand/collapse functionality
     //TODO: Move upwards to parent state
-    const [expand, showTable] = useState(false);
+    const [expand, showTable] = useState(true);
 
     //Array of possible header colors
     //TOOD: Expand, make editable
