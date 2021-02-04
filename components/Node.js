@@ -20,6 +20,8 @@ export default memo(({ data }) => {
     return (
         <div className='node' style={{minWidth: `${expand ? '500px' : '0px'}`, transition: `${!  expand ? 'all .5s ease' : 'all 0s'}`}}>
 
+            <h1>{props.active}</h1>
+
             {/* The Table Name div acts as a button to expand/collapse the table's column content on Double Click */}
             <div onDoubleClick={() => showTable(!expand)} className='tablename' style={{backgroundColor: `${colors[props.IEnumerable % colors.length]}`, borderBottomLeftRadius: `${expand ? '0px' : '8px'}`, borderBottomRightRadius: `${expand ? '0px' : '8px'}`, borderBottom: `${expand ? '8px solid #e4eaf1' : 'none' }`, transition: `${!expand ? 'all .5s ease' : 'all 0s'}`, top: `${expand ? '-32px' : '0px'}` }} >
                 {props.tablename}
@@ -29,8 +31,8 @@ export default memo(({ data }) => {
                 {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} index={i} dataType={column.dataType} expanded={expand} />)}
             </div>
 
-            <div className='nodecontainer' />
-            <div className='outline' style={{visibility: `${expand ? 'visible' : 'hidden'}`}} />
+            <div className='nodecontainer' style={{visibility: 'hidden'}} />
+            <div className='outline' style={{visibility: 'hidden'}} />
 
             <style jsx>{`
 
@@ -139,18 +141,3 @@ export default memo(({ data }) => {
         </div>
     );
 });
-
-
-// <Handle
-// type="source"
-// position="right"
-// id="a"
-// style={{ top: 10, background: '#555' }}
-// />
-
-// <Handle
-// type="source"
-// position="right"
-// id="b"
-// style={{ bottom: 10, top: 'auto', background: '#555' }}
-// />
