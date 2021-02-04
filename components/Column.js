@@ -1,22 +1,33 @@
 import { Handle } from 'react-flow-renderer';
 
 const Column = (props) => {
-    console.log(props)
     return (
         <div className='container'>
 
             <div className='column' className='left'>
-                <Handle type='target' position='left' id={`id-${props.index}`} key={`id-${props.index}`} style={{
-                    position: 'relative', float: 'left', left: -12, backgroundColor: 'transparent'
-                }} />
+                <Handle type='target' position='left' id={`id-${props.index}`} key={`id-${props.index}`}
+                
+                style={{
+                    position: 'relative', float: 'left', left: -12, width: '16px', height: '16px', border: '5px solid #0373fc', backgroundColor: 'transparent'
+                }}
+
+                onConnect={(params) => console.log('')}
+                
+                />
                 {props.name}
             </div>
 
             <div className='column' className='right'>
                 {props.dataType}
-                <Handle type='source' position='right' id={`id-${props.index}`} key={`id-${props.index}`} style={{
-                    position: 'relative', float: 'right', left: 27, backgroundColor: 'transparent'
-                }} />
+                <Handle type='source' position='right' id={`id-${props.index}`} key={`id-${props.index}`}
+                
+                style={{
+                    position: 'relative', float: 'right', left: 27, width: '16px', height: '16px', border: '5px solid #0373fc', backgroundColor: 'transparent'
+                }}
+
+                onConnect={(params) => console.log('')}
+
+                />
             </div>
 
             <style jsx>{`
@@ -29,6 +40,10 @@ const Column = (props) => {
                     transition: all .3s;
                     // font-family: 'Lato', sans-serif;
                     font-family: 'Inter', sans-serif;
+                }
+
+                .handle {
+                    border: 5px solid red;
                 }
 
                 .container{
@@ -46,15 +61,25 @@ const Column = (props) => {
                     }
 
                     &:hover > .left{
-                        color: #9f7ce8;
+                        // color: #0373fc;
                     }
                     
                     &:hover > .right{
-                        color: #9f7ce8;
+                        // color: #0373fc;
                     }
 
                     &:active{
+                        border-top: .5px solid #0373fc;
+                        border-bottom: .5px solid #0373fc;
                         background-color: #eaf4ff;
+                    }
+
+                    &:active > .left{
+                        color: #0373fc;
+                    }
+
+                    &:active > .right{
+                        color: #0373fc;
                     }
                 }
 

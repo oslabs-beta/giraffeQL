@@ -6,7 +6,8 @@ import Arrow from './icons/Arrow.js';
 export default memo(({ data }) => {
 
     const props = data.label.props.children.props;
-    const [expand, showTable] = useState(false);
+
+    const [expand, showTable] = useState();
 
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
