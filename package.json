@@ -21,6 +21,7 @@
     "sass": "^1.32.6"
   },
   "devDependencies": {
+    "node-sass": "^5.0.0",
     "styled-jsx-plugin-sass": "^1.0.0"
   }
 }

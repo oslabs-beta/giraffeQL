@@ -48,7 +48,9 @@ const Canvas = (props) => {
           type: "tableNode",
           data: {
             label: (
-              <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} IEnumerable={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} />
+              <div>
+                <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} IEnumerable={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} />
+              </div>
               ),
             },
           //The starting position of the node.
