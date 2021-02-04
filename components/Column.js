@@ -1,15 +1,19 @@
 import { Handle } from 'react-flow-renderer';
+import { useState } from 'react';
 
 const Column = (props) => {
+
+    const [selected, selectColumn] = useState(false);
+
     return (
-        <div className='container'>
+        <div className='container' onMouseOver={()=>selectColumn(true)} onMouseLeave={()=>selectColumn(false)}>
 
             <div className='column' className='left'>
 
                 <Handle type='target' position='left' id={`id-${props.index}`} key={`id-${props.index}`}
                 
                 style={{
-                    position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'left', left: `${props.expanded ? '-46px' : '0%'}`, width: '16px', height: '16px', border: `${props.expanded ? '5px solid #0373fc' : 'transparent'}`, backgroundColor: 'transparent'
+                    position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'left', left: `${props.expanded ? '-40px' : '0%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
                 }}
 
                 onConnect={(params) => console.log('')}
@@ -24,7 +28,7 @@ const Column = (props) => {
                 <Handle type='source' position='right' id={`id-${props.index}`} key={`id-${props.index}`}
                 
                 style={{
-                    position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'right', left: `${props.expanded ? '62px' : '90%'}`, width: '16px', height: '16px', border: `${props.expanded ? '5px solid #0373fc' : 'transparent'}`, backgroundColor: 'transparent'
+                    position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'right', left: `${props.expanded ? '40px' : '90%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
                 }}
 
                 onConnect={(params) => console.log('')}
@@ -39,7 +43,7 @@ const Column = (props) => {
 
                 *{
                     font-size: 16px;
-                    transition: all .3s;
+                    transition: all 0s;
                     // font-family: 'Lato', sans-serif;
                     font-family: 'Inter', sans-serif;
                 }
@@ -96,7 +100,7 @@ const Column = (props) => {
 
                 .right{
                     color: #cccccc;
-                    margin-right: 16px;
+                    // margin-right: 16px;
                 }
 
             `}</style>

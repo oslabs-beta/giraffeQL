@@ -7,7 +7,7 @@ export default memo(({ data }) => {
 
     const props = data.label.props.children.props;
 
-    const [expand, showTable] = useState();
+    const [expand, showTable] = useState(false);
 
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
@@ -18,7 +18,7 @@ export default memo(({ data }) => {
                 {props.tablename}
             </div>
             
-            <div className='tables' style={{maxHeight: `${expand ? '1000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0s'}`}} >
+            <div className='tables' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0s'}`}} >
                 {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} index={i} dataType={column.dataType} expanded={expand} />)}
             </div>
 
@@ -70,11 +70,11 @@ export default memo(({ data }) => {
 
                 .tables{
                     // max-height: 250px;
-                    margin: 8px;
+                    // margin: 8px;
                     margin-top: 16px;
                     margin-bottom: 0px;
                     overflow-y: auto;
-                    overflow: visible;
+                    // overflow: visible;
                 }
 
                 ::-webkit-scrollbar {

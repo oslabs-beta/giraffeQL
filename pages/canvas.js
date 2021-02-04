@@ -1,5 +1,5 @@
 import ReactFlow, { Controls, Background, removeElements, addEdge }  from 'react-flow-renderer';
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import Node from '../components/Node.js';
 

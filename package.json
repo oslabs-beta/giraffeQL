@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
+    "dagre": "^0.8.5",
     "electron": "^11.2.1",
     "next": "^10.0.6",
     "pg": "^8.5.1",
