@@ -1,5 +1,7 @@
 import ColumnInspector from './ColumnInspector.js';
 
+import Pencil from './icons/Pencil.js';
+
 const Inspector = (data) =>{
 
     //We access our "props" by going into the passed in data and extracting it from several nested objects
@@ -11,7 +13,8 @@ const Inspector = (data) =>{
     return (
         <div id='inspector'>
 
-            <div id='tablename' style={{backgroundColor: `${colors[props.nodeid % colors.length]}`}} >{props.tablename}</div>
+            <Pencil />
+            <div id='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`}} >{props.tablename}</div>
 
             {props.columns.map((column, i) => <ColumnInspector name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} dataType={column.dataType} />)}
 
@@ -28,15 +31,16 @@ const Inspector = (data) =>{
                     float: left;
                     background-color: white;
                     z-index: 999999998;
-                    border-right: 4px solid #e4eaf1;
-                    box-shadow: 16px 0px 16px rgba(0,0,0,.1);
+                    box-shadow: 3px 0px 3px rgba(0,0,0,.05);
                 }
 
                 #tablename{
                     font-size: 24px;
-                    text-align: center;
-                    background-color: blue;
+                    text-align: left;
+                    background-color: white;
                     padding: 16px;
+                    // border-bottom: 3px solid #b8c2cc;
+                    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
                 }
 
             `}</style>
