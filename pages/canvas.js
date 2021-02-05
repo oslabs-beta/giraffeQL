@@ -1,5 +1,7 @@
-import ReactFlow, { Controls, removeElements, addEdge, ReactFlowProvider, getConnectedEdges}  from 'react-flow-renderer';
+import ReactFlow, { Controls, removeElements, ReactFlowProvider, getConnectedEdges, isNode}  from 'react-flow-renderer';
 import { useState, useEffect } from 'react'
+
+import dagre from 'dagre';
 
 import Node from '../components/Node.js';
 import Inspector from '../components/Inspector.js';
@@ -14,6 +16,43 @@ const nodeTypes = {
 const graphStyles = { width: '100%', height: '100%' };
 const connectionStyles = { stroke: '#0373fc', strokeWidth: '5px' };
 
+//Dagre layout graph
+const dagreGraph = new dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+//Component to get the layouted elements
+//By default, set to 'LR', AKA Left -> Right
+//Can also be set to TB, AKA Top -> Bottom
+const getLayoutedElements = (elements, direction = 'TB') => {
+
+  const isHorizontal = direction === 'LR';
+
+  dagreGraph.setGraph({ rankdir: direction });
+
+  elements.forEach((el) => {
+    if (isNode(el)) {
+      dagreGraph.setNode(el.id, { width: 550, height: 300 });
+    } else {
+      dagreGraph.setEdge(el.source, el.target);
+    }
+  });
+
+  dagre.layout(dagreGraph);
+  
+  return elements.map((el) => {
+    if (isNode(el)) {
+      const nodeWithPosition = dagreGraph.node(el.id);
+      el.targetPosition = isHorizontal ? 'left' : 'top';
+      el.sourcePosition = isHorizontal ? 'right' : 'bottom';
+      el.position = {
+        x: nodeWithPosition.x + Math.random() / 1000,
+        y: nodeWithPosition.y,
+      };
+    }
+    return el;
+  });
+};
+
 const Canvas = (props) => {
 
   //Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
@@ -26,8 +65,11 @@ const Canvas = (props) => {
   const [zoomOnScroll, setZoomOnScroll] = useState(false);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
 
-  const onElementsRemove = (elementsToRemove) => setElements((els) => removeElements(elementsToRemove, els));
+  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), removeElements(elementsToRemove, els)));
   const [activeNode, selectNode] = useState(null);
+
+  //We pass in our elements to the layout
+  const layoutedElements = () => getLayoutedElements(elements);
 
   //Listeners for user interaction with nodes
   const onConnect = (params) => {
@@ -46,25 +88,15 @@ const Canvas = (props) => {
     const newElements = [...elements];
     newElements.push(connection)
     
-    console.log(newElements);
-
     setElements(els => els.concat([connection]));
   };
+  const onElementClick = (event, element) => {if (isNode(element)) selectNode(element)};
   const onNodeDragStart = (event, node) => selectNode(node);
   const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
 
-  const newElement = {
-    id: `${index}`,
-    type: "tableNode",
-    data: {
-      label: (
-        <div>
-          <Node id={`column#${index}`} key={`column#${index}`} nodeid={index} tablename={'Test table'} columns={[]} selectedEdges={selectedEdges} />
-        </div>
-        ),
-      },
-    position: { x: 250 * index, y: 50}
-  }
+  useEffect(() => {
+    layoutedElements();
+  }, [index]);
 
   //Runs only once when this page renders
   useEffect(() => {
@@ -91,7 +123,7 @@ const Canvas = (props) => {
           },
         //The starting position of the node.
         //TODO: replace with smart layout-ing using dagre
-        position: { x: 250 * i, y: 50}
+        position: { x: 0, y: 0}
       }
 
       newElements.push(column);
@@ -152,8 +184,8 @@ const Canvas = (props) => {
         {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
         <ReactFlowProvider><ReactFlow
             //default zoom properties
-            minZoom={0.25}
-            maxZoom={1}
+            minZoom={0.1}
+            maxZoom={.75}
             defaultZoom={.4}
             zoomOnScroll={zoomOnScroll}
             zoomOnDoubleClick={zoomOnDoubleClick}
@@ -163,6 +195,7 @@ const Canvas = (props) => {
 
             //Element connect, click, drag callbacks/listeners
             onConnect={onConnect}
+            onElementClick={onElementClick}
             onNodeDragStart={onNodeDragStart}
             
             //Assigning our custom types to be rendered
