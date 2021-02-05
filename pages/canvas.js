@@ -19,6 +19,7 @@ const Canvas = (props) => {
   //NOTE: When rerendered, all of the existing nodes will have their state reset. This includes expand/collapse state.
   //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
   const [elements, setElements] = useState([]);
+  const [index, setNodeCount] = useState(0);
 
   //Zome prevention
   const [zoomOnScroll, setZoomOnScroll] = useState(false);
@@ -28,9 +29,41 @@ const Canvas = (props) => {
   const [activeNode, selectNode] = useState(null);
 
   //Listeners for user interaction with nodes
-  const onConnect = (params) => setElements((els) => addEdge(params, els));
-  const onNodeDragStop = (event, node) => selectNode(node);
+  const onConnect = (params) => {
+
+    const connection = {
+      id: `e${params.source}${params.sourceHandle}-${params.target}${params.targetHandle}`,
+      source: params.source,
+      sourceHandle: params.sourceHandle,
+      target: params.target,
+      targetHandle: params.targetHandle,
+      animated: true,
+      // type: 'step',
+      style: { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' },
+    }
+
+    const newElements = [...elements];
+    newElements.push(connection)
+    
+    console.log(newElements);
+
+    setElements(els => els.concat([connection]));
+  };
+  const onNodeDragStart = (event, node) => selectNode(node);
   const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
+
+  const newElement = {
+    id: `${index}`,
+    type: "tableNode",
+    data: {
+      label: (
+        <div>
+          <Node id={`column#${index}`} key={`column#${index}`} nodeid={index} tablename={'Test table'} columns={[]} selectedEdges={selectedEdges} />
+        </div>
+        ),
+      },
+    position: { x: 250 * index, y: 50}
+  }
 
   //Runs only once when this page renders
   useEffect(() => {
@@ -80,14 +113,14 @@ const Canvas = (props) => {
         const targetHandle = props.data.tables[target].columns.findIndex(column => column.name === props.data.tables[i].connections[j].destinationKey);
 
         const connection = {
-          id: `reactflow__edge-${i}${alphabet[columnNumber]}-${target}${alphabet[targetHandle]}`,
-          source: i,
+          id: `e${i}${alphabet[columnNumber]}-${target}${alphabet[targetHandle]}`,
+          source: i.toString(),
           sourceHandle: alphabet[columnNumber],
-          target: target,
+          target: target.toString(),
           targetHandle: alphabet[targetHandle],
           animated: true,
-          type: 'step',
-          style: { stroke: 'transparent', strokeWidth: '1px' },
+          // type: 'step',
+          style: { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' },
         }
 
         newElements.push(connection);
@@ -99,6 +132,7 @@ const Canvas = (props) => {
     //We replace our existing (or empty by default) elements state with the fetched elements
     //NOTE: we must either always REPLACE the elements array, or ensure we are adding to the array without overlapping id's
     setElements([...newElements]);
+    setNodeCount(props.data.tables.length);
 
   }, []);
 
@@ -125,14 +159,14 @@ const Canvas = (props) => {
 
           //Element connect, click, drag callbacks/listeners
           onConnect={onConnect}
-          onNodeDragStop={onNodeDragStop}
+          onNodeDragStart={onNodeDragStart}
           
           //Assigning our custom types to be rendered
           nodeTypes={nodeTypes}
           elements={elements}
           style={graphStyles}
 
-          connectionLineType={'step'}
+          // connectionLineType={'step'}
           connectionLineStyle={connectionStyles}
           >
           {/* Bottom-left UI zoom and fit screen controls */}
