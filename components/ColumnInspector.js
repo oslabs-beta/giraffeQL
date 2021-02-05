@@ -1,9 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ColumnInspector = (props) => {
 
     const [name, setName] = useState(props.name);
     const [type, setType] = useState(props.dataType);
+
+    useEffect(() => {
+
+        if (!props.editable)
+            return;
+
+        var newNode = JSON.parse(JSON.stringify(props.activeNode))
+
+        newNode.data.label.props.children.props.columns[props.index].name = name;
+        newNode.data.label.props.children.props.columns[props.index].dataType = type;
+
+        props.updateNode(newNode);
+
+    }, [name, type]);
 
     const dataTypes = ['integer', 'bigint', 'date', 'character varying'];
 

@@ -20,39 +20,6 @@ const connectionStyles = { stroke: '#0373fc', strokeWidth: '5px' };
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-//Component to get the layouted elements
-//By default, set to 'LR', AKA Left -> Right
-//Can also be set to TB, AKA Top -> Bottom
-const getLayoutedElements = (elements, direction = 'TB') => {
-
-  const isHorizontal = direction === 'LR';
-
-  dagreGraph.setGraph({ rankdir: direction });
-
-  elements.forEach((el) => {
-    if (isNode(el)) {
-      dagreGraph.setNode(el.id, { width: 550, height: 300 });
-    } else {
-      dagreGraph.setEdge(el.source, el.target);
-    }
-  });
-
-  dagre.layout(dagreGraph);
-  
-  return elements.map((el) => {
-    if (isNode(el)) {
-      const nodeWithPosition = dagreGraph.node(el.id);
-      el.targetPosition = isHorizontal ? 'left' : 'top';
-      el.sourcePosition = isHorizontal ? 'right' : 'bottom';
-      el.position = {
-        x: nodeWithPosition.x + Math.random() / 1000,
-        y: nodeWithPosition.y,
-      };
-    }
-    return el;
-  });
-};
-
 const Canvas = (props) => {
 
   //Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
@@ -60,16 +27,56 @@ const Canvas = (props) => {
   //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
   const [elements, setElements] = useState([]);
   const [index, setNodeCount] = useState(0);
+  const [layedout, toggleLayout] = useState(false);
 
   //Zome prevention
   const [zoomOnScroll, setZoomOnScroll] = useState(false);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
 
-  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), removeElements(elementsToRemove, els)));
+  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)));
   const [activeNode, selectNode] = useState(null);
 
+  //Component to get the layouted elements
+  //By default, set to 'LR', AKA Left -> Right
+  //Can also be set to TB, AKA Top -> Bottom
+  const getLayoutedElements = (elements, direction = 'TB') => {
+
+    if (elements.length < 1)
+      return;
+
+    const isHorizontal = direction === 'LR';
+
+    dagreGraph.setGraph({ rankdir: direction });
+
+    elements.forEach((el) => {
+      if (isNode(el)) {
+        dagreGraph.setNode(el.id, { width: 550, height: 300 });
+      } else {
+        dagreGraph.setEdge(el.source, el.target);
+      }
+    });
+
+    dagre.layout(dagreGraph);
+    
+    return elements.map((el) => {
+      if (isNode(el)) {
+        const nodeWithPosition = dagreGraph.node(el.id);
+        el.targetPosition = isHorizontal ? 'left' : 'top';
+        el.sourcePosition = isHorizontal ? 'right' : 'bottom';
+        el.position = {
+          x: nodeWithPosition.x + Math.random() / 1000,
+          y: nodeWithPosition.y,
+        };
+      }
+      toggleLayout(true);
+      return el;
+    });
+  };
+
   //We pass in our elements to the layout
-  const layoutedElements = () => getLayoutedElements(elements);
+  if (!layedout){
+    const layoutedElements = getLayoutedElements(elements);
+  }
 
   //Listeners for user interaction with nodes
   const onConnect = (params) => {
@@ -93,10 +100,15 @@ const Canvas = (props) => {
   const onElementClick = (event, element) => {if (isNode(element)) selectNode(element)};
   const onNodeDragStart = (event, node) => selectNode(node);
   const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
+  const nodeValueChange = (node) => {
+    node.data.label.props.children.props.selectedEdges = selectedEdges;
 
-  useEffect(() => {
-    layoutedElements();
-  }, [index]);
+    const newElements = [...elements];
+    const target = newElements.findIndex(element => element.id === node.id);
+
+    newElements.splice(target, 1, node);
+    setElements(newElements);
+  };
 
   //Runs only once when this page renders
   useEffect(() => {
@@ -169,7 +181,7 @@ const Canvas = (props) => {
 
   }, []);
 
-  const inspector =  activeNode ? <Inspector data={activeNode} /> : <div />;
+  const inspector =  activeNode ? <Inspector data={activeNode} nodeValueChange={nodeValueChange} /> : <div />;
 
   return (
     <div id='root'>
@@ -177,40 +189,41 @@ const Canvas = (props) => {
       <Navbar />
 
       <div id='canvascontainer'>
-    
-        {inspector}
-        
+            
         {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
         {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
-        <ReactFlowProvider><ReactFlow
-            //default zoom properties
-            minZoom={0.1}
-            maxZoom={.75}
-            defaultZoom={.4}
-            zoomOnScroll={zoomOnScroll}
-            zoomOnDoubleClick={zoomOnDoubleClick}
+        <ReactFlowProvider>
+          {inspector}
+          <ReactFlow
+              //default zoom properties
+              minZoom={0.1}
+              maxZoom={.75}
+              defaultZoom={.4}
+              zoomOnScroll={zoomOnScroll}
+              zoomOnDoubleClick={zoomOnDoubleClick}
 
-            //Element removal callback
-            onElementsRemove={onElementsRemove}
+              //Element removal callback
+              onElementsRemove={onElementsRemove}
 
-            //Element connect, click, drag callbacks/listeners
-            onConnect={onConnect}
-            onElementClick={onElementClick}
-            onNodeDragStart={onNodeDragStart}
-            
-            //Assigning our custom types to be rendered
-            nodeTypes={nodeTypes}
-            elements={elements}
-            style={graphStyles}
+              //Element connect, click, drag callbacks/listeners
+              onConnect={onConnect}
+              onElementClick={onElementClick}
+              onNodeDragStart={onNodeDragStart}
+              
+              //Assigning our custom types to be rendered
+              nodeTypes={nodeTypes}
+              elements={elements}
+              style={graphStyles}
 
-            // connectionLineType={'step'}
-            connectionLineStyle={connectionStyles}
-            >
-            {/* Bottom-left UI zoom and fit screen controls */}
-            <Controls style={{zIndex: '999999999', marginBottom: '64px', marginLeft: '96.5vw'}} />
-            {/* Background pattern, can be lines or dots */}
+              // connectionLineType={'step'}
+              connectionLineStyle={connectionStyles}
+              >
+              {/* Bottom-left UI zoom and fit screen controls */}
+              <Controls style={{zIndex: '999999999', marginBottom: '8px', marginLeft: '96.5vw', position: 'fixed'}} />
+              {/* Background pattern, can be lines or dots */}
 
-        </ReactFlow></ReactFlowProvider>;
+          </ReactFlow>
+        </ReactFlowProvider>;
 
       </div>
 
@@ -224,6 +237,7 @@ const Canvas = (props) => {
         }
 
         #canvascontainer{
+          display: flex;
           width: 100%;
           height: 100%;
           margin-top: 55px;
@@ -265,9 +279,6 @@ export async function getServerSideProps({ query }) {
 
   return {
     //The data we fetch from the database gets passed into our component as props
-    //We have two arrays inside of data:
-      //1. tables
-      //2. connections
     props: {data}, 
   }
 }
