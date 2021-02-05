@@ -94,6 +94,10 @@ const Canvas = (props) => {
   const onNodeDragStart = (event, node) => selectNode(node);
   const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
 
+  useEffect(() => {
+    layoutedElements();
+  }, [index]);
+
   //Runs only once when this page renders
   useEffect(() => {
 
@@ -163,13 +167,7 @@ const Canvas = (props) => {
     setElements([...newElements]);
     setNodeCount(props.data.tables.length);
 
-    layoutedElements();
-
   }, []);
-
-  useEffect(() => {
-    layoutedElements();
-  }, [index]);
 
   const inspector =  activeNode ? <Inspector data={activeNode} /> : <div />;
 
