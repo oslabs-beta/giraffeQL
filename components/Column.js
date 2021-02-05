@@ -1,14 +1,27 @@
-import { Handle } from 'react-flow-renderer';
-import { useState } from 'react';
+import { Handle, useStoreState } from 'react-flow-renderer';
+import { useState, useEffect } from 'react';
 
 const Column = (props) => {
 
+    const store = useStoreState((store) => store);
     const [active, selectColumn] = useState(false);
+    const [activeEdges, populateEdges] = useState([]);
+
+    useEffect(() => {
+        
+        if (!store.selectedElements)
+            return;
+
+        populateEdges(props.selectedEdges([store.selectedElements[0]], store.edges));
+        
+    }, [store.selectedElements]);
 
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
     const targetBackground = () => {
-        if (props.edges.some(edge => edge.targetHandle === alphabet[props.index] && edge.target == props.nodeid.toString()) && props.expanded)
+        if (props.edges.some(edge => edge.targetHandle === alphabet[props.index]
+            && edge.target == props.nodeid.toString())
+            && props.expanded && props.selected)
             return '#ff6b6b';
         if (props.selected && props.expanded && active)
             return '#f1f6f8';
@@ -16,11 +29,48 @@ const Column = (props) => {
     }
 
     const sourceBackground = () => {
-        if (props.edges.some(edge => edge.sourceHandle === alphabet[props.index] && edge.source === props.nodeid.toString()) && props.expanded)
+        if (props.edges.some(edge => edge.sourceHandle === alphabet[props.index]
+            && edge.source === props.nodeid.toString())
+            && props.expanded && props.selected)
             return '#0373fc';
         if (props.selected && props.expanded && active)
             return '#f1f6f8';
         return 'transparent';
+    }
+
+    const targetBorder = () => {
+        if (props.edges.some(edge => edge.targetHandle === alphabet[props.index]
+            && edge.target == props.nodeid.toString())
+            && activeEdges.some(edge => edge.targetHandle === alphabet[props.index]
+            && edge.target === props.nodeid.toString())
+            && props.expanded && !props.selected){
+            return '5px solid #ff6b6b';
+        }
+        if (props.selected && active && props.expanded)
+            return '5px solid #0373fc';
+        if (props.selected && !active && props.expanded)
+            return '5px solid transparent';
+        if (props.expanded && active)
+            return '5px solid #0373fc';
+        return '5px solid transparent';
+    }
+
+    const sourceBorder = () => {
+        if (props.edges.some(edge => edge.sourceHandle === alphabet[props.index]
+            && edge.source === props.nodeid.toString())
+            && activeEdges.some(edge => edge.sourceHandle === alphabet[props.index]
+            && edge.source === props.nodeid.toString())
+            && props.expanded && !props.selected){
+            return '5px solid #0373fc';
+        }
+        if (props.selected && active && props.expanded)
+            return '5px solid #0373fc';
+        if (props.selected && !active && props.expanded)
+            return '5px solid transparent';
+        if (props.expanded && active)
+            return '5px solid #0373fc';
+        return '5px solid transparent';
+
     }
 
     const borderColor = () => {
@@ -68,7 +118,7 @@ const Column = (props) => {
                         float: 'left',
                         left: `${targetPos()}`,
                         width: `32px`, height: `32px`,
-                        border: `${borderColor()}`,
+                        border: `${targetBorder()}`,
                         backgroundColor: `${targetBackground()}`
                     }}
                 
@@ -92,7 +142,7 @@ const Column = (props) => {
                         float: 'right',
                         left: `${sourcePos()}`,
                         width: `32px`, height: `32px`,
-                        border: `${borderColor()}`,
+                        border: `${sourceBorder()}`,
                         backgroundColor: `${sourceBackground()}`
                     }}
 
