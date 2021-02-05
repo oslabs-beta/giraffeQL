@@ -1,4 +1,4 @@
-import ReactFlow, { Controls, Background, removeElements, addEdge, getConnectedEdges, isNode }  from 'react-flow-renderer';
+import ReactFlow, { Controls, removeElements, addEdge, ReactFlowProvider, getConnectedEdges}  from 'react-flow-renderer';
 import { useState, useEffect } from 'react'
 
 import Node from '../components/Node.js';
@@ -29,8 +29,8 @@ const Canvas = (props) => {
 
   //Listeners for user interaction with nodes
   const onConnect = (params) => setElements((els) => addEdge(params, els));
-  const onNodeDragStop = (event, node) => (console.log(node), selectNode(node));
-  const onElementClick = (event, element) => console.log('');
+  const onNodeDragStop = (event, node) => selectNode(node);
+  const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
 
   //Runs only once when this page renders
   useEffect(() => {
@@ -51,7 +51,7 @@ const Canvas = (props) => {
           //In the case of our nodes, we pass in a Node.js component with all of the props from the associated table data index.
           label: (
             <div>
-              <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} IEnumerable={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} />
+              <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} nodeid={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} selectedEdges={selectedEdges} />
             </div>
             ),
           },
@@ -87,7 +87,7 @@ const Canvas = (props) => {
           targetHandle: alphabet[targetHandle],
           animated: true,
           type: 'step',
-          style: { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' },
+          style: { stroke: 'transparent', strokeWidth: '1px' },
         }
 
         newElements.push(connection);
@@ -112,35 +112,34 @@ const Canvas = (props) => {
       
       {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
       {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
-      <ReactFlow
-        //default zoom properties
-        minZoom={0.25}
-        maxZoom={1}
-        defaultZoom={.4}
-        zoomOnScroll={zoomOnScroll}
-        zoomOnDoubleClick={zoomOnDoubleClick}
+      <ReactFlowProvider><ReactFlow
+          //default zoom properties
+          minZoom={0.25}
+          maxZoom={1}
+          defaultZoom={.4}
+          zoomOnScroll={zoomOnScroll}
+          zoomOnDoubleClick={zoomOnDoubleClick}
 
-        //Element removal callback
-        onElementsRemove={onElementsRemove}
+          //Element removal callback
+          onElementsRemove={onElementsRemove}
 
-        //Element connect, click, drag callbacks/listeners
-        onConnect={onConnect}
-        onElementClick={onElementClick}
-        onNodeDragStop={onNodeDragStop}
-        
-        //Assigning our custom types to be rendered
-        nodeTypes={nodeTypes}
-        elements={elements}
-        style={graphStyles}
+          //Element connect, click, drag callbacks/listeners
+          onConnect={onConnect}
+          onNodeDragStop={onNodeDragStop}
+          
+          //Assigning our custom types to be rendered
+          nodeTypes={nodeTypes}
+          elements={elements}
+          style={graphStyles}
 
-        connectionLineType={'step'}
-        connectionLineStyle={connectionStyles}
-        >
-        {/* Bottom-left UI zoom and fit screen controls */}
-        <Controls style={{zIndex: '999999999'}} />
-        {/* Background pattern, can be lines or dots */}
+          connectionLineType={'step'}
+          connectionLineStyle={connectionStyles}
+          >
+          {/* Bottom-left UI zoom and fit screen controls */}
+          <Controls style={{zIndex: '999999999'}} />
+          {/* Background pattern, can be lines or dots */}
 
-      </ReactFlow>;
+      </ReactFlow></ReactFlowProvider>;
 
       <style jsx>{`
 
