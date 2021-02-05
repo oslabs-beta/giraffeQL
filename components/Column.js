@@ -3,9 +3,51 @@ import { useState } from 'react';
 
 const Column = (props) => {
 
-    const [selected, selectColumn] = useState(false);
+    const [active, selectColumn] = useState(false);
 
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+    const targetBackground = () => {
+        if (props.edges.some(edge => edge.targetHandle === alphabet[props.index] && edge.target == props.nodeid.toString()) && props.expanded)
+            return '#ff6b6b';
+        if (props.selected && props.expanded && active)
+            return '#f1f6f8';
+        return 'transparent';
+    }
+
+    const sourceBackground = () => {
+        if (props.edges.some(edge => edge.sourceHandle === alphabet[props.index] && edge.source === props.nodeid.toString()) && props.expanded)
+            return '#0373fc';
+        if (props.selected && props.expanded && active)
+            return '#f1f6f8';
+        return 'transparent';
+    }
+
+    const borderColor = () => {
+        if (props.selected && active && props.expanded)
+            return '5px solid #0373fc';
+        if (props.selected && !active && props.expanded)
+            return '5px solid transparent';
+        if (props.expanded && active)
+            return '5px solid #0373fc';
+        return '5px solid transparent';
+    }
+
+    const targetPos = () => {
+        if (props.selected && props.expanded)
+            return '-47px';
+        if (props.expanded)
+            return '-47px';
+        return '0%';
+    }
+
+    const sourcePos = () => {
+        if (props.selected && props.expanded)
+            return '47px';
+        if (props.expanded)
+            return '47px';
+        return '90%';
+    }
 
     return (
         <div className='container' onMouseOver={()=>selectColumn(true)} onMouseLeave={()=>selectColumn(false)}>
@@ -22,7 +64,12 @@ const Column = (props) => {
                 
                     /* Handle Styling */
                     style={{
-                        position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'left', left: `${props.expanded ? '-40px' : '0%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
+                        position: `${props.expanded ? 'relative' : 'absolute'}`,
+                        float: 'left',
+                        left: `${targetPos()}`,
+                        width: `32px`, height: `32px`,
+                        border: `${borderColor()}`,
+                        backgroundColor: `${targetBackground()}`
                     }}
                 
                 />
@@ -41,7 +88,12 @@ const Column = (props) => {
                 
                     /* Handle Styling */
                     style={{
-                        position: `${props.expanded ? 'relative' : 'absolute'}`, float: 'right', left: `${props.expanded ? '40px' : '90%'}`, width: '16px', height: '16px', border: `${props.expanded && selected ? '5px solid #0373fc' : '5px solid transparent'}`, backgroundColor: 'transparent'
+                        position: `${props.expanded ? 'relative' : 'absolute'}`,
+                        float: 'right',
+                        left: `${sourcePos()}`,
+                        width: `32px`, height: `32px`,
+                        border: `${borderColor()}`,
+                        backgroundColor: `${sourceBackground()}`
                     }}
 
                 />

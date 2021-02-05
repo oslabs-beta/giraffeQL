@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { useStoreState, useStoreActions } from 'react-flow-renderer';
+import { useStoreState } from 'react-flow-renderer';
 
 import Column from './Column.js';
 
@@ -11,48 +11,56 @@ export default memo(({ data }) => {
     const props = data.label.props.children.props;
     const store = useStoreState((store) => store);
 
+    //State for whether this is the activeNode or not
     const [selected, selectNode] = useState(false);
     //State for expand/collapse functionality
-    //TODO: Move upwards to parent state
     const [expand, showTable] = useState(false);
+    //An array storing all in-going and out-going edges
+    const [edges, populateEdges] = useState([]);
 
-    // const [edges, populateEdges] = useState([]);
-    let edges = [];
-
+    //useEffect #1 on [selectedElements]:
+    //Checks the selectedElement's id against this node's id
+    //If they match, this becomes the selected node.
     useEffect(() => {
 
         if (!store.selectedElements)
             return;
 
-        if (store.selectedElements[0].id != props.nodeid && !selected)
+        if (store.selectedElements[0].id != props.nodeid.toString() && !selected)
             return;
 
-        if (store.selectedElements[0].id == props.nodeid && !selected){
+        if (store.selectedElements[0].id === props.nodeid.toString() && !selected){
 
             selectNode(true);
             showTable(true);
 
-            // populateEdges(props.selectedEdges([store.selectedElements[0]], store.edges));
+            populateEdges(props.selectedEdges([store.selectedElements[0]], store.edges))
 
-            edges = props.selectedEdges([store.selectedElements[0]], store.edges);
-
-            edges.forEach(edge => {
-                edge.style = {stroke: 'rgba(3, 115, 252, .75)'};
-            });
-        
         }
-        else if (store.selectedElements[0].id != props.nodeid && selected){
+        else if (store.selectedElements[0].id !== props.nodeid.toString() && selected){
             
             edges.forEach(edge => {
-                edge.style = {stroke: 'transparent'};
+                edge.style = { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' };
             });
 
             selectNode(false);
-            // populateEdges([]);
+            populateEdges([]);
 
         }
 
     }, [store.selectedElements]);
+
+    //useEffect #2 on [edges]:
+    //Checks for changes in the edges state array length
+    //When the array becomes greater than 0, we highlight the edges and color in-going and out-going
+    useEffect(() => {
+
+        if (!edges.length)
+            return;
+
+        edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
+
+    }, [edges])
 
     //Array of possible header colors
     //TOOD: Expand, make editable
@@ -69,11 +77,11 @@ export default memo(({ data }) => {
             </div>
             
             <div className='tables' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0s'}`}} >
-                {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} index={i} dataType={column.dataType} expanded={expand} />)}
+                {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} nodeid={props.nodeid} index={i} dataType={column.dataType} edges={edges} expanded={expand} selected={selected} />)}
             </div>
 
-            <div className='nodecontainer' style={{visibility: `${selected ? 'visible' : 'hidden'}`}} />
-            <div className='outline' style={{visibility: `${selected ? 'visible' : 'hidden'}`}} />
+            <div className='nodecontainer' />
+            <div className='outline' style={{visibility: `${selected && expand ? 'visible' : 'hidden'}`}} />
 
             <style jsx>{`
 
@@ -123,9 +131,9 @@ export default memo(({ data }) => {
                     width: 100%;
                     height: 100%;
                     background-color: #0373fc;
-                    top: -48px;
-                    left: -16px;
-                    padding: 32px 16px;
+                    top: -40px;
+                    left: -8px;
+                    padding: 24px 8px;
                     border-radius: 16px;
 
                     z-index: -999999999;

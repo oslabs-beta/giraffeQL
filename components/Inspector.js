@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import ColumnInspector from './ColumnInspector.js';
 
 const Inspector = (data) =>{
@@ -30,7 +29,7 @@ const Inspector = (data) =>{
                     background-color: white;
                     z-index: 999999998;
                     border-right: 4px solid #e4eaf1;
-                    box-shadow: 16px 0px 16px rgba(0,0,0,.15);
+                    box-shadow: 16px 0px 16px rgba(0,0,0,.1);
                 }
 
                 #tablename{
