@@ -146,7 +146,6 @@ const Canvas = (props) => {
 
       <div id='canvascontainer'>
     
-        {/*<button id='exitinspectorbtn' onClick={() => selectNode(null)} style={{visibility: `${activeNode ? 'visible' : 'hidden'}`}}>x</button>*/}
         {inspector}
         
         {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
@@ -195,19 +194,6 @@ const Canvas = (props) => {
           width: 100%;
           height: 100%;
           margin-top: 55px;
-        }
-
-        #exitinspectorbtn{
-          font-size: 24px;
-          transition: all 0s ease;
-          font-family: 'Inter', sans-serif;
-          position: fixed;
-          padding: 4px 8px;
-          margin-left: 20%;
-          background-color: #e4eaf1;
-          border: none;
-          outline: none;
-          z-index: 9999999999;
         }
 
       `}</style>
