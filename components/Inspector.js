@@ -12,7 +12,7 @@ const Inspector = (data) =>{
     return (
         <div id='inspector'>
 
-            <div id='tablename' style={{backgroundColor: `${colors[props.IEnumerable % colors.length]}`}} >{props.tablename}</div>
+            <div id='tablename' style={{backgroundColor: `${colors[props.nodeid % colors.length]}`}} >{props.tablename}</div>
 
             {props.columns.map((column, i) => <ColumnInspector name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} dataType={column.dataType} />)}
 

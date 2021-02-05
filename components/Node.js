@@ -1,4 +1,5 @@
-import React, { useState, memo } from 'react';
+import React, { useState, useEffect, memo } from 'react';
+import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
 import Column from './Column.js';
 
@@ -8,10 +9,50 @@ export default memo(({ data }) => {
     //We access our "props" by going into the passed in data and extracting it from several nested objects
     //This is only necessaray because of how data gets passed by the element label
     const props = data.label.props.children.props;
+    const store = useStoreState((store) => store);
 
+    const [selected, selectNode] = useState(false);
     //State for expand/collapse functionality
     //TODO: Move upwards to parent state
     const [expand, showTable] = useState(false);
+
+    // const [edges, populateEdges] = useState([]);
+    let edges = [];
+
+    useEffect(() => {
+
+        if (!store.selectedElements)
+            return;
+
+        if (store.selectedElements[0].id != props.nodeid && !selected)
+            return;
+
+        if (store.selectedElements[0].id == props.nodeid && !selected){
+
+            selectNode(true);
+            showTable(true);
+
+            // populateEdges(props.selectedEdges([store.selectedElements[0]], store.edges));
+
+            edges = props.selectedEdges([store.selectedElements[0]], store.edges);
+
+            edges.forEach(edge => {
+                edge.style = {stroke: 'rgba(3, 115, 252, .75)'};
+            });
+        
+        }
+        else if (store.selectedElements[0].id != props.nodeid && selected){
+            
+            edges.forEach(edge => {
+                edge.style = {stroke: 'transparent'};
+            });
+
+            selectNode(false);
+            // populateEdges([]);
+
+        }
+
+    }, [store.selectedElements]);
 
     //Array of possible header colors
     //TOOD: Expand, make editable
@@ -23,7 +64,7 @@ export default memo(({ data }) => {
             <h1>{props.active}</h1>
 
             {/* The Table Name div acts as a button to expand/collapse the table's column content on Double Click */}
-            <div onDoubleClick={() => showTable(!expand)} className='tablename' style={{backgroundColor: `${colors[props.IEnumerable % colors.length]}`, borderBottomLeftRadius: `${expand ? '0px' : '8px'}`, borderBottomRightRadius: `${expand ? '0px' : '8px'}`, borderBottom: `${expand ? '8px solid #e4eaf1' : 'none' }`, transition: `${!expand ? 'all .5s ease' : 'all 0s'}`, top: `${expand ? '-32px' : '0px'}` }} >
+            <div onDoubleClick={() => showTable(!expand)} className='tablename' style={{backgroundColor: `${colors[props.nodeid % colors.length]}`, borderBottomLeftRadius: `${expand ? '0px' : '8px'}`, borderBottomRightRadius: `${expand ? '0px' : '8px'}`, borderBottom: `${expand ? '8px solid #e4eaf1' : 'none' }`, transition: `${!expand ? 'all .5s ease' : 'all 0s'}`, top: `${expand ? '-32px' : '0px'}` }} >
                 {props.tablename}
             </div>
             
@@ -31,8 +72,8 @@ export default memo(({ data }) => {
                 {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} index={i} dataType={column.dataType} expanded={expand} />)}
             </div>
 
-            <div className='nodecontainer' style={{visibility: 'hidden'}} />
-            <div className='outline' style={{visibility: 'hidden'}} />
+            <div className='nodecontainer' style={{visibility: `${selected ? 'visible' : 'hidden'}`}} />
+            <div className='outline' style={{visibility: `${selected ? 'visible' : 'hidden'}`}} />
 
             <style jsx>{`
 
