@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 import Node from '../components/Node.js';
 import Inspector from '../components/Inspector.js';
+import Navbar from '../components/Navbar.js';
 
 //Set our custom node component from Node.js
 const nodeTypes = {
@@ -139,49 +140,61 @@ const Canvas = (props) => {
   const inspector =  activeNode ? <Inspector data={activeNode} /> : <div />;
 
   return (
-    <div id="container">
+    <div id='root'>
+
+      <Navbar />
+
+      <div id='canvascontainer'>
     
-      <button id='exitinspectorbtn' onClick={() => selectNode(null)} style={{visibility: `${activeNode ? 'visible' : 'hidden'}`}}>x</button>
-      {inspector}
-      
-      {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
-      {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
-      <ReactFlowProvider><ReactFlow
-          //default zoom properties
-          minZoom={0.25}
-          maxZoom={1}
-          defaultZoom={.4}
-          zoomOnScroll={zoomOnScroll}
-          zoomOnDoubleClick={zoomOnDoubleClick}
+        {/*<button id='exitinspectorbtn' onClick={() => selectNode(null)} style={{visibility: `${activeNode ? 'visible' : 'hidden'}`}}>x</button>*/}
+        {inspector}
+        
+        {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
+        {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
+        <ReactFlowProvider><ReactFlow
+            //default zoom properties
+            minZoom={0.25}
+            maxZoom={1}
+            defaultZoom={.4}
+            zoomOnScroll={zoomOnScroll}
+            zoomOnDoubleClick={zoomOnDoubleClick}
 
-          //Element removal callback
-          onElementsRemove={onElementsRemove}
+            //Element removal callback
+            onElementsRemove={onElementsRemove}
 
-          //Element connect, click, drag callbacks/listeners
-          onConnect={onConnect}
-          onNodeDragStart={onNodeDragStart}
-          
-          //Assigning our custom types to be rendered
-          nodeTypes={nodeTypes}
-          elements={elements}
-          style={graphStyles}
+            //Element connect, click, drag callbacks/listeners
+            onConnect={onConnect}
+            onNodeDragStart={onNodeDragStart}
+            
+            //Assigning our custom types to be rendered
+            nodeTypes={nodeTypes}
+            elements={elements}
+            style={graphStyles}
 
-          // connectionLineType={'step'}
-          connectionLineStyle={connectionStyles}
-          >
-          {/* Bottom-left UI zoom and fit screen controls */}
-          <Controls style={{zIndex: '999999999'}} />
-          {/* Background pattern, can be lines or dots */}
+            // connectionLineType={'step'}
+            connectionLineStyle={connectionStyles}
+            >
+            {/* Bottom-left UI zoom and fit screen controls */}
+            <Controls style={{zIndex: '999999999', marginBottom: '64px', marginLeft: '96.5vw'}} />
+            {/* Background pattern, can be lines or dots */}
 
-      </ReactFlow></ReactFlowProvider>;
+        </ReactFlow></ReactFlowProvider>;
+
+      </div>
 
       <style jsx>{`
 
-        #container{
+        #root{
           overflow: hidden;
           width: 100vw;
           height: 100vh;
           background-color: #f1f6f8;
+        }
+
+        #canvascontainer{
+          width: 100%;
+          height: 100%;
+          margin-top: 55px;
         }
 
         #exitinspectorbtn{
@@ -190,7 +203,7 @@ const Canvas = (props) => {
           font-family: 'Inter', sans-serif;
           position: fixed;
           padding: 4px 8px;
-          margin-left: 19.6%;
+          margin-left: 20%;
           background-color: #e4eaf1;
           border: none;
           outline: none;

@@ -156,12 +156,16 @@ const Column = (props) => {
                 }
 
                 .left{
+                    display: flex;
+                    align-items: center;
                     font-weight: bold;
                     color: #5e6f7a;
                     margin-right: 32px;
                 }
 
                 .right{
+                    display: flex;
+                    align-items: center;
                     color: #cccccc;
                     // margin-right: 16px;
                 }

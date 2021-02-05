@@ -67,7 +67,7 @@ export default memo(({ data }) => {
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div className='node' style={{minWidth: `${expand ? '500px' : '0px'}`, transition: `${!  expand ? 'all .5s ease' : 'all 0s'}`}}>
+        <div className='node' style={{minWidth: `${expand ? '500px' : '0px'}`, transition: `${!  expand ? 'all .5s ease' : 'all 0.2s'}`}}>
 
             <h1>{props.active}</h1>
 
@@ -76,7 +76,7 @@ export default memo(({ data }) => {
                 {props.tablename}
             </div>
             
-            <div className='tables' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0s'}`}} >
+            <div className='tables' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0.6s ease'}`}} >
                 {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} nodeid={props.nodeid} index={i} dataType={column.dataType} edges={edges} expanded={expand} selected={selected} />)}
             </div>
 
@@ -155,6 +155,7 @@ export default memo(({ data }) => {
                     color: black;
                     border-top-left-radius: 8px;
                     border-top-right-radius: 8px;
+                    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
                 }
 
                 .tables{

@@ -2,14 +2,22 @@ import { useState } from 'react';
 
 const ColumnInspector = (props) => {
 
+    const [name, setName] = useState(props.name);
+    const [type, setType] = useState(props.dataType);
+
+    const dataTypes = ['integer', 'bigint', 'date', 'character vary'];
+
     return (
         <div className='container'>
 
             {/* Our Table component is split into two columns: the column name and it's associated Data Type.*/}
 
-            <div className='column' className='left'>{props.name}</div>
+            <input type='text' value={name} placeholder={name} className='column' className='left' onChange={(e)=>setName(e.target.value)} />
 
-            <div className='column' className='right'>{props.dataType}</div>
+            <input type='text' list='types' placeholder={type} className='column' className='right' onChange={(e)=>setType(e.target.value)} />
+            <datalist id='types'>
+                {dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}
+            </datalist>
 
             <style jsx>{`
 
@@ -57,6 +65,11 @@ const ColumnInspector = (props) => {
                     &:active > .right{
                         color: #0373fc;
                     }
+                }
+
+                input{
+                    width: 100px;
+                    border: #e4eaf1;
                 }
 
                 .column{
