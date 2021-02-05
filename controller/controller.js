@@ -18,7 +18,7 @@ module.exports = {
     return new Promise((resolve) => {
       pool.query(query, params, (err, data) => {
         if (err) return resolve(new Error(err));
-        else return resolve(data);
+        else return (console.log('oops i did it again'), resolve(data));
       })
     })
   },

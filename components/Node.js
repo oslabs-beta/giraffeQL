@@ -18,7 +18,13 @@ export default memo(({ data }) => {
     //An array storing all in-going and out-going edges
     const [edges, populateEdges] = useState([]);
 
-    //useEffect #1 on [selectedElements]:
+    //useEffect #1 on [store.edges]:
+    //Populate the edges array on first render, and every time our edges change
+    useEffect(() => {
+        populateEdges(props.selectedEdges([store.elements[props.nodeid]], store.edges));
+    }, [store.edges]);
+
+    //useEffect #2 on [selectedElements]:
     //Checks the selectedElement's id against this node's id
     //If they match, this becomes the selected node.
     useEffect(() => {
@@ -34,33 +40,30 @@ export default memo(({ data }) => {
             selectNode(true);
             showTable(true);
 
-            populateEdges(props.selectedEdges([store.selectedElements[0]], store.edges))
-
         }
         else if (store.selectedElements[0].id !== props.nodeid.toString() && selected){
             
+            selectNode(false);
+
             edges.forEach(edge => {
                 edge.style = { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' };
             });
-
-            selectNode(false);
-            populateEdges([]);
 
         }
 
     }, [store.selectedElements]);
 
-    //useEffect #2 on [edges]:
+    //useEffect #3 on [edges]:
     //Checks for changes in the edges state array length
     //When the array becomes greater than 0, we highlight the edges and color in-going and out-going
     useEffect(() => {
 
-        if (!edges.length)
+        if (!selected)
             return;
 
         edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
 
-    }, [edges])
+    }, [selected])
 
     //Array of possible header colors
     //TOOD: Expand, make editable
@@ -77,7 +80,7 @@ export default memo(({ data }) => {
             </div>
             
             <div className='tables' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0.6s ease'}`}} >
-                {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} nodeid={props.nodeid} index={i} dataType={column.dataType} edges={edges} expanded={expand} selected={selected} />)}
+                {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} nodeid={props.nodeid} index={i} dataType={column.dataType} edges={edges} expanded={expand} selected={selected} selectedEdges={props.selectedEdges} />)}
             </div>
 
             <div className='nodecontainer' />
