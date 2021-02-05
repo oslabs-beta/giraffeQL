@@ -26,10 +26,11 @@ function Pencil(props) {
                 transition: all .3s;
                 position: fixed;
                 font-size: 18px;
-                margin-left: 320px;
-                margin-top: 23px;
+                margin-top: 21px;
                 color: transparent;
                 user-select: none;
+
+                margin-left: 270px;
             }
 
             svg {
@@ -38,8 +39,8 @@ function Pencil(props) {
 
                 z-index: 10;
 
-                margin-top: -266px;
-                margin-left: -72px;
+                margin-top: -269px;
+                margin-left: -116px;
 
                 &:hover{
                     cursor: pointer;
@@ -52,7 +53,7 @@ function Pencil(props) {
                 &:hover ~ h1 {
                     transition: .6s;
                     color: #ababab;
-                    margin-left: 270px;
+                    margin-left: 225px;
                 }
 
                 &:active > #pencilbg{
