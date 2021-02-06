@@ -22,7 +22,7 @@ const Inspector = (data) =>{
 
         const onKeyDown = ({key}) => {
             if (key === "Enter" && editable)
-                return (toggleEdit(false), data.nodeValueChange(activeNode));
+                return submit();
         }
 
         document.addEventListener('keydown', onKeyDown);
@@ -37,8 +37,7 @@ const Inspector = (data) =>{
     useEffect(()=>{
 
         updateNode(data.data);
-        setTableName(data.data.data.label.props.children.props.tablename);
-        
+
     }, [data]);
 
     useEffect(() => {
@@ -46,6 +45,7 @@ const Inspector = (data) =>{
         if (!store.selectedElements)
             return;
 
+        setTableName(data.data.data.label.props.children.props.tablename);
         toggleEdit(false);
 
     }, [store.selectedElements]);
@@ -59,6 +59,10 @@ const Inspector = (data) =>{
 
     }, [tableName]);
 
+    const submit = () => {
+        return (toggleEdit(false), data.nodeValueChange(activeNode));
+    }
+
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
@@ -69,7 +73,7 @@ const Inspector = (data) =>{
             <div id='sidebar' >
 
                 {/* Edit Button */}
-                <div onClick={()=>{if(editable)data.nodeValueChange(activeNode); toggleEdit(!editable)}} ><Pencil /></div>
+                <div onClick={()=>{editable ? submit() : toggleEdit(!editable)}} ><Pencil /></div>
 
                 {/* Tablename */}
                 <div id='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
