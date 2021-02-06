@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
+import { useStoreState } from 'react-flow-renderer';
 
 const ColumnInspector = (props) => {
 
+    const store = useStoreState((store) => store);
+
     const [name, setName] = useState(props.name);
     const [type, setType] = useState(props.dataType);
-
+    const [prevNode, nextNode] = useState(null);
+    
     useEffect(() => {
 
-        if (!props.editable)
+        if (!props.editable || prevNode !== store.selectedElements[0])
             return;
 
-        var newNode = JSON.parse(JSON.stringify(props.activeNode))
+        const newNode = JSON.parse(JSON.stringify(props.activeNode));
 
         newNode.data.label.props.children.props.columns[props.index].name = name;
         newNode.data.label.props.children.props.columns[props.index].dataType = type;
@@ -18,6 +22,15 @@ const ColumnInspector = (props) => {
         props.updateNode(newNode);
 
     }, [name, type]);
+
+    useEffect(() => {
+        
+        if (!store.selectedElements)
+            return;
+                
+        nextNode(store.selectedElements[0]);
+
+    }, [store.selectedElements])
 
     const dataTypes = ['integer', 'bigint', 'date', 'character varying'];
 

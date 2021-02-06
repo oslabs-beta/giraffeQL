@@ -101,7 +101,9 @@ const Canvas = (props) => {
   const onNodeDragStart = (event, node) => selectNode(node);
   const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
   const nodeValueChange = (node) => {
-    node.data.label.props.children.props.selectedEdges = selectedEdges;
+
+    if(!node.data.label.props.children.props.selectedEdges)
+      node.data.label.props.children.props.selectedEdges = selectedEdges;
 
     const newElements = [...elements];
     const target = newElements.findIndex(element => element.id === node.id);
