@@ -1,3 +1,4 @@
+//🦒
 import ReactFlow, { Controls, removeElements, ReactFlowProvider, getConnectedEdges, isNode}  from 'react-flow-renderer';
 import { useState, useEffect } from 'react'
 
@@ -5,6 +6,7 @@ import dagre from 'dagre';
 
 import Node from '../components/Node.js';
 import Inspector from '../components/Inspector.js';
+import SchemaIDE from '../components/SchemaIDE.js';
 import Navbar from '../components/Navbar.js';
 
 //Set our custom node component from Node.js
@@ -39,7 +41,7 @@ const Canvas = (props) => {
   //Component to get the layouted elements
   //By default, set to 'LR', AKA Left -> Right
   //Can also be set to TB, AKA Top -> Bottom
-  const getLayoutedElements = (elements, direction = 'TB') => {
+  const getLayoutedElements = (elements, direction = 'LR') => {
 
     if (elements.length < 1)
       return;
@@ -82,7 +84,7 @@ const Canvas = (props) => {
   const onConnect = (params) => {
 
     const connection = {
-      id: `e${params.source}${params.sourceHandle}-${params.target}${params.targetHandle}`,
+      id: `reactflow${params.source}${params.sourceHandle}-${params.target}${params.targetHandle}`,
       source: params.source,
       sourceHandle: params.sourceHandle,
       target: params.target,
@@ -160,7 +162,7 @@ const Canvas = (props) => {
         const targetHandle = props.data.tables[target].columns.findIndex(column => column.name === props.data.tables[i].connections[j].destinationKey);
 
         const connection = {
-          id: `e${i}${alphabet[columnNumber]}-${target}${alphabet[targetHandle]}`,
+          id: `reactflow${i}${alphabet[columnNumber]}-${target}${alphabet[targetHandle]}`,
           source: i.toString(),
           sourceHandle: alphabet[columnNumber],
           target: target.toString(),
@@ -225,6 +227,7 @@ const Canvas = (props) => {
               {/* Background pattern, can be lines or dots */}
 
           </ReactFlow>
+          <SchemaIDE />
         </ReactFlowProvider>;
 
       </div>
