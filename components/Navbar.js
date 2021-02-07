@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 const Navbar = (props) => {
@@ -22,7 +23,9 @@ const Navbar = (props) => {
     return (
         <div id='navbar'>
 
-            <h1>GraphitiQL</h1>
+            <Link href='/'>
+                <h1>GraphitiQL</h1>
+            </Link>
             <h2>Codesmith NY 23</h2>
 
             <input value={searchquery} placeholder='Search for a table name . . .' onChange={(e)=>typeSearch(e.target.value)} />
@@ -39,6 +42,12 @@ const Navbar = (props) => {
                 h1 {
                     font-size: 16px;
                     color: #edf2f7;
+                    border-radius: 8px;
+                    padding: 8px;
+
+                    &:hover{
+                        background-color: #5f81e7;
+                    }
                 }
 
                 h2 {
@@ -55,6 +64,7 @@ const Navbar = (props) => {
                     position: fixed;
                     top: 0;
                     width: 100%;
+                    height: 39px;
                     padding: 8px;
                     z-index: 9999999999999999999999999;
                 }

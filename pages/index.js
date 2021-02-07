@@ -1,7 +1,5 @@
-import Link from 'next/link'
-import { useState, useEffect } from 'react'
-
-import Navbar from '../components/Navbar.js';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 const Home = (props) => {
 

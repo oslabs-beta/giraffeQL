@@ -19,7 +19,6 @@
     "next": "^10.0.6",
     "pg": "^8.5.1",
     "pluralize": "^8.0.0",
-    "prismjs": "^1.23.0",
     "react": "^17.0.1",
     "react-dom": "17.0.1",
     "react-flow-renderer": "^8.7.0",

@@ -1,5 +1,6 @@
 //🦒
-import ReactFlow, { Controls, removeElements, ReactFlowProvider, getConnectedEdges, isNode}  from 'react-flow-renderer';
+import ReactFlow, { removeElements, getConnectedEdges, isNode, useStoreState, useStoreActions }  from 'react-flow-renderer';
+
 import { useState, useEffect } from 'react'
 
 import dagre from 'dagre';
@@ -25,6 +26,8 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const Canvas = (props) => {
 
+  const store = useStoreState((store) => store);
+
   //Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
   //NOTE: When rerendered, all of the existing nodes will have their state reset. This includes expand/collapse state.
   //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
@@ -42,7 +45,6 @@ const Canvas = (props) => {
   const [activeNode, selectNode] = useState(null);
 
   const onLoad = (reactFlowInstance) => {
-    reactFlowInstance.zoomTo(.3);
     cacheInstance(reactFlowInstance);
   };  
 
@@ -125,9 +127,15 @@ const Canvas = (props) => {
     
     setElements(els => els.concat([connection]));
   };
+
+  const onPaneClick = () => (selectNode(null), setSelectedElements([]));
+
   const onElementClick = (event, element) => {if (isNode(element)) selectNode(element)};
   const onNodeDragStart = (event, node) => selectNode(node);
+
+  const setSelectedElements = useStoreActions((actions) => actions.setSelectedElements);
   const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
+
   const nodeValueChange = (node) => {
 
     if(!node.data.label.props.children.props.selectedEdges)
@@ -222,41 +230,40 @@ const Canvas = (props) => {
             
         {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
         {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
-        <ReactFlowProvider>
-          {inspector}
-          <ReactFlow
-              //default zoom properties
-              minZoom={0.1}
-              maxZoom={.75}
-              defaultZoom={.4}
-              zoomOnScroll={zoomOnScroll}
-              zoomOnDoubleClick={zoomOnDoubleClick}
+        {inspector}
+        <ReactFlow
+            //default zoom properties
+            minZoom={0.1}
+            maxZoom={.75}
+            defaultZoom={.4}
+            zoomOnScroll={zoomOnScroll}
+            zoomOnDoubleClick={zoomOnDoubleClick}
 
-              //Element removal callback
-              onElementsRemove={onElementsRemove}
+            //Element removal callback
+            onElementsRemove={onElementsRemove}
 
-              //Element connect, click, drag callbacks/listeners
-              onConnect={onConnect}
-              onElementClick={onElementClick}
-              onNodeDragStart={onNodeDragStart}
+            //Element connect, click, drag callbacks/listeners
+            onConnect={onConnect}
+            onElementClick={onElementClick}
+            onNodeDragStart={onNodeDragStart}
 
-              onLoad={onLoad}
-              
-              //Assigning our custom types to be rendered
-              nodeTypes={nodeTypes}
-              elements={elements}
-              style={graphStyles}
+            onLoad={onLoad}
+            onPaneClick={onPaneClick}
+            
+            //Assigning our custom types to be rendered
+            nodeTypes={nodeTypes}
+            elements={elements}
+            style={graphStyles}
 
-              // connectionLineType={'step'}
-              connectionLineStyle={connectionStyles}
-              >
-              {/* Bottom-left UI zoom and fit screen controls */}
-              {/*<Controls style={{zIndex: '999999999', marginBottom: '8px', marginLeft: '96.5vw', position: 'fixed'}} />*/}
-              {/* Background pattern, can be lines or dots */}
+            // connectionLineType={'step'}
+            connectionLineStyle={connectionStyles}
+            >
+            {/* Bottom-left UI zoom and fit screen controls */}
+            {/*<Controls style={{zIndex: '999999999', marginBottom: '8px', marginLeft: '96.5vw', position: 'fixed'}} />*/}
+            {/* Background pattern, can be lines or dots */}
 
-          </ReactFlow>
-          <SchemaIDE />
-        </ReactFlowProvider>
+        </ReactFlow>
+        <SchemaIDE />
 
       </div>
 

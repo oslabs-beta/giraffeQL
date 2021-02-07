@@ -42,18 +42,19 @@ const DefaultInspector = (props) => {
                     font-family: 'Inter', sans-serif;
                     position: fixed;
                     padding: 4px 8px;
-                    // border-top-right-radius: 8px;
                     border-bottom-right-radius: 8px;
                     margin-left: 23%;
                     margin-top: 0;
-                    background-color: #e4eaf1;
+                    color: #6f8195;
+                    background-color: #d8e3e8;
                     border: none;
                     outline: none;
                     cursor: pointer;
                     z-index: 9999999999;
 
                     &:hover{
-                        background-color: #ababab;
+                        color: #12b3ab;
+                        background-color: #cad5e0;
                     }
                 }
 
