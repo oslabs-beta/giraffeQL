@@ -6,8 +6,6 @@ const {
   joinConnections
 } = require('./helpers.js');
 
-const exampleData = require('../exampledata.json');
-
 //turn table database into GraphQL format schema
 function tableToType(table, joinConnections) {
     let upperCaseL = capitalizeFirstLetter(table.name);
