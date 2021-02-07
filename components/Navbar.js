@@ -1,10 +1,31 @@
+import { useState, useEffect } from 'react';
+
 const Navbar = (props) => {
+
+    const [searchquery, typeSearch] = useState('');
+
+    useEffect(() => {
+
+        const onKeyDown = ({key}) => {
+            if (key === "Enter" && searchquery.length > 0)
+                return (props.search(searchquery.toLowerCase()), typeSearch(''));
+        }
+
+        document.addEventListener('keydown', onKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+        }
+
+    });
 
     return (
         <div id='navbar'>
 
             <h1>GraphitiQL</h1>
             <h2>Codesmith NY 23</h2>
+
+            <input value={searchquery} placeholder='Search for a table name . . .' onChange={(e)=>typeSearch(e.target.value)} />
 
             <style jsx>{`
 
@@ -36,6 +57,25 @@ const Navbar = (props) => {
                     width: 100%;
                     padding: 8px;
                     z-index: 9999999999999999999999999;
+                }
+
+                input {
+                    color: black;
+                    background-color: #727ed4;
+                    border-radius: 32px;
+                    height: 16px;
+                    padding: 8px;
+                    border: none;
+                    outline: none;
+                    box-shadow: inset 2px 2px 0px #262f6e;
+
+                    &:focus{
+                        background-color: #b2b7ff;
+                    }
+
+                    ::placeholder{
+                        color: #b2b7ff;
+                    }
                 }
 
             `}</style>

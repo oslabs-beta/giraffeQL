@@ -10,8 +10,6 @@ const Home = (props) => {
     return (
         <div id='home'>
 
-            <Navbar />
-
             <div id='homecontainer'>
 
                 <input type='text' placeholder='uri here' val={URI} onChange={e => setURI(e.target.value)} />

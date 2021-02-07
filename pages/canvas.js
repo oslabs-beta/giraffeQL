@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react'
 import dagre from 'dagre';
 
 import Node from '../components/Node.js';
-import Inspector from '../components/Inspector.js';
+import NodeInspector from '../components/NodeInspector.js';
+import DefaultInspector from '../components/DefaultInspector.js';
 import SchemaIDE from '../components/SchemaIDE.js';
 import Navbar from '../components/Navbar.js';
 
@@ -31,12 +32,37 @@ const Canvas = (props) => {
   const [index, setNodeCount] = useState(0);
   const [layedout, toggleLayout] = useState(false);
 
+  const [instance, cacheInstance] = useState(null);
+
   //Zome prevention
-  const [zoomOnScroll, setZoomOnScroll] = useState(false);
+  const [zoomOnScroll, setZoomOnScroll] = useState(true);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
 
   const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)));
   const [activeNode, selectNode] = useState(null);
+
+  const onLoad = (reactFlowInstance) => {
+    reactFlowInstance.zoomTo(.3);
+    cacheInstance(reactFlowInstance);
+  };  
+
+  const searchNode = (tablename) => {
+    
+    const target = elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.data.label.props.children.props.tablename === tablename);
+
+    if (target !== -1)
+      selectNode(elements[target]);
+  }
+
+  useEffect(() => {
+
+    if (!instance)
+      return;
+
+    instance.fitView();
+    instance.zoomTo(.4);
+    
+  }, [instance]);
 
   //Component to get the layouted elements
   //By default, set to 'LR', AKA Left -> Right
@@ -52,7 +78,7 @@ const Canvas = (props) => {
 
     elements.forEach((el) => {
       if (isNode(el)) {
-        dagreGraph.setNode(el.id, { width: 550, height: 300 });
+        dagreGraph.setNode(el.id, { width: 300, height: 150 });
       } else {
         dagreGraph.setEdge(el.source, el.target);
       }
@@ -66,7 +92,7 @@ const Canvas = (props) => {
         el.targetPosition = isHorizontal ? 'left' : 'top';
         el.sourcePosition = isHorizontal ? 'right' : 'bottom';
         el.position = {
-          x: nodeWithPosition.x + Math.random() / 1000,
+          x: nodeWithPosition.x,
           y: nodeWithPosition.y,
         };
       }
@@ -185,12 +211,12 @@ const Canvas = (props) => {
 
   }, []);
 
-  const inspector =  activeNode ? <Inspector data={activeNode} nodeValueChange={nodeValueChange} /> : <div />;
+  const inspector =  activeNode ? <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} /> : <DefaultInspector selectNode={selectNode} />;
 
   return (
     <div id='root'>
 
-      <Navbar />
+      <Navbar search={searchNode} />
 
       <div id='canvascontainer'>
             
@@ -213,6 +239,8 @@ const Canvas = (props) => {
               onConnect={onConnect}
               onElementClick={onElementClick}
               onNodeDragStart={onNodeDragStart}
+
+              onLoad={onLoad}
               
               //Assigning our custom types to be rendered
               nodeTypes={nodeTypes}
@@ -223,12 +251,12 @@ const Canvas = (props) => {
               connectionLineStyle={connectionStyles}
               >
               {/* Bottom-left UI zoom and fit screen controls */}
-              <Controls style={{zIndex: '999999999', marginBottom: '8px', marginLeft: '96.5vw', position: 'fixed'}} />
+              {/*<Controls style={{zIndex: '999999999', marginBottom: '8px', marginLeft: '96.5vw', position: 'fixed'}} />*/}
               {/* Background pattern, can be lines or dots */}
 
           </ReactFlow>
           <SchemaIDE />
-        </ReactFlowProvider>;
+        </ReactFlowProvider>
 
       </div>
 
