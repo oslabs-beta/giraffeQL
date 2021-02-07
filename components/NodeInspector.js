@@ -18,21 +18,6 @@ const NodeInspector = (data) =>{
     //We make an exact copy of our currently activeNode in our state
     const [activeNode, updateNode] = useState(data.data);
 
-    useEffect(() => {
-
-        const onKeyDown = ({key}) => {
-            if (key === "Enter" && editable)
-                return submit();
-        }
-
-        document.addEventListener('keydown', onKeyDown);
-
-        return () => {
-            document.removeEventListener('keydown', onKeyDown);
-        }
-
-    });
-
     //When the data (props) as activeNode being sent to the inspector change, we update the activeNode state
     useEffect(()=>{
 
@@ -59,21 +44,28 @@ const NodeInspector = (data) =>{
 
     }, [tableName]);
 
-    const submit = () => {
+    const submit = (e) => {
+
+        if (e.code === "Enter" && editable)
+            return savechanges();
+
+    }
+
+    const savechanges = () => {
         return (toggleEdit(false), data.nodeValueChange(activeNode));
     }
 
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} >
+        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
 
             <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(278px)' }`}} >{expand ? '<' : '>'}</button>
 
             <div className='sidebar' >
 
                 {/* Edit Button */}
-                <div onClick={()=>{editable ? submit() : toggleEdit(!editable)}} ><Pencil edit={editable} /></div>
+                <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil editable={editable ? true : undefined} /></div>
 
                 {/* Tablename */}
                 <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >

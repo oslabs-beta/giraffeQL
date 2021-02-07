@@ -45,14 +45,6 @@ const Canvas = (props) => {
     cacheInstance(reactFlowInstance);
   };  
 
-  const searchNode = (tablename) => {
-    
-    const target = elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.data.label.props.children.props.tablename === tablename);
-
-    if (target !== -1)
-      selectNode(elements[target]);
-  }
-
   useEffect(() => {
 
     if (!instance)
@@ -127,9 +119,9 @@ const Canvas = (props) => {
 
   const onPaneClick = () => selectNode(null);
 
-  const onElementClick = (event, element) => {if (isNode(element)) selectNode(element)};
+  const onElementClick = (event, element) => {if (isNode(element)) return selectNode(element)};
   const onNodeDragStart = (event, node) => selectNode(node);
-  const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
+  const selectedEdges = (node, edges) => {if (node) return getConnectedEdges(node, edges)};
   const nodeValueChange = (node) => {
 
     if(!node.data.label.props.children.props.selectedEdges)
@@ -218,13 +210,12 @@ const Canvas = (props) => {
   return (
     <div id='root'>
 
-      <Navbar search={searchNode} />
-
       <div id='canvascontainer'>
             
         {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
         {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
         <ReactFlowProvider>
+          <Navbar search={selectNode} />
           {inspector}
           <ReactFlow
               //default zoom properties

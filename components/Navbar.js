@@ -1,24 +1,25 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
 const Navbar = (props) => {
 
+    const store = useStoreState((store) => store);
+
     const [searchquery, typeSearch] = useState('');
+    const setSelectedElements = useStoreActions((actions) => actions.setSelectedElements);
 
-    useEffect(() => {
+    const submit = (e) => {
+        if (e.code === 'Enter' && searchquery.length > 0) {
+            e.target.blur();
 
-        const onKeyDown = ({key}) => {
-            if (key === "Enter" && searchquery.length > 0)
-                return (props.search(searchquery.toLowerCase()), typeSearch(''));
+            const target = store.elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.data.label.props.children.props.tablename === searchquery.toLowerCase());
+
+            if (target !== -1)
+                return (props.search(store.elements[target]), setSelectedElements(store.elements[target]), typeSearch(''));
+            else return typeSearch('');
         }
-
-        document.addEventListener('keydown', onKeyDown);
-
-        return () => {
-            document.removeEventListener('keydown', onKeyDown);
-        }
-
-    });
+    }
 
     return (
         <div id='navbar'>
@@ -28,7 +29,7 @@ const Navbar = (props) => {
             </Link>
             <h2>Codesmith NY 23</h2>
 
-            <input value={searchquery} placeholder='Search for a table name . . .' onChange={(e)=>typeSearch(e.target.value)} />
+            <input value={searchquery} placeholder='Search for a table name . . .' onChange={(e)=>typeSearch(e.target.value)} onKeyDown={submit} />
 
             <style jsx>{`
 

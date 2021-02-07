@@ -35,17 +35,16 @@ export default memo(({ data }) => {
         if (!store.selectedElements)
             return;
 
-        if (store.selectedElements[0].id != props.nodeid.toString() && !selected)
+        if (store.selectedElements[0].id !== props.nodeid.toString() && !selected)
             return;
 
         if (store.selectedElements[0].id === props.nodeid.toString() && !selected){
-
             selectNode(true);
             showTable(true);
-
+            return;
         }
         else if (store.selectedElements[0].id !== props.nodeid.toString() && selected)
-            deselect();
+            return deselect();
 
     }, [store.selectedElements]);
 
@@ -57,11 +56,12 @@ export default memo(({ data }) => {
         if (!selected)
             return;
 
-        edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
+            edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
 
     }, [selected])
 
     const deselect = () => {
+
         selectNode(false);
 
         edges.forEach(edge => {
