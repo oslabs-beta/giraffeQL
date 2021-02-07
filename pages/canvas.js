@@ -143,6 +143,8 @@ const Canvas = (props) => {
   useEffect(() => {
 
     const newElements = [];
+
+    console.log(props.data.tables[1].connections);
    
     for (let i = 0; i < props.data.tables.length; i++){
 
@@ -207,6 +209,8 @@ const Canvas = (props) => {
     //NOTE: we must either always REPLACE the elements array, or ensure we are adding to the array without overlapping id's
     setElements([...newElements]);
     setNodeCount(props.data.tables.length);
+
+    updateData(true);
 
   }, []);
 

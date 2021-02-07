@@ -21,8 +21,8 @@ const SchemaIDE = (props) => {
 
     useEffect(() => {
 
-        if (!props.updated)
-            return;
+        // if (!props.updated)
+        //     return;
 
         const newTables = [];
 
@@ -32,6 +32,7 @@ const SchemaIDE = (props) => {
 
             newTable.name = node.data.label.props.children.props.tablename;
             newTable.columns = node.data.label.props.children.props.columns;
+            newTable.connections = [];
 
             newTables.push(newTable);
 
