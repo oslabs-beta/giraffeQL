@@ -29,6 +29,9 @@ export default memo(({ data }) => {
     //If they match, this becomes the selected node.
     useEffect(() => {
 
+        if (!store.selectedElements && selected)
+            deselect();
+            
         if (!store.selectedElements)
             return;
 
@@ -41,15 +44,8 @@ export default memo(({ data }) => {
             showTable(true);
 
         }
-        else if (store.selectedElements[0].id !== props.nodeid.toString() && selected){
-            
-            selectNode(false);
-
-            edges.forEach(edge => {
-                edge.style = { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' };
-            });
-
-        }
+        else if (store.selectedElements[0].id !== props.nodeid.toString() && selected)
+            deselect();
 
     }, [store.selectedElements]);
 
@@ -64,6 +60,14 @@ export default memo(({ data }) => {
         edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
 
     }, [selected])
+
+    const deselect = () => {
+        selectNode(false);
+
+        edges.forEach(edge => {
+            edge.style = { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' };
+        });
+    }
 
     //Array of possible header colors
     //TOOD: Expand, make editable
