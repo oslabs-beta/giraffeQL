@@ -1,10 +1,9 @@
 const { plural, singular } = require('pluralize');
 const { 
   convertDataType, 
-  capitalizeFirstLetter, 
-  findJoinTables,
-  mapJoinConnections,
-  sortTables
+  capitalizeFirstLetter,
+  sortTables,
+  joinConnections
 } = require('./helpers.js');
 
 const exampleData = require('../exampledata.json');
@@ -52,12 +51,8 @@ function mapConnection(connection) {
 function generateAllTypes(tables) {
   let allTypes = `TypeDefs = \` \n`;
   const [baseTables, joinTables] = sortTables(tables);
-  const joinTables = findJoinTables(tables);
-  const tablesToType = tables.filter((table) => {
-    return !Object.keys(joinTables).includes(table.name)
-  });
-  const allJoinConnections = mapJoinConnections(joinTables);
-  tablesToType.forEach((table) => {
+  const allJoinConnections = joinConnections(joinTables);
+  baseTables.forEach((table) => {
     allTypes += tableToType(table, allJoinConnections[table.name]) + '\n\n';
   });
   return allTypes + `\``;

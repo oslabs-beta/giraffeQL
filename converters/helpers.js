@@ -19,43 +19,33 @@ module.exports = {
     return string[0].toUpperCase() + string.slice(1);
   },
 
-  // function to identify which tables are join tables 
-  // assumes that a join table will be made up entirely of connections 
-    // aside from the primary key of the table
-  findJoinTables: (tables) => {
-    return tables.reduce((joinTables, table) => {
-      if (table.columns.length - table.connections.length <= 1) {
-        joinTables[table.name] = table.connections.map((conn) => {
-          return conn.destinationTable;
-        })
-      }
-      return joinTables;
-    }, {})
-  },
-
+  // sorts tables into two categories: base tables and join tables
+  // join tables are defined as those which are made up of foreign keys (except for the primary key)
   sortTables: (tables) => {
     const baseTables = [];
     const joinTables = [];
     tables.forEach((table) => {
-      if (table.columns.length - tables.connections.length <= 1) {
+      if (table.columns.length - table.connections.length <= 1) {
         joinTables.push(table);
       } else {
         baseTables.push(table);
       }
     })
     return [baseTables, joinTables];
-  }
+  },
 
-  mapJoinConnections: (joinTables) => {
-    return Object.keys(joinTables).reduce((connections, currTable) => {
-      joinTables[currTable].forEach((ele, idx) => {
-        if (!connections[ele]) connections[ele] = [];
-        const connectedTables = joinTables[currTable].slice()
-        connectedTables.splice(idx,1);
-        connections[ele].push(...connectedTables);
+  // takes an array of join tables and determines the connections between base tables
+  joinConnections: (joinTables) => {
+    const connections = {}
+    joinTables.forEach((joinTable) => {
+      joinTable.connections.forEach((conn, idx, arr) => {
+        const connectedTable = conn.destinationTable
+        if (!connections[connectedTable]) connections[connectedTable] = [];
+        const otherTables = arr.slice();
+        otherTables.splice(idx,1);
+        connections[connectedTable].push(...otherTables.map((table) => table.destinationTable));
       })
-      return connections;
-    }, {})
+    })
+    return connections;
   }
-
 }
