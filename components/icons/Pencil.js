@@ -18,7 +18,7 @@ const Pencil = (props) => {
             />
         </svg>
 
-        <h1 style={{transform: `${props.editable ? 'translateX(-28px)' : 'translateX(0px)'}`}}>{props.editable ? 'Submit' : 'Edit'}</h1>
+        <h1 style={{transform: `${props.editable === 1 ? 'translateX(-28px)' : 'translateX(0px)'}`}}>{props.editable === 1 ? 'Submit' : 'Edit'}</h1>
 
         <style jsx>{`
 

@@ -22,7 +22,8 @@ export default memo(({ data }) => {
     //Populate the edges array on first render, and every time our edges change
     useEffect(() => {
         populateEdges(props.selectedEdges([store.elements[props.nodeid]], store.edges));
-    }, [store.edges]);
+        console.log(store);
+    }, [store.edges.length]);
 
     //useEffect #2 on [selectedElements]:
     //Checks the selectedElement's id against this node's id

@@ -20,7 +20,10 @@ const SchemaIDE = (props) => {
     }, []);
 
     useEffect(() => {
-        
+
+        if (!props.updated)
+            return;
+
         const newTables = [];
 
         store.elements.filter(node => !node.id.includes('reactflow')).forEach(node => {
@@ -36,14 +39,18 @@ const SchemaIDE = (props) => {
 
         updateTable(newTables);
 
-    }, [store.elements]);
+    }, [props.updated]);
 
     useEffect(() => {
         refreshSchema();
+        props.resetUpdate(false);
     }, [tables]);
 
-    const refreshSchema = () => {
+    useEffect(() => {
         hljs.initHighlighting();
+    }, [schema]);
+
+    const refreshSchema = () => {
         writeSchema(generateAllTypes(tables));
     }
 
@@ -59,6 +66,8 @@ const SchemaIDE = (props) => {
     }
     `
 
+    const holder = schema.toString();
+
     return (
         <div id='ide' >
 
@@ -66,110 +75,7 @@ const SchemaIDE = (props) => {
 
                 <div id='gql'><h1>GraphQL</h1><h2>Query</h2></div>
 
-                <pre><code>{`
-type Film { 
-    director: String!
-    opening_crawl: String!
-    episode_id: Int!
-    _id: Int!
-    title: String!
-    release_date: Int!
-    producer: String!
-}
-
-type Person { 
-    gender: String
-    species_id: Int
-    homeworld_id: Int
-    height: Int
-    _id: Int!
-    mass: String
-    hair_color: String
-    skin_color: String
-    eye_color: String
-    name: String!
-    birth_year: String
-}
-
-type People_in_film { 
-    person_id: Int!
-    film_id: Int!
-    _id: Int!
-}
-
-type Pilot { 
-    _id: Int!
-    person_id: Int!
-    vessel_id: Int!
-}
-
-type Planet { 
-    orbital_period: Int
-    climate: String
-    gravity: String
-    terrain: String
-    surface_water: String
-    population: Int
-    _id: Int!
-    name: String
-    rotation_period: Int
-    diameter: Int
-}
-
-type Planets_in_film { 
-    film_id: Int!
-    planet_id: Int!
-    _id: Int!
-}
-
-type Species { 
-    hair_colors: String
-    name: String!
-    classification: String
-    average_height: String
-    average_lifespan: String
-    skin_colors: String
-    eye_colors: String
-    language: String
-    homeworld_id: Int
-    _id: Int!
-}
-
-type Species_in_film { 
-    film_id: Int!
-    species_id: Int!
-    _id: Int!
-}
-
-type Starship_spec { 
-    _id: Int!
-    vessel_id: Int!
-    MGLT: String
-    hyperdrive_rating: String
-}
-
-type Vessel { 
-    cost_in_credits: Int
-    length: String
-    vessel_type: String!
-    model: String
-    manufacturer: String
-    name: String!
-    vessel_class: String!
-    max_atmosphering_speed: String
-    crew: Int
-    passengers: Int
-    cargo_capacity: String
-    consumables: String
-    _id: Int!
-}
-
-type Vessels_in_film { 
-    _id: Int!
-    film_id: Int!
-    vessel_id: Int!
-}
-                `}</code></pre>
+                <pre><code>{holder}</code></pre>
 
             </div>
 

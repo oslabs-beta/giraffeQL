@@ -30,7 +30,9 @@ const Canvas = (props) => {
   //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
   const [elements, setElements] = useState([]);
   const [index, setNodeCount] = useState(0);
+
   const [layedout, toggleLayout] = useState(false);
+  const [updated, updateData] = useState(false);
 
   const [instance, cacheInstance] = useState(null);
 
@@ -49,7 +51,7 @@ const Canvas = (props) => {
 
     if (!instance)
       return;
-
+    
     instance.fitView();
     instance.zoomTo(.4);
     
@@ -119,8 +121,8 @@ const Canvas = (props) => {
 
   const onPaneClick = () => selectNode(null);
 
-  const onElementClick = (event, element) => {if (isNode(element)) return selectNode(element)};
-  const onNodeDragStart = (event, node) => selectNode(node);
+  const onElementClick = (event, element) => {if (isNode(element) && element !== activeNode) return selectNode(element)};
+  const onNodeDragStart = (event, node) => {if (node !== activeNode) return selectNode(node)};
   const selectedEdges = (node, edges) => {if (node) return getConnectedEdges(node, edges)};
   const nodeValueChange = (node) => {
 
@@ -132,6 +134,9 @@ const Canvas = (props) => {
 
     newElements.splice(target, 1, node);
     setElements(newElements);
+
+    updateData(true);
+    
   };
 
   //Runs only once when this page renders
@@ -153,7 +158,7 @@ const Canvas = (props) => {
           //In the case of our nodes, we pass in a Node.js component with all of the props from the associated table data index.
           label: (
             <div>
-              <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} nodeid={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} selectedEdges={selectedEdges} />
+              <div id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} nodeid={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} selectedEdges={selectedEdges} />
             </div>
             ),
           },
@@ -249,7 +254,7 @@ const Canvas = (props) => {
               {/* Background pattern, can be lines or dots */}
 
           </ReactFlow>
-          <SchemaIDE />
+          <SchemaIDE updated={updated} resetUpdate={updateData} />
         </ReactFlowProvider>
 
       </div>

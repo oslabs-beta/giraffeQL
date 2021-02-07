@@ -20,9 +20,7 @@ const NodeInspector = (data) =>{
 
     //When the data (props) as activeNode being sent to the inspector change, we update the activeNode state
     useEffect(()=>{
-
         updateNode(data.data);
-
     }, [data]);
 
     useEffect(() => {
@@ -65,7 +63,7 @@ const NodeInspector = (data) =>{
             <div className='sidebar' >
 
                 {/* Edit Button */}
-                <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil editable={editable ? true : undefined} /></div>
+                <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil editable={editable ? 1 : undefined} /></div>
 
                 {/* Tablename */}
                 <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
