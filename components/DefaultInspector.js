@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useStoreState } from 'react-flow-renderer';
+import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
 const DefaultInspector = (props) => {
 
@@ -12,6 +12,8 @@ const DefaultInspector = (props) => {
         setNodes(store.elements.filter(node => !node.id.includes('reactflow')));
     }, [store.elements]);
 
+    const setSelectedElements = useStoreActions((actions) => actions.setSelectedElements);
+
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
@@ -19,7 +21,7 @@ const DefaultInspector = (props) => {
 
             <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(313px)' }`}} >{expand ? '<' : '>'}</button>
 
-            {allNodes.map(node => <div className='tablename' onClick={()=>props.selectNode(node)} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)}
+            {allNodes.map((node, i) => <div className='tablename' key={`defaultnode#${i}`} onClick={()=>(setSelectedElements(node), props.selectNode(node))} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)}
 
             <style jsx>{`
 
@@ -42,18 +44,19 @@ const DefaultInspector = (props) => {
                     font-family: 'Inter', sans-serif;
                     position: fixed;
                     padding: 4px 8px;
-                    // border-top-right-radius: 8px;
                     border-bottom-right-radius: 8px;
                     margin-left: 23%;
                     margin-top: 0;
-                    background-color: #e4eaf1;
+                    color: #6f8195;
+                    background-color: #d8e3e8;
                     border: none;
                     outline: none;
                     cursor: pointer;
                     z-index: 9999999999;
 
                     &:hover{
-                        background-color: #ababab;
+                        color: #12b3ab;
+                        background-color: #cad5e0;
                     }
                 }
 

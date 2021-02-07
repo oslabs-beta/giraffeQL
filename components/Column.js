@@ -10,7 +10,7 @@ const Column = (props) => {
     useEffect(() => {
         
         if (!store.selectedElements)
-            return;
+            return populateEdges([]);
 
         populateEdges(props.selectedEdges([store.selectedElements[0]], store.edges));
         
