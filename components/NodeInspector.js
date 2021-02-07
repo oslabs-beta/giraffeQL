@@ -4,7 +4,7 @@ import { useStoreState } from 'react-flow-renderer';
 import ColumnInspector from './ColumnInspector.js';
 import Pencil from './icons/Pencil.js';
 
-const Inspector = (data) =>{
+const NodeInspector = (data) =>{
 
     //We access our "props" by going into the passed in data and extracting it from several nested objects
     //This is only necessaray because of how data gets passed by the element label
@@ -66,19 +66,18 @@ const Inspector = (data) =>{
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div id='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'relative' : 'fixed'}`}} >
+        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} >
 
-            <button id='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(288px)' }`}} >{expand ? '<' : '>'}</button>
+            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(278px)' }`}} >{expand ? '<' : '>'}</button>
 
-            <div id='sidebar' >
+            <div className='sidebar' >
 
                 {/* Edit Button */}
-                <div onClick={()=>{editable ? submit() : toggleEdit(!editable)}} ><Pencil /></div>
+                <div onClick={()=>{editable ? submit() : toggleEdit(!editable)}} ><Pencil edit={editable} /></div>
 
                 {/* Tablename */}
-                <div id='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
+                <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
                     <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
-
                 </div>
 
                 {/* Columns */}
@@ -92,8 +91,8 @@ const Inspector = (data) =>{
                     font-family: 'Inter', sans-serif;
                 }
 
-                #inspector {
-                    position: relative;
+                .inspector {
+                    position: fixed;
                     height: 100%;
                     width: 23%;
                     float: left;
@@ -102,7 +101,7 @@ const Inspector = (data) =>{
                     box-shadow: 3px 0px 3px rgba(0,0,0,.05);
                 }
 
-                #tablename{
+                .tablename{
                     font-size: 24px;
                     text-align: left;
                     background-color: white;
@@ -114,7 +113,7 @@ const Inspector = (data) =>{
                 .tablenameinput{
                     border: none;
                     outline: none;
-                    font-size: 24px;
+                    font-size: 16px;
                     text-align: left;
                     color: black;
                     width: 100%;
@@ -125,14 +124,14 @@ const Inspector = (data) =>{
                     }
                 }
 
-                #inspectorbtn{
+                .inspectorbtn{
                     font-size: 24px;
                     font-family: 'Inter', sans-serif;
                     position: fixed;
                     padding: 4px 8px;
                     // border-top-right-radius: 8px;
                     border-bottom-right-radius: 8px;
-                    margin-left: 20.3%;
+                    margin-left: 23%;
                     margin-top: 0;
                     background-color: #e4eaf1;
                     border: none;
@@ -145,14 +144,10 @@ const Inspector = (data) =>{
                     }
                 }
 
-                #submitbtn{
-
-                }
-
             `}</style>
         </div>
     );
 
 }
 
-export default Inspector;
+export default NodeInspector;

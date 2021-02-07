@@ -1,7 +1,7 @@
 const { plural, singular } = require('pluralize');
 const { convertDataType, capitalizeFirstLetter } = require('./helpers.js');
 
-const exampleData = require('../exampledata.json');
+// const exampleData = require('../exampledata.json');
 
 //turn table database into GraphQL format schema
 function tableToType(table) {
