@@ -2,16 +2,16 @@
 module.exports = {
   convertDataType: (sqlDataType) => {
     switch (sqlDataType) {
-    case 'character varying':
-      return 'String';
-    case 'integer':
-      return 'Int';
-    case 'bigint':
-      return 'Int';
-    case 'date':
-      return 'Int';
-    default:
-      return 'Unknown';
+      case "character varying":
+        return "String";
+      case "integer":
+        return "Int";
+      case "bigint":
+        return "Int";
+      case "date":
+        return "Int";
+      default:
+        return "Unknown";
     }
   },
 
@@ -30,22 +30,26 @@ module.exports = {
       } else {
         baseTables.push(table);
       }
-    })
+    });
     return [baseTables, joinTables];
   },
 
   // takes an array of join tables and determines the connections between base tables
   joinConnections: (joinTables) => {
-    const connections = {}
+    const tableRels = {};
     joinTables.forEach((joinTable) => {
       joinTable.connections.forEach((conn, idx, arr) => {
-        const connectedTable = conn.destinationTable
-        if (!connections[connectedTable]) connections[connectedTable] = [];
+        const connectedTable = conn.destinationTable;
+        if (!tableRels[connectedTable]) tableRels[connectedTable] = [];
         const otherTables = arr.slice();
-        otherTables.splice(idx,1);
-        connections[connectedTable].push(...otherTables.map((table) => table.destinationTable));
-      })
-    })
-    return connections;
-  }
-}
+        otherTables.splice(idx, 1);
+        tableRels[connectedTable].push(
+          ...otherTables.map((table) => table.destinationTable)
+        );
+      });
+    });
+    return tableRels;
+  },
+  
+};
+
