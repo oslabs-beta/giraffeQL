@@ -21,9 +21,13 @@ const DefaultInspector = (props) => {
 
             <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(313px)' }`}} >{expand ? '<' : '>'}</button>
 
+            <div id='header' >Tables <button id='createbtn' onClick={props.createNode} >+</button></div>
+
             {allNodes.map((node, i) => <div className='tablename' key={`defaultnode#${i}`} onClick={()=>(setSelectedElements(node), props.selectNode(node))} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)}
 
             <style jsx>{`
+
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
 
                 *{
                     font-family: 'Inter', sans-serif;
@@ -60,17 +64,47 @@ const DefaultInspector = (props) => {
                     }
                 }
 
+                #header{
+                    position: relative;
+                    font-size: 24px;
+                    text-align: left;
+                    color: white;
+                    background-color: #12b3ab;
+                    padding: 16px;
+                    // border-bottom: 3px solid #b8c2cc;
+                    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+                    z-index: 10;
+                    height: 30px;
+                }
+
                 .tablename{
+                    position: relative;
                     font-size: 16px;
                     text-align: left;
                     background-color: #f7fafc;
                     padding: 16px;
                     border-bottom: 1px solid #d9e1e7;
                     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+                    z-index: 9;
 
                     &:hover{
                         cursor: pointer;
                         background-color: #eaf4ff;
+                    }
+                }
+
+                #createbtn{
+
+                    background-color: transparent;
+                    border: 2px solid white;
+                    outline: none;
+                    color: white;
+                    border-radius: 8px;
+
+                    &:hover{
+                        border: 4px solid white;
+                        font-weight: bold;
+                        margin-left: -2px;
                     }
                 }
 

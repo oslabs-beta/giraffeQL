@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
 const Navbar = (props) => {
