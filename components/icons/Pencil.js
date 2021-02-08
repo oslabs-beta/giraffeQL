@@ -1,6 +1,6 @@
 import * as React from "react"
 
-function Pencil(props) {
+const Pencil = (props) => {
   return (
     <div>
         <svg width={800} height={600} xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -18,7 +18,7 @@ function Pencil(props) {
             />
         </svg>
 
-        <h1>Edit</h1>
+        <h1 style={{transform: `${props.editable === 1 ? 'translateX(-28px)' : 'translateX(0px)'}`}}>{props.editable === 1 ? 'Submit' : 'Edit'}</h1>
 
         <style jsx>{`
 
@@ -30,7 +30,7 @@ function Pencil(props) {
                 color: transparent;
                 user-select: none;
 
-                margin-left: 270px;
+                margin-left: 310px;
             }
 
             svg {
@@ -40,24 +40,24 @@ function Pencil(props) {
                 z-index: 10;
 
                 margin-top: -269px;
-                margin-left: -116px;
+                margin-left: -76px;
 
                 &:hover{
                     cursor: pointer;
                 }
 
-                &:hover > #pencil{
-                    fill:  #e4eaf1;
-                }
-
                 &:hover ~ h1 {
                     transition: .6s;
                     color: #ababab;
-                    margin-left: 225px;
+                    margin-left: 265px;
                 }
 
-                &:active > #pencilbg{
-                    fill: #2c8a85;
+                &:hover > #pencilbg{
+                    fill: #159894;
+                }
+
+                &:active > #pencil{
+                    fill:  #e4eaf1;
                 }
             }
 

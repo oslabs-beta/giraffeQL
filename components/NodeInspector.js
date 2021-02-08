@@ -4,7 +4,7 @@ import { useStoreState } from 'react-flow-renderer';
 import ColumnInspector from './ColumnInspector.js';
 import Pencil from './icons/Pencil.js';
 
-const Inspector = (data) =>{
+const NodeInspector = (data) =>{
 
     //We access our "props" by going into the passed in data and extracting it from several nested objects
     //This is only necessaray because of how data gets passed by the element label
@@ -18,26 +18,9 @@ const Inspector = (data) =>{
     //We make an exact copy of our currently activeNode in our state
     const [activeNode, updateNode] = useState(data.data);
 
-    useEffect(() => {
-
-        const onKeyDown = ({key}) => {
-            if (key === "Enter" && editable)
-                return submit();
-        }
-
-        document.addEventListener('keydown', onKeyDown);
-
-        return () => {
-            document.removeEventListener('keydown', onKeyDown);
-        }
-
-    });
-
     //When the data (props) as activeNode being sent to the inspector change, we update the activeNode state
     useEffect(()=>{
-
         updateNode(data.data);
-
     }, [data]);
 
     useEffect(() => {
@@ -59,26 +42,32 @@ const Inspector = (data) =>{
 
     }, [tableName]);
 
-    const submit = () => {
+    const submit = (e) => {
+
+        if (e.code === "Enter" && editable)
+            return savechanges();
+
+    }
+
+    const savechanges = () => {
         return (toggleEdit(false), data.nodeValueChange(activeNode));
     }
 
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div id='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'relative' : 'fixed'}`}} >
+        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
 
-            <button id='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(288px)' }`}} >{expand ? '<' : '>'}</button>
+            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(278px)' }`}} >{expand ? '<' : '>'}</button>
 
-            <div id='sidebar' >
+            <div className='sidebar' >
 
                 {/* Edit Button */}
-                <div onClick={()=>{editable ? submit() : toggleEdit(!editable)}} ><Pencil /></div>
+                <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil editable={editable ? 1 : undefined} /></div>
 
                 {/* Tablename */}
-                <div id='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
+                <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
                     <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
-
                 </div>
 
                 {/* Columns */}
@@ -92,8 +81,8 @@ const Inspector = (data) =>{
                     font-family: 'Inter', sans-serif;
                 }
 
-                #inspector {
-                    position: relative;
+                .inspector {
+                    position: fixed;
                     height: 100%;
                     width: 23%;
                     float: left;
@@ -102,7 +91,7 @@ const Inspector = (data) =>{
                     box-shadow: 3px 0px 3px rgba(0,0,0,.05);
                 }
 
-                #tablename{
+                .tablename{
                     font-size: 24px;
                     text-align: left;
                     background-color: white;
@@ -114,7 +103,7 @@ const Inspector = (data) =>{
                 .tablenameinput{
                     border: none;
                     outline: none;
-                    font-size: 24px;
+                    font-size: 16px;
                     text-align: left;
                     color: black;
                     width: 100%;
@@ -125,28 +114,25 @@ const Inspector = (data) =>{
                     }
                 }
 
-                #inspectorbtn{
+                .inspectorbtn{
                     font-size: 24px;
                     font-family: 'Inter', sans-serif;
                     position: fixed;
                     padding: 4px 8px;
-                    // border-top-right-radius: 8px;
                     border-bottom-right-radius: 8px;
-                    margin-left: 20.3%;
+                    margin-left: 23%;
                     margin-top: 0;
-                    background-color: #e4eaf1;
+                    color: #6f8195;
+                    background-color: #d8e3e8;
                     border: none;
                     outline: none;
                     cursor: pointer;
                     z-index: 9999999999;
 
                     &:hover{
-                        background-color: #ababab;
+                        color: #12b3ab;
+                        background-color: #cad5e0;
                     }
-                }
-
-                #submitbtn{
-
                 }
 
             `}</style>
@@ -155,4 +141,4 @@ const Inspector = (data) =>{
 
 }
 
-export default Inspector;
+export default NodeInspector;

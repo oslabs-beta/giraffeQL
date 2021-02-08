@@ -1,10 +1,13 @@
-import ReactFlow, { Controls, removeElements, ReactFlowProvider, getConnectedEdges, isNode}  from 'react-flow-renderer';
+//🦒
+import ReactFlow, { removeElements, ReactFlowProvider, getConnectedEdges, isNode}  from 'react-flow-renderer';
 import { useState, useEffect } from 'react'
 
 import dagre from 'dagre';
 
 import Node from '../components/Node.js';
-import Inspector from '../components/Inspector.js';
+import NodeInspector from '../components/NodeInspector.js';
+import DefaultInspector from '../components/DefaultInspector.js';
+import SchemaIDE from '../components/SchemaIDE.js';
 import Navbar from '../components/Navbar.js';
 
 //Set our custom node component from Node.js
@@ -27,19 +30,37 @@ const Canvas = (props) => {
   //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
   const [elements, setElements] = useState([]);
   const [index, setNodeCount] = useState(0);
+
   const [layedout, toggleLayout] = useState(false);
+  const [updated, updateData] = useState(false);
+
+  const [instance, cacheInstance] = useState(null);
 
   //Zome prevention
-  const [zoomOnScroll, setZoomOnScroll] = useState(false);
+  const [zoomOnScroll, setZoomOnScroll] = useState(true);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
 
   const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)));
   const [activeNode, selectNode] = useState(null);
 
+  const onLoad = (reactFlowInstance) => {
+    cacheInstance(reactFlowInstance);
+  };  
+
+  useEffect(() => {
+
+    if (!instance)
+      return;
+    
+    instance.fitView();
+    instance.zoomTo(.4);
+    
+  }, [instance]);
+
   //Component to get the layouted elements
   //By default, set to 'LR', AKA Left -> Right
   //Can also be set to TB, AKA Top -> Bottom
-  const getLayoutedElements = (elements, direction = 'TB') => {
+  const getLayoutedElements = (elements, direction = 'LR') => {
 
     if (elements.length < 1)
       return;
@@ -50,7 +71,7 @@ const Canvas = (props) => {
 
     elements.forEach((el) => {
       if (isNode(el)) {
-        dagreGraph.setNode(el.id, { width: 550, height: 300 });
+        dagreGraph.setNode(el.id, { width: 300, height: 150 });
       } else {
         dagreGraph.setEdge(el.source, el.target);
       }
@@ -64,7 +85,7 @@ const Canvas = (props) => {
         el.targetPosition = isHorizontal ? 'left' : 'top';
         el.sourcePosition = isHorizontal ? 'right' : 'bottom';
         el.position = {
-          x: nodeWithPosition.x + Math.random() / 1000,
+          x: nodeWithPosition.x,
           y: nodeWithPosition.y,
         };
       }
@@ -82,7 +103,7 @@ const Canvas = (props) => {
   const onConnect = (params) => {
 
     const connection = {
-      id: `e${params.source}${params.sourceHandle}-${params.target}${params.targetHandle}`,
+      id: `reactflow${params.source}${params.sourceHandle}-${params.target}${params.targetHandle}`,
       source: params.source,
       sourceHandle: params.sourceHandle,
       target: params.target,
@@ -97,9 +118,12 @@ const Canvas = (props) => {
     
     setElements(els => els.concat([connection]));
   };
-  const onElementClick = (event, element) => {if (isNode(element)) selectNode(element)};
-  const onNodeDragStart = (event, node) => selectNode(node);
-  const selectedEdges = (node, edges) => getConnectedEdges(node, edges);
+
+  const onPaneClick = () => selectNode(null);
+
+  const onElementClick = (event, element) => {if (isNode(element) && element !== activeNode) return selectNode(element)};
+  const onNodeDragStart = (event, node) => {if (node !== activeNode) return selectNode(node)};
+  const selectedEdges = (node, edges) => {if (node) return getConnectedEdges(node, edges)};
   const nodeValueChange = (node) => {
 
     if(!node.data.label.props.children.props.selectedEdges)
@@ -110,12 +134,17 @@ const Canvas = (props) => {
 
     newElements.splice(target, 1, node);
     setElements(newElements);
+
+    updateData(true);
+    
   };
 
   //Runs only once when this page renders
   useEffect(() => {
 
     const newElements = [];
+
+    console.log(props.data.tables[1].connections);
    
     for (let i = 0; i < props.data.tables.length; i++){
 
@@ -131,7 +160,7 @@ const Canvas = (props) => {
           //In the case of our nodes, we pass in a Node.js component with all of the props from the associated table data index.
           label: (
             <div>
-              <Node id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} nodeid={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} selectedEdges={selectedEdges} />
+              <div id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} nodeid={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} selectedEdges={selectedEdges} />
             </div>
             ),
           },
@@ -160,7 +189,7 @@ const Canvas = (props) => {
         const targetHandle = props.data.tables[target].columns.findIndex(column => column.name === props.data.tables[i].connections[j].destinationKey);
 
         const connection = {
-          id: `e${i}${alphabet[columnNumber]}-${target}${alphabet[targetHandle]}`,
+          id: `reactflow${i}${alphabet[columnNumber]}-${target}${alphabet[targetHandle]}`,
           source: i.toString(),
           sourceHandle: alphabet[columnNumber],
           target: target.toString(),
@@ -181,20 +210,21 @@ const Canvas = (props) => {
     setElements([...newElements]);
     setNodeCount(props.data.tables.length);
 
+    updateData(true);
+
   }, []);
 
-  const inspector =  activeNode ? <Inspector data={activeNode} nodeValueChange={nodeValueChange} /> : <div />;
+  const inspector =  activeNode ? <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} /> : <DefaultInspector selectNode={selectNode} />;
 
   return (
     <div id='root'>
-
-      <Navbar />
 
       <div id='canvascontainer'>
             
         {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
         {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
         <ReactFlowProvider>
+          <Navbar search={selectNode} />
           {inspector}
           <ReactFlow
               //default zoom properties
@@ -211,6 +241,9 @@ const Canvas = (props) => {
               onConnect={onConnect}
               onElementClick={onElementClick}
               onNodeDragStart={onNodeDragStart}
+
+              onLoad={onLoad}
+              onPaneClick={onPaneClick}
               
               //Assigning our custom types to be rendered
               nodeTypes={nodeTypes}
@@ -221,11 +254,12 @@ const Canvas = (props) => {
               connectionLineStyle={connectionStyles}
               >
               {/* Bottom-left UI zoom and fit screen controls */}
-              <Controls style={{zIndex: '999999999', marginBottom: '8px', marginLeft: '96.5vw', position: 'fixed'}} />
+              {/*<Controls style={{zIndex: '999999999', marginBottom: '8px', marginLeft: '96.5vw', position: 'fixed'}} />*/}
               {/* Background pattern, can be lines or dots */}
 
           </ReactFlow>
-        </ReactFlowProvider>;
+          <SchemaIDE updated={updated} resetUpdate={updateData} />
+        </ReactFlowProvider>
 
       </div>
 

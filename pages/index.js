@@ -1,7 +1,5 @@
-import Link from 'next/link'
-import { useState, useEffect } from 'react'
-
-import Navbar from '../components/Navbar.js';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 const Home = (props) => {
 
@@ -9,8 +7,6 @@ const Home = (props) => {
 
     return (
         <div id='home'>
-
-            <Navbar />
 
             <div id='homecontainer'>
 

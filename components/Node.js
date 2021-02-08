@@ -22,34 +22,29 @@ export default memo(({ data }) => {
     //Populate the edges array on first render, and every time our edges change
     useEffect(() => {
         populateEdges(props.selectedEdges([store.elements[props.nodeid]], store.edges));
-    }, [store.edges]);
+    }, [store.edges.length]);
 
     //useEffect #2 on [selectedElements]:
     //Checks the selectedElement's id against this node's id
     //If they match, this becomes the selected node.
     useEffect(() => {
 
+        if (!store.selectedElements && selected)
+            deselect();
+            
         if (!store.selectedElements)
             return;
 
-        if (store.selectedElements[0].id != props.nodeid.toString() && !selected)
+        if (store.selectedElements[0].id !== props.nodeid.toString() && !selected)
             return;
 
         if (store.selectedElements[0].id === props.nodeid.toString() && !selected){
-
             selectNode(true);
             showTable(true);
-
+            return;
         }
-        else if (store.selectedElements[0].id !== props.nodeid.toString() && selected){
-            
-            selectNode(false);
-
-            edges.forEach(edge => {
-                edge.style = { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' };
-            });
-
-        }
+        else if (store.selectedElements[0].id !== props.nodeid.toString() && selected)
+            return deselect();
 
     }, [store.selectedElements]);
 
@@ -61,9 +56,18 @@ export default memo(({ data }) => {
         if (!selected)
             return;
 
-        edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
+            edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
 
     }, [selected])
+
+    const deselect = () => {
+
+        selectNode(false);
+
+        edges.forEach(edge => {
+            edge.style = { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' };
+        });
+    }
 
     //Array of possible header colors
     //TOOD: Expand, make editable
