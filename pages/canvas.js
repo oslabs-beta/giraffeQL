@@ -143,8 +143,6 @@ const Canvas = (props) => {
   useEffect(() => {
 
     const newElements = [];
-
-    console.log(props.data.tables[1].connections);
    
     for (let i = 0; i < props.data.tables.length; i++){
 
