@@ -4,7 +4,7 @@ import { useStoreState } from 'react-flow-renderer';
 import generateAllTypes from '../converters/TypeDefs.js';
 
 import hljs from 'highlight.js';
-import hljsDefineGraphQL from 'highlightjs-graphql';
+// import hljsDefineGraphQL from 'highlightjs-graphql';
 import javascript from 'highlight.js/lib/languages/javascript';
 
 const SchemaIDE = (props) => {
@@ -16,7 +16,7 @@ const SchemaIDE = (props) => {
 
     useEffect(() => {
         hljs.registerLanguage("javascript", javascript);
-        hljsDefineGraphQL(hljs);
+        // hljsDefineGraphQL(hljs);
     }, []);
 
     useEffect(() => {
@@ -26,13 +26,29 @@ const SchemaIDE = (props) => {
 
         const newTables = [];
 
-        store.elements.filter(node => !node.id.includes('reactflow')).forEach(node => {
+        const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+        store.elements.filter(node => !node.id.includes('reactflow')).forEach((node, i) => {
 
             const newTable = {};
 
             newTable.name = node.data.label.props.children.props.tablename;
             newTable.columns = node.data.label.props.children.props.columns;
             newTable.connections = [];
+
+            store.elements.filter(connection => connection.id.includes('reactflow') && connection.source === i.toString()).forEach(connection => {
+
+                const newConnection = {};
+
+                const targetNode = store.elements.findIndex(target => target.id === connection.target.toString());
+
+                newConnection.originKey = alphabet.indexOf(connection.sourceHandle);
+                newConnection.destinationTable = store.elements[targetNode].data.label.props.children.props.tablename;
+                newConnection.destinationKey= alphabet.indexOf(connection.targetHandle);
+
+                newTable.connections.push(newConnection);
+
+            });
 
             newTables.push(newTable);
 
@@ -55,28 +71,14 @@ const SchemaIDE = (props) => {
         writeSchema(generateAllTypes(tables));
     }
 
-    const test = `
-    type Film { 
-        director: String!
-        opening_crawl: String!
-        episode_id: Int!
-        _id: Int!
-        title: String!
-        release_date: Int!
-        producer: String!
-    }
-    `
-
-    const holder = schema.toString();
-
     return (
         <div id='ide' >
 
             <div className='sidebar' >
 
                 <div id='gql'><h1>GraphQL</h1><h2>Query</h2></div>
-
-                <pre><code>{holder}</code></pre>
+                <button onClick={()=>navigator.clipboard.writeText(schema)}>Copy</button>
+                <pre><code>{schema}</code></pre>
 
             </div>
 
@@ -149,6 +151,23 @@ const SchemaIDE = (props) => {
                 ::-webkit-scrollbar-track-piece:start {
                     background: transparent;
                     margin-top: 16px;
+                }
+
+                button{
+                    position: fixed;
+                    color: #12b3ab;
+                    border: 1px solid #12b3ab;
+                    border-radius: 4px;
+                    padding: 8px;
+                    outline: none;
+                    background-color: transparent;
+                    margin-top: 20px;
+                    margin-left: 246px;
+
+                    &:hover{
+                        cursor: pointer;
+                        background-color: #1a4949;
+                    }
                 }
 
             `}</style>

@@ -33,6 +33,7 @@ const Canvas = (props) => {
 
   const [layedout, toggleLayout] = useState(false);
   const [updated, updateData] = useState(false);
+  const [startEdit, toggleStartEdit] = useState(false);
 
   const [instance, cacheInstance] = useState(null);
 
@@ -42,6 +43,38 @@ const Canvas = (props) => {
 
   const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)));
   const [activeNode, selectNode] = useState(null);
+
+  const createElement = () => {
+
+    const defaultColumn = {
+      name: "newColumn",
+      dataType: "string",
+      required: true
+    };
+
+    const column = {
+      id: index,
+      type: "tableNode",
+      data: {
+        label: (
+          <div>
+            <div id={`NewTable-${index}`} key={`NewTable-${index}`} nodeid={index} tablename={`New Table #${index}`} columns={[defaultColumn]} selectedEdges={selectedEdges} startExpanded={true} />
+          </div>
+          ),
+        },
+      position: { x: 0, y: 0}
+    }
+
+    const newElements = [...elements];
+    newElements.push(column);
+
+    setElements(newElements);
+    toggleStartEdit(true);
+    selectNode(column);
+    
+    setNodeCount(index + 1);
+
+  };
 
   const onLoad = (reactFlowInstance) => {
     cacheInstance(reactFlowInstance);
@@ -143,8 +176,6 @@ const Canvas = (props) => {
   useEffect(() => {
 
     const newElements = [];
-
-    console.log(props.data.tables[1].connections);
    
     for (let i = 0; i < props.data.tables.length; i++){
 
@@ -214,7 +245,7 @@ const Canvas = (props) => {
 
   }, []);
 
-  const inspector =  activeNode ? <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} /> : <DefaultInspector selectNode={selectNode} />;
+  const inspector =  activeNode ? <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} /> : <DefaultInspector selectNode={selectNode} createNode={createElement} />;
 
   return (
     <div id='root'>

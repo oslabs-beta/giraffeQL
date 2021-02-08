@@ -17,6 +17,14 @@ const NodeInspector = (data) =>{
 
     //We make an exact copy of our currently activeNode in our state
     const [activeNode, updateNode] = useState(data.data);
+    const [columns, addColumns] = useState(props.columns);
+
+    // useEffect(() => {
+    //     if (data.startEdit){
+    //         toggleEdit(true);
+    //         data.toggleStartEdit(false);
+    //     }
+    // }, []);
 
     //When the data (props) as activeNode being sent to the inspector change, we update the activeNode state
     useEffect(()=>{
@@ -53,6 +61,24 @@ const NodeInspector = (data) =>{
         return (toggleEdit(false), data.nodeValueChange(activeNode));
     }
 
+    const newColumn = () => {
+
+        const column = {
+            name: "newColumn",
+            dataType: "string",
+            required: true
+        };
+
+        const newColumns = [...columns];
+        newColumns.push(column);
+
+        addColumns(newColumns);
+
+        activeNode.data.label.props.children.props.columns.push(column);
+        store.elements[activeNode.id].data.label.props.children.props.columns.push(column)
+        savechanges();
+    }
+
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
@@ -71,7 +97,9 @@ const NodeInspector = (data) =>{
                 </div>
 
                 {/* Columns */}
-                {props.columns.map((column, i) => <ColumnInspector name={column.name} index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} dataType={column.dataType} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
+                {columns.map((column, i) => <ColumnInspector name={column.name} index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} dataType={column.dataType} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
+
+                <div id='options'><button onClick={newColumn} >Add Column</button></div>
 
             </div>
 
@@ -132,6 +160,29 @@ const NodeInspector = (data) =>{
                     &:hover{
                         color: #12b3ab;
                         background-color: #cad5e0;
+                    }
+                }
+
+                #options{
+                    display: flex;
+                    justify-content: flex-end;
+                    padding: 8px;
+                    border-top: .5px solid transparent;
+                    border-bottom: .5px solid #e4eaf1;
+                    flex-flow: row nowrap;
+                    
+                    button {
+                        color: #12b3ab;
+                        border: 1px solid #12b3ab;
+                        border-radius: 4px;
+                        padding: 8px;
+                        outline: none;
+                        background-color: transparent;
+
+                        &:hover{
+                            cursor: pointer;
+                            background-color: #e4fffa;
+                        }
                     }
                 }
 
