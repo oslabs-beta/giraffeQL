@@ -18,6 +18,11 @@ export default memo(({ data }) => {
     //An array storing all in-going and out-going edges
     const [edges, populateEdges] = useState([]);
 
+    useEffect(() => {
+        if (props.startExpanded)
+            showTable(true);
+    }, [])
+
     //useEffect #1 on [store.edges]:
     //Populate the edges array on first render, and every time our edges change
     useEffect(() => {

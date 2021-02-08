@@ -77,7 +77,7 @@ const SchemaIDE = (props) => {
             <div className='sidebar' >
 
                 <div id='gql'><h1>GraphQL</h1><h2>Query</h2></div>
-
+                <button onClick={()=>navigator.clipboard.writeText(schema)}>Copy</button>
                 <pre><code>{schema}</code></pre>
 
             </div>
@@ -151,6 +151,23 @@ const SchemaIDE = (props) => {
                 ::-webkit-scrollbar-track-piece:start {
                     background: transparent;
                     margin-top: 16px;
+                }
+
+                button{
+                    position: fixed;
+                    color: #12b3ab;
+                    border: 1px solid #12b3ab;
+                    border-radius: 4px;
+                    padding: 8px;
+                    outline: none;
+                    background-color: transparent;
+                    margin-top: 20px;
+                    margin-left: 246px;
+
+                    &:hover{
+                        cursor: pointer;
+                        background-color: #1a4949;
+                    }
                 }
 
             `}</style>
