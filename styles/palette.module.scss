@@ -5,7 +5,11 @@ $four: '#02c39a';
 $five: '#4361ee';
 $six: '#9b5de5';
 $seven: '#f15bb5';
+$eight: red;
 
+#something{
+  color: $eight;
+}
 :export{
     one: $one;
     two: $two;
@@ -14,4 +18,5 @@ $seven: '#f15bb5';
     five: $five;
     six: $six;
     seven: $seven;
+    eight: $eight;
 }
