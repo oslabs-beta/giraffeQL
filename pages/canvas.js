@@ -327,13 +327,14 @@ export async function getServerSideProps({ query }) {
   
   //Check if we just fetched from a bad URI... don't want to crash the whole app!
   if (res.status === 400) {
-    return {
+    return [{
       redirect: {
         //We redirect the user back to the root page.
         destination: '/',
         permanent: false,
+        message: 'Sending some sort of message back'
       },
-    }
+    }]
   }
   
   const data = await res.json()

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useStoreState } from 'react-flow-renderer';
-
+import paletteStyles from '../styles/palette.module.scss'
 import Column from './Column.js';
 
 //By default custom Nodes use React.memo() so that their data becomes memoized.
