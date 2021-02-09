@@ -41,20 +41,20 @@ const Canvas = (props) => {
   const [zoomOnScroll, setZoomOnScroll] = useState(true);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
 
-  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)));
+  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), updateData(true));
   const [activeNode, selectNode] = useState(null);
 
   const createElement = () => {
 
     const defaultColumn = {
-      name: "newColumn",
-      dataType: "string",
+      name: 'newColumn',
+      dataType: 'character varying',
       required: true
     };
 
     const column = {
-      id: index,
-      type: "tableNode",
+      id: index.toString(),
+      type: 'tableNode',
       data: {
         label: (
           <div>
@@ -62,17 +62,20 @@ const Canvas = (props) => {
           </div>
           ),
         },
-      position: { x: 0, y: 0}
+      position: { x: 0, y: 0},
+      sourcePosition: 'right',
+      targetPosition: 'left'
     }
 
     const newElements = [...elements];
-    newElements.push(column);
+    newElements.splice(index, 0, column);
 
     setElements(newElements);
     toggleStartEdit(true);
     selectNode(column);
     
     setNodeCount(index + 1);
+    updateData(true);
 
   };
 
@@ -185,7 +188,7 @@ const Canvas = (props) => {
         //These cannot overlap/duplicate, and they cannot contain any other characters.
         id: `${i}`,
         //Our custom Node.js type
-        type: "tableNode",
+        type: 'tableNode',
         data: {
           //Our "label" holds all data that we pass into the element.
           //In the case of our nodes, we pass in a Node.js component with all of the props from the associated table data index.
@@ -300,7 +303,7 @@ const Canvas = (props) => {
           overflow: hidden;
           width: 100vw;
           height: 100vh;
-          background-color: #f1f6f8;
+          background-color: #edf2f7;
         }
 
         #canvascontainer{

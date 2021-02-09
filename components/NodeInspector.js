@@ -19,16 +19,17 @@ const NodeInspector = (data) =>{
     const [activeNode, updateNode] = useState(data.data);
     const [columns, addColumns] = useState(props.columns);
 
-    // useEffect(() => {
-    //     if (data.startEdit){
-    //         toggleEdit(true);
-    //         data.toggleStartEdit(false);
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (data.startEdit){
+            toggleEdit(true);
+            data.toggleStartEdit(false);
+        }
+    }, []);
 
     //When the data (props) as activeNode being sent to the inspector change, we update the activeNode state
     useEffect(()=>{
         updateNode(data.data);
+        addColumns(props.columns);
     }, [data]);
 
     useEffect(() => {
@@ -52,7 +53,7 @@ const NodeInspector = (data) =>{
 
     const submit = (e) => {
 
-        if (e.code === "Enter" && editable)
+        if (e.code === 'Enter' && editable)
             return savechanges();
 
     }
@@ -64,8 +65,8 @@ const NodeInspector = (data) =>{
     const newColumn = () => {
 
         const column = {
-            name: "newColumn",
-            dataType: "string",
+            name: 'newColumn',
+            dataType: 'character varying',
             required: true
         };
 
@@ -74,8 +75,7 @@ const NodeInspector = (data) =>{
 
         addColumns(newColumns);
 
-        activeNode.data.label.props.children.props.columns.push(column);
-        store.elements[activeNode.id].data.label.props.children.props.columns.push(column)
+        store.elements.filter(node => !node.id.includes('reactflow'))[activeNode.id].data.label.props.children.props.columns.push(column)
         savechanges();
     }
 

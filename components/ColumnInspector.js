@@ -11,6 +11,9 @@ const ColumnInspector = (props) => {
     
     useEffect(() => {
 
+        if (!store.selectedElements)
+            return;
+
         if (!props.editable || prevNode !== store.selectedElements[0])
             return;
 

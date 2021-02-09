@@ -1,7 +1,9 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useStoreState } from 'react-flow-renderer';
-import paletteStyles from '../styles/palette.module.scss'
+
 import Column from './Column.js';
+
+import palette from '../styles/palette.module.scss'
 
 //By default custom Nodes use React.memo() so that their data becomes memoized.
 export default memo(({ data }) => {
@@ -26,7 +28,8 @@ export default memo(({ data }) => {
     //useEffect #1 on [store.edges]:
     //Populate the edges array on first render, and every time our edges change
     useEffect(() => {
-        populateEdges(props.selectedEdges([store.elements[props.nodeid]], store.edges));
+        const target = store.elements.findIndex(node => node.id === props.nodeid.toString());
+        populateEdges(props.selectedEdges([store.elements.filter(node => !node.id.includes('reactflow'))[target]], store.edges));
     }, [store.edges.length]);
 
     //useEffect #2 on [selectedElements]:
