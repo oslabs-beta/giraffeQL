@@ -18,7 +18,6 @@ const ColumnInspector = (props) => {
 
         if (!props.editable || prevNode !== store.selectedElements[0])
             return;
-
         const newNode = JSON.parse(JSON.stringify(props.activeNode));
 
         newNode.data.label.props.children.props.columns[props.index].name = name;
@@ -38,7 +37,7 @@ const ColumnInspector = (props) => {
 
     }, [store.selectedElements])
 
-    const dataTypes = ['integer', 'bigint', 'date', 'character varying'];
+    const dataTypes = ['integer', 'bigint', 'date', 'character varying', 'boolean'];
 
     return (
         <div className='container' style={{backgroundColor: `${props.editable ? '#c0dbfd' : 'transparent'}`}}>

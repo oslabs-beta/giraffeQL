@@ -54,6 +54,11 @@ const NodeInspector = (data) =>{
 
     }, [tableName]);
 
+    // useEffect(() => {
+    //   if (columns.length === 0) return;
+    //   toggleEdit(true) // --> Can't get it to get out of edit mode
+    // },[columns.length])
+
     // Submit????
     const submit = (e) => {
 
@@ -69,19 +74,18 @@ const NodeInspector = (data) =>{
 
     // New column  
     const newColumn = () => {
-
         const column = {
             name: 'newColumn',
             dataType: 'character varying',
             required: true
         };
-        
+
         // Pushes all new columns into inspector columns.
         const newColumns = [...columns];
         newColumns.push(column);
 
         addColumns(newColumns);
-
+        
         // Pushes columns into state. 
         store.elements.filter(node => !node.id.includes('reactflow'))[activeNode.id].data.label.props.children.props.columns.push(column)
         savechanges();
@@ -90,7 +94,7 @@ const NodeInspector = (data) =>{
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
+        <div onDoubleClick={() => toggleEdit(true)} className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
 
             <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(278px)' }`}} >{expand ? '<' : '>'}</button>
 
@@ -100,7 +104,7 @@ const NodeInspector = (data) =>{
                 <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil editable={editable ? 1 : undefined} /></div>
 
                 {/* Tablename */}
-                <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
+                <div className='tablename' onDoubleClick={() => toggleEdit(true)} style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
                     <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
                 </div>
 
