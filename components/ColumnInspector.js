@@ -38,7 +38,7 @@ const ColumnInspector = (props) => {
 
     }, [store.selectedElements])
 
-    const dataTypes = ['integer', 'bigint', 'date', 'character varying'];
+    const dataTypes = ['integer', 'bigint', 'date', 'character varying', 'boolean'];
 
     return (
         <div className='container' style={{backgroundColor: `${props.editable ? '#c0dbfd' : 'transparent'}`}}>
