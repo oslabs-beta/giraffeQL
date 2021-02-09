@@ -16,7 +16,7 @@ const Home = (props) => {
             <div id='homecontainer'>
 
               <svg viewBox="0 0 100 100">
-                <g fill="transparent" stroke="#12b3ab" stroke-width="8">
+                <g fill="transparent" stroke="#12b3ab" strokeWidth="8">
                   <circle cx="50" cy="50" r="42" fill="#edf2f7" />
                   <circle cx="25" cy="50" r="4" />
                   <circle cx="75" cy="50" r="4" />

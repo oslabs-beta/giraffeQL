@@ -6,8 +6,8 @@ import Pencil from './icons/Pencil.js';
 
 const NodeInspector = (data) =>{
 
-    //We access our "props" by going into the passed in data and extracting it from several nested objects
-    //This is only necessaray because of how data gets passed by the element label
+    // We access our "props" by going into the passed in data and extracting it from several nested objects
+    // This is only necessaray because of how data gets passed by the element label
     const props = data.data.data.label.props.children.props;
     const store = useStoreState((store) => store);
 
@@ -15,10 +15,11 @@ const NodeInspector = (data) =>{
     const [editable, toggleEdit] = useState(false);
     const [tableName, setTableName] = useState(props.tablename);
 
-    //We make an exact copy of our currently activeNode in our state
+    // We make an exact copy of our currently activeNode in our state
     const [activeNode, updateNode] = useState(data.data);
     const [columns, addColumns] = useState(props.columns);
-
+    
+    // When a new node is created, we automatically start in edit mode.
     useEffect(() => {
         if (data.startEdit){
             toggleEdit(true);
@@ -26,12 +27,13 @@ const NodeInspector = (data) =>{
         }
     }, []);
 
-    //When the data (props) as activeNode being sent to the inspector change, we update the activeNode state
+    // When the data (props) as activeNode being sent to the inspector change, we update the activeNode state
     useEffect(()=>{
         updateNode(data.data);
         addColumns(props.columns);
     }, [data]);
 
+    // When a different element is selected, edit mode is automatically toggled off. 
     useEffect(() => {
 
         if (!store.selectedElements)
@@ -42,6 +44,7 @@ const NodeInspector = (data) =>{
 
     }, [store.selectedElements]);
 
+    // Updating node information back in main elements state. 
     useEffect(() => {
 
         const newNode = JSON.parse(JSON.stringify(activeNode))
@@ -51,6 +54,7 @@ const NodeInspector = (data) =>{
 
     }, [tableName]);
 
+    // Submit????
     const submit = (e) => {
 
         if (e.code === 'Enter' && editable)
@@ -58,10 +62,12 @@ const NodeInspector = (data) =>{
 
     }
 
+    // Saves changes... or does it?
     const savechanges = () => {
         return (toggleEdit(false), data.nodeValueChange(activeNode));
     }
 
+    // New column  
     const newColumn = () => {
 
         const column = {
@@ -69,12 +75,14 @@ const NodeInspector = (data) =>{
             dataType: 'character varying',
             required: true
         };
-
+        
+        // Pushes all new columns into inspector columns.
         const newColumns = [...columns];
         newColumns.push(column);
 
         addColumns(newColumns);
 
+        // Pushes columns into state. 
         store.elements.filter(node => !node.id.includes('reactflow'))[activeNode.id].data.label.props.children.props.columns.push(column)
         savechanges();
     }

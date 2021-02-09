@@ -1,33 +1,32 @@
 import { useState, useEffect } from 'react';
 import { useStoreState } from 'react-flow-renderer';
 
-import generateAllTypes from '../converters/TypeDefs.js';
+import generateAllTypes from '../converters/typeDefs.js';
 
 import hljs from 'highlight.js';
-// import hljsDefineGraphQL from 'highlightjs-graphql';
 import javascript from 'highlight.js/lib/languages/javascript';
 
 const SchemaIDE = (props) => {
 
+    // Create instance of store
     const store = useStoreState((store) => store);
 
     const [tables, updateTable] = useState([]);
     const [schema, writeSchema] = useState('');
 
+    // Tells code highlighter which language to read.
     useEffect(() => {
         hljs.registerLanguage("javascript", javascript);
-        // hljsDefineGraphQL(hljs);
     }, []);
 
+    // Taking the data from all nodes/elements whenever there is a change and turning them back to original format. 
     useEffect(() => {
-
-        // if (!props.updated)
-        //     return;
 
         const newTables = [];
 
         const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
+        // ONLY iterating through the node's by filtering out the connections.
         store.elements.filter(node => !node.id.includes('reactflow')).forEach((node, i) => {
 
             const newTable = {};
@@ -36,6 +35,7 @@ const SchemaIDE = (props) => {
             newTable.columns = node.data.label.props.children.props.columns;
             newTable.connections = [];
 
+            // Iterate through the nodes connections
             store.elements.filter(connection => connection.id.includes('reactflow') && connection.source === i.toString()).forEach(connection => {
 
                 const newConnection = {};
@@ -58,11 +58,14 @@ const SchemaIDE = (props) => {
 
     }, [props.updated]);
 
+    // If tables array is changed, outputted schema is refreshed
     useEffect(() => {
         refreshSchema();
         props.resetUpdate(false);
     }, [tables]);
 
+    // Simultaneously, highlighting is updated
+    // TODO: Need to get highlighting working. 
     useEffect(() => {
         hljs.initHighlighting();
     }, [schema]);

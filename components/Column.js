@@ -2,11 +2,13 @@ import { Handle, useStoreState } from 'react-flow-renderer';
 import { useState, useEffect } from 'react';
 
 const Column = (props) => {
-
+    
+    // Create a reference to our store and set up state to hold active column and activeEdges
     const store = useStoreState((store) => store);
     const [active, selectColumn] = useState(false);
     const [activeEdges, populateEdges] = useState([]);
 
+    // When selected elements changes, we change what the active edges are (highlighted)
     useEffect(() => {
         
         if (!store.selectedElements)
@@ -15,9 +17,8 @@ const Column = (props) => {
         populateEdges(props.selectedEdges([store.selectedElements[0]], store.edges));
         
     }, [store.selectedElements]);
-
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-
+    
+    // Styling of edges
     const targetBackground = () => {
         if (props.edges.some(edge => edge.targetHandle === alphabet[props.index]
             && edge.target == props.nodeid.toString())
@@ -73,16 +74,6 @@ const Column = (props) => {
 
     }
 
-    const borderColor = () => {
-        if (props.selected && active && props.expanded)
-            return '5px solid #0373fc';
-        if (props.selected && !active && props.expanded)
-            return '5px solid transparent';
-        if (props.expanded && active)
-            return '5px solid #0373fc';
-        return '5px solid transparent';
-    }
-
     const targetPos = () => {
         if (props.selected && props.expanded)
             return '-47px';
@@ -98,6 +89,9 @@ const Column = (props) => {
             return '47px';
         return '90%';
     }
+    // Styling ends here
+
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
     return (
         <div className='container' onMouseOver={()=>selectColumn(true)} onMouseLeave={()=>selectColumn(false)}>
@@ -105,8 +99,6 @@ const Column = (props) => {
             {/* Our Table component is split into two columns: the column name and it's associated Data Type.
                 Each of these also contains an input (target) and output (source) "Handle" component that allows
                 Nodes to connect.*/}
-
-            {/* TODO: Refactor positioning of Handles to allow for overflow-y scrolling */}
 
             <div className='column' className='left'>
 
