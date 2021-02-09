@@ -327,6 +327,22 @@ const Canvas = (props) => {
 //Runs on page load
 export async function getServerSideProps({ query }) {
 
+  if (!query)
+    return {
+      redirect: {
+        destination: '/?message=error',
+        permanent: false,
+      }
+    }
+
+  if (!query.data)
+    return {
+      redirect: {
+        destination: '/?message=error',
+        permanent: false,
+      }
+    }
+
   //We grab the URI directly from the page's URL (in the context's query)
   const body = {
     URI: query.data
@@ -336,17 +352,17 @@ export async function getServerSideProps({ query }) {
   
   //Check if we just fetched from a bad URI... don't want to crash the whole app!
   if (res.status === 400) {
-    return [{
+    return {
       redirect: {
         //We redirect the user back to the root page.
-        destination: '/',
+        destination: '/?message=error',
         permanent: false,
         message: 'Sending some sort of message back'
       },
-    }]
+    }
   }
   
-  const data = await res.json()
+  const data = await res.json();
 
   if (!data) {
     return {
