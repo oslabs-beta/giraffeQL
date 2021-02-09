@@ -12,20 +12,20 @@ function tableToType(table, joinConnections) {
     let type = `  type ${singular(upperCaseL)} { \n`;
 
     table.columns.forEach((col) => {
-      type += `   ${mapColumn(col)}\n`;
+      type += `    ${mapColumn(col)}\n`;
     })
 
     table.connections.forEach((conn) => {
-      type += `   ${mapConnection(conn.destinationTable)}\n`;
+      type += `    ${mapConnection(conn.destinationTable)}\n`;
     })
 
     if (joinConnections) {
       joinConnections.forEach((jc) => {
-        type += `   ${mapConnection(jc)}\n`;
+        type += `    ${mapConnection(jc)}\n`;
       })
     }
 
-    type += ' }'
+    type += '  }'
     return type;
 }
 
@@ -42,26 +42,78 @@ function mapConnection(connection) {
   return `${connection}: [${connectedObj}]`;
 }
 
+/* createPerson(
+      gender: String,
+      species_id: Int,
+      homeworld_id: Int,
+      height: Int,
+      mass: String,
+      hair_color: String,
+      skin_color: String,
+      eye_color: String,
+      name: String!,
+      birth_year: String,
+    ): Person!
+
+    updatePerson(
+      gender: String,
+      species_id: Int,
+      homeworld_id: Int,
+      height: Int,
+      _id: Int!,
+      mass: String,
+      hair_color: String,
+      skin_color: String,
+      eye_color: String,
+      name: String!,
+      birth_year: String,
+    ): Person!
+
+    deletePerson(_id: ID!): Person!
+    */
+
+function createObjMutations(table) {
+  const objectName = capitalizeFirstLetter(singular(table.name));
+  let create = `    create${objectName}(\n`;
+  let update = `    update${objectName}(\n`;
+  let deleteMutation = `    delete${objectName}(`;
+  const close = `): ${objectName}!`
+  table.columns.forEach((col) => {
+    if (col.primaryKey) {
+      update += `      ${mapColumn(col)}\n`;
+      deleteMutation += `${col.name}: ID!`;
+    } else {
+      create += `      ${mapColumn(col)}\n`;
+      update += `      ${mapColumn(col)}\n`;
+    }
+  })
+  return `${create}    ` + close + '\n\n' + `${update}    ` + close + '\n\n' + deleteMutation + close; // +'\n';
+}
+
 // highest level function that takes a list of tables and their connections
 // returns the graphQL TypeDefs 
 function generateAllTypes(tables) {
+  console.log(tables);
   //Forming GraphQL database
   let allTypes = 'const typeDefs = `\n';
   //Forming GraphQL Query
-  let tableQuery = `type Query {\n`;
+  let tableQuery = `  type Query {\n`;
+  //Forming type mutation
+  let typeMutation = `  type Mutation {\n`;
   const [baseTables, joinTables] = sortTables(tables);
   const allJoinConnections = joinConnections(joinTables);
   let resolvers = 'const resolvers = {\n';
   let objectResolvers = '';
   baseTables.forEach((table) => {
     allTypes += `${tableToType(table, allJoinConnections[table.name])}\n\n`;
-    tableQuery += `  ${mapConnection(table.name)}\n`;
+    tableQuery += `    ${mapConnection(table.name)}\n`;
+    typeMutation += `${createObjMutations(table)}\n`;
     resolvers += `  ${generateResolverFunc(table.name)}\n`;
     // objectResolvers += generateObjectResolver();
     objectResolvers += `${generateObjectResolver(table, allJoinConnections[table.name])}\n`;
   });
   resolvers += objectResolvers + '}';
-  return allTypes + '\n' + tableQuery + '}`\n\n' + resolvers;
+  return allTypes + '\n' + tableQuery + '  }\n\n' + typeMutation + '  }\n' + '}`\n\n' + resolvers;
 }
 
 /*
@@ -100,5 +152,6 @@ function generateObjectResolver(table, joinConnections) {
 module.exports = generateAllTypes;
 // module.exports = {
 //   generateAllTypes,
-//   generateObjectResolver
+//   generateObjectResolver,
+//   createObjMutations
 // };
