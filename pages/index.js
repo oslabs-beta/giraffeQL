@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 const Home = (props) => {
 
     const [URI, setURI] = useState('');
+    const [pageLoading, setPageLoading] = useState(false);
 
     const router = useRouter();
 
@@ -41,6 +43,14 @@ const Home = (props) => {
 
     const instructions = props.message === 'error' ? 'Invalid URI, please try again:' : 'Type a database URI below to get started:';
 
+    useEffect(() => {
+      const handleStart = () => { setPageLoading(true); };
+      const handleComplete = () => { setPageLoading(false); };
+      router.events.on('routeChangeStart', handleStart);
+      router.events.on('routeChangeComplete', handleComplete);
+      router.events.on('routeChangeError', handleComplete);
+      }, [router]);
+
     return (
         <div id='home'>
 
@@ -66,17 +76,17 @@ const Home = (props) => {
               <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
 
               <div id='homesearch'>
-
+              
                 <div id='postgres'>postgres://</div>
                 <input type='text' spellCheck='false' placeholder='Enter a valid PostgreSQL URI' val={URI} onChange={e => setURI(e.target.value)} />
                 <button onClick={checkURLStatus} disabled={URI.length < 1 ? true : false}><span>Enter</span></button>
 
               </div>
-
+              
             </div>
-
+            
            </div>
-
+           { pageLoading ? (<div id='loading'>Searching for your database...<div><Image src='/searchGiraffe.jpeg' width='250' height='250' /></div></div>): <div/>}
           <style jsx>{`
 
           @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
@@ -252,6 +262,14 @@ const Home = (props) => {
             #homesearch{
               display: flex;
               height: 32px;
+            }
+
+            #loading{
+              font-size: 36px;  
+              font-weight: 700;
+              color: #2d3748;
+              text-align: center;
+              margin: 0;
             }
 
           `}</style>
