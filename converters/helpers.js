@@ -7,7 +7,7 @@ module.exports = {
       case "integer":
         return "Int";
       case "bigint":
-        return "Int";
+        return "Float";
       case "date":
         return "Int";
       default:
