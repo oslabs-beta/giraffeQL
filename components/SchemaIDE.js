@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useStoreState } from 'react-flow-renderer';
 
-import generateAllTypes from '../converters/TypeDefs.js';
+import generateAllTypes from '../converters/typeDefs.js';
 
 import hljs from 'highlight.js';
 // import hljsDefineGraphQL from 'highlightjs-graphql';
