@@ -28,7 +28,8 @@ export default memo(({ data }) => {
     //useEffect #1 on [store.edges]:
     //Populate the edges array on first render, and every time our edges change
     useEffect(() => {
-        populateEdges(props.selectedEdges([store.elements.filter(node => !node.id.includes('reactflow'))[props.nodeid]], store.edges));
+        const target = store.elements.findIndex(node => node.id === props.nodeid.toString());
+        populateEdges(props.selectedEdges([store.elements.filter(node => !node.id.includes('reactflow'))[target]], store.edges));
     }, [store.edges.length]);
 
     //useEffect #2 on [selectedElements]:
