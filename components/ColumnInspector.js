@@ -18,7 +18,6 @@ const ColumnInspector = (props) => {
 
         if (!props.editable || prevNode !== store.selectedElements[0])
             return;
-
         const newNode = JSON.parse(JSON.stringify(props.activeNode));
 
         newNode.data.label.props.children.props.columns[props.index].name = name;
