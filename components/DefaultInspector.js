@@ -103,7 +103,7 @@ const DefaultInspector = (props) => {
 
                     &:hover{
                         border: 4px solid white;
-                        font-weight: bold;
+                        font-weight: 900;
                         margin-left: -2px;
                     }
                 }
