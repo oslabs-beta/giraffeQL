@@ -39,16 +39,13 @@ const Canvas = (props) => {
   // Zoom prevention
   const [zoomOnScroll, setZoomOnScroll] = useState(true);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
-  // const [deleteConfirmed, confirmNodeDeletion] = useState(false);
+  const [deleteConfirmed, confirmNodeDeletion] = useState(null);
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
-  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), updateData(true));
+  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), updateData(true), confirmNodeDeletion(null));
 
-  // const onElementsRemove = (elementsToRemove) => {
-  //   // figure out logic - if delted confirmed then 
-  //   // confirmNodeDeletion(true)
-  //   // if (deleteConfirmed) 
-  //   confirmRemoveElement(elementsToRemove)
-  // }
+  const onElementsRemove = (elementsToRemove) => {
+    confirmNodeDeletion(elementsToRemove);
+  }
   
 
   const [activeNode, selectNode] = useState(null);
@@ -265,6 +262,7 @@ const Canvas = (props) => {
   
   // Toggle betwween defaultInspector and nodeInspector when a node is selected.
   const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
+  const deleteNode = !deleteConfirmed ? <div/> : <DeleteNodeModal deleteConfirmed={deleteConfirmed} confirmRemoveElement={confirmRemoveElement} confirmNodeDeletion={confirmNodeDeletion}/>;
 
   return (
     <div id='root'>
@@ -308,7 +306,7 @@ const Canvas = (props) => {
               {/* Background pattern, can be lines or dots */}
               
           </ReactFlow>
-          {/* <DeleteNodeModal /> */}
+          {deleteNode}
           {/* { !deleteConfirmed ? (<DeleteNodeModal />): <div/>} */}
           <SchemaIDE updated={updated} resetUpdate={updateData} />
         </ReactFlowProvider>
