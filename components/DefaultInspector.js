@@ -3,15 +3,19 @@ import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
 const DefaultInspector = (props) => {
 
+    // Create instance of store and allNodes
     const store = useStoreState((store) => store);
 
     const [expand, showTable] = useState(true);
     const [allNodes, setNodes] = useState([]);
 
+    // Checks if our elements change and if it does, populates allNodes array.
     useEffect(() => {
+        // Filter out connections so we only get the nodes themselves.
         setNodes(store.elements.filter(node => !node.id.includes('reactflow')));
     }, [store.elements]);
 
+    // Using ReactFlow action store to be able to select an element/node
     const setSelectedElements = useStoreActions((actions) => actions.setSelectedElements);
 
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
@@ -23,6 +27,7 @@ const DefaultInspector = (props) => {
 
             <div id='header' >Tables <button id='createbtn' onClick={props.createNode} >+</button></div>
 
+            {/* Populate panel with all the nodes */}
             {allNodes.map((node, i) => <div className='tablename' key={`defaultnode#${i}`} onClick={()=>(setSelectedElements(node), props.selectNode(node))} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)}
 
             <style jsx>{`
