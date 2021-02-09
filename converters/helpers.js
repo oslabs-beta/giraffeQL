@@ -10,6 +10,8 @@ module.exports = {
         return "Float";
       case "date":
         return "Int";
+      case 'boolean': 
+        return 'Boolean'
       default:
         return "Unknown";
     }
