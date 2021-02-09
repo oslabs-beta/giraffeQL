@@ -12,7 +12,22 @@ const Home = (props) => {
       setURI('');
     }, []);
 
-    const checkURLStatus = () =>{
+    useEffect(() => {
+
+      const submitURI = (e) => {
+        if (e.code === 'Enter' && URI.length > 0)
+          return checkURLStatus();
+      }
+
+      document.addEventListener('keydown', submitURI);
+
+      return () => {
+       document.removeEventListener('keydown', submitURI);
+      };
+
+    });
+
+    const checkURLStatus = () => {
 
       let path = '';
 
@@ -52,7 +67,7 @@ const Home = (props) => {
 
               <div id='homesearch'>
 
-                <h4>postgres://</h4>
+                <div id='postgres'>postgres://</div>
                 <input type='text' spellCheck='false' placeholder='Enter a valid PostgreSQL URI' val={URI} onChange={e => setURI(e.target.value)} />
                 <button onClick={checkURLStatus} disabled={URI.length < 1 ? true : false}><span>Enter</span></button>
 
@@ -145,7 +160,7 @@ const Home = (props) => {
                 margin: 4px;
               }
               
-              h4{
+              #postgres{
                 margin-top: 0;
                 display: flex;
                 align-items: center;
@@ -156,6 +171,7 @@ const Home = (props) => {
                 outline: none;
                 font-size: 12px;
                 border: 1px solid #6f8195;
+                border-right: none;
                 color: #6f8195;
                 background-color: #d9e1e7;
                 box-shadow: none;
