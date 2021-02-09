@@ -3,13 +3,18 @@ import { useStoreState } from 'react-flow-renderer';
 
 const ColumnInspector = (props) => {
 
+    // Create instance of store.
     const store = useStoreState((store) => store);
 
     const [name, setName] = useState(props.name);
     const [type, setType] = useState(props.dataType);
     const [prevNode, nextNode] = useState(null);
     
+    // Whenever name or datatype changes, we update the info and push it back up to the inspector's activeNode. 
     useEffect(() => {
+
+        if (!store.selectedElements)
+            return;
 
         if (!props.editable || prevNode !== store.selectedElements[0])
             return;
@@ -23,6 +28,7 @@ const ColumnInspector = (props) => {
 
     }, [name, type]);
 
+    // When selected Node changes, the inspector changes to new node. 
     useEffect(() => {
         
         if (!store.selectedElements)
@@ -41,8 +47,10 @@ const ColumnInspector = (props) => {
 
             <input type='text' value={name} className='column' className='left' onChange={(e)=>setName(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#5e6f7a'}`}} />
 
-            <input type='text' list='types' value={type} placeholder={type} className='column' className='right' onChange={(e)=>setType(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
-            <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist>
+            <input type='text' list='types' placeholder={type} className='column' className='right' onChange={(e)=>setType(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+                {/* List of data-types */}
+                {/* TODO: Make this work!! Gets overwritten once a value is selected. */}
+                <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist>
 
             <style jsx>{`
 

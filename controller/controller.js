@@ -5,13 +5,15 @@ module.exports = {
   connectToDB: async (URI) => {
     return new Promise((resolve) => {
       const pool = new Pool({ connectionString: URI });
-      const Redirect = dynamic(()=> import("../pages/index.js"))
       // test if db connection works
-      pool.query("SELECT 1", (err, data) => {
-        if (err) return <Redirect />
-        // resolve(new Error(err));
-        return resolve(pool);
-      }); 
+      try {
+        pool.query("SELECT 1", (err, data) => {
+          if (err) return resolve(new Error(err));
+          return resolve(pool);
+        }); 
+      } catch {
+        return resolve(new Error(err));
+      }
     });
   },
   asyncQuery: async (pool, query, params) => {

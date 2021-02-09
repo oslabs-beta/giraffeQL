@@ -10,43 +10,81 @@ import DefaultInspector from '../components/DefaultInspector.js';
 import SchemaIDE from '../components/SchemaIDE.js';
 import Navbar from '../components/Navbar.js';
 
-//Set our custom node component from Node.js
+// Set our custom node component from Node.js
 const nodeTypes = {
   tableNode: Node,
 };
 
-//Various stylings for ReactFlow properties
+// Various stylings for ReactFlow properties
 const graphStyles = { width: '100%', height: '100%' };
 const connectionStyles = { stroke: '#0373fc', strokeWidth: '5px' };
 
-//Dagre layout graph
+// Dagre layout graph
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const Canvas = (props) => {
 
-  //Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
-  //NOTE: When rerendered, all of the existing nodes will have their state reset. This includes expand/collapse state.
-  //TODO: Unbundle/refactor state out of Nodes or find way to memoize data on re-render.
+  // Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
   const [elements, setElements] = useState([]);
   const [index, setNodeCount] = useState(0);
 
   const [layedout, toggleLayout] = useState(false);
   const [updated, updateData] = useState(false);
+  const [startEdit, toggleStartEdit] = useState(false);
 
   const [instance, cacheInstance] = useState(null);
 
-  //Zome prevention
+  // Zoom prevention
   const [zoomOnScroll, setZoomOnScroll] = useState(true);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
-
-  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)));
+  
+  // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
+  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), updateData(true));
   const [activeNode, selectNode] = useState(null);
+  
+  // Where node/element is created
+  const createElement = () => {
 
+    const defaultColumn = {
+      name: 'newColumn',
+      dataType: 'character varying',
+      required: true
+    };
+
+    const column = {
+      id: index.toString(),
+      type: 'tableNode',
+      data: {
+        label: (
+          <div>
+            <div id={`NewTable-${index}`} key={`NewTable-${index}`} nodeid={index} tablename={`New Table #${index}`} columns={[defaultColumn]} selectedEdges={selectedEdges} startExpanded={true} />
+          </div>
+          ),
+        },
+      position: { x: 0, y: 0},
+      sourcePosition: 'right',
+      targetPosition: 'left'
+    }
+
+    const newElements = [...elements];
+    newElements.splice(index, 0, column);
+
+    setElements(newElements);
+    toggleStartEdit(true);
+    selectNode(column);
+    
+    setNodeCount(index + 1);
+    updateData(true);
+
+  };
+  
+  // Built in method of ReactFlow that gives reference to instance of ReactFlow, which is saved to state. 
   const onLoad = (reactFlowInstance) => {
     cacheInstance(reactFlowInstance);
   };  
 
+  // Once we have capture of instance, we are fitting nodes to instance viewport and ability to zoom. 
   useEffect(() => {
 
     if (!instance)
@@ -94,12 +132,12 @@ const Canvas = (props) => {
     });
   };
 
-  //We pass in our elements to the layout
+  // We pass in our elements to the layout
   if (!layedout){
     const layoutedElements = getLayoutedElements(elements);
   }
 
-  //Listeners for user interaction with nodes
+  // Listeners for user interaction with nodes - gets called everytime we connect two nodes to each other. 
   const onConnect = (params) => {
 
     const connection = {
@@ -109,7 +147,6 @@ const Canvas = (props) => {
       target: params.target,
       targetHandle: params.targetHandle,
       animated: true,
-      // type: 'step',
       style: { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' },
     }
 
@@ -119,11 +156,16 @@ const Canvas = (props) => {
     setElements(els => els.concat([connection]));
   };
 
+  // If anywhere on canvas is clicked besides a node, activeNode is set to null
   const onPaneClick = () => selectNode(null);
 
   const onElementClick = (event, element) => {if (isNode(element) && element !== activeNode) return selectNode(element)};
   const onNodeDragStart = (event, node) => {if (node !== activeNode) return selectNode(node)};
+  
+  // Callback that is drilled into all nodes, that returns all of the edges connected to selectedNode.
   const selectedEdges = (node, edges) => {if (node) return getConnectedEdges(node, edges)};
+  
+  // Anytime we update values in editable mode, this is used to update the elements array in state. 
   const nodeValueChange = (node) => {
 
     if(!node.data.label.props.children.props.selectedEdges)
@@ -136,7 +178,6 @@ const Canvas = (props) => {
     setElements(newElements);
 
     updateData(true);
-    
   };
 
   //Runs only once when this page renders
@@ -152,7 +193,7 @@ const Canvas = (props) => {
         //These cannot overlap/duplicate, and they cannot contain any other characters.
         id: `${i}`,
         //Our custom Node.js type
-        type: "tableNode",
+        type: 'tableNode',
         data: {
           //Our "label" holds all data that we pass into the element.
           //In the case of our nodes, we pass in a Node.js component with all of the props from the associated table data index.
@@ -171,14 +212,14 @@ const Canvas = (props) => {
 
     }
 
-    //We also iterate AGAIN through the tables data to add each connection
-    //We do this after our first loop because the connections must happen AFTER the nodes themselves have been established
+    // We also iterate AGAIN through the tables data to add each connection
+    // We do this after our first loop because the connections must happen AFTER the nodes themselves have been established
 
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
     for (let i = 0; i < props.data.tables.length; i++){
 
-      //Going inside the connections array
+      // Going inside the connections array
       for (let j = 0; j < props.data.tables[i].connections.length; j++){
 
         const columnNumber = props.data.tables[i].columns.findIndex(column => column.name === props.data.tables[i].connections[j].originKey);
@@ -186,6 +227,7 @@ const Canvas = (props) => {
         const target = props.data.tables.findIndex(table => table.name === props.data.tables[i].connections[j].destinationTable);
         const targetHandle = props.data.tables[target].columns.findIndex(column => column.name === props.data.tables[i].connections[j].destinationKey);
 
+        // All id's and source/target's etc. need to be converted to STRINGS, not INTs
         const connection = {
           id: `reactflow${i}${alphabet[columnNumber]}-${target}${alphabet[targetHandle]}`,
           source: i.toString(),
@@ -193,7 +235,6 @@ const Canvas = (props) => {
           target: target.toString(),
           targetHandle: alphabet[targetHandle],
           animated: true,
-          // type: 'step',
           style: { stroke: 'rgba(3, 115, 252, .75)', strokeWidth: '1px' },
         }
 
@@ -211,8 +252,9 @@ const Canvas = (props) => {
     updateData(true);
 
   }, []);
-
-  const inspector =  activeNode ? <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} /> : <DefaultInspector selectNode={selectNode} />;
+  
+  // Toggle betwween defaultInspector and nodeInspector when a node is selected.
+  const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
 
   return (
     <div id='root'>
@@ -267,7 +309,7 @@ const Canvas = (props) => {
           overflow: hidden;
           width: 100vw;
           height: 100vh;
-          background-color: #f1f6f8;
+          background-color: #edf2f7;
         }
 
         #canvascontainer{
@@ -285,6 +327,22 @@ const Canvas = (props) => {
 //Runs on page load
 export async function getServerSideProps({ query }) {
 
+  if (!query)
+    return {
+      redirect: {
+        destination: '/?message=error',
+        permanent: false,
+      }
+    }
+
+  if (!query.data)
+    return {
+      redirect: {
+        destination: '/?message=error',
+        permanent: false,
+      }
+    }
+
   //We grab the URI directly from the page's URL (in the context's query)
   const body = {
     URI: query.data
@@ -297,13 +355,14 @@ export async function getServerSideProps({ query }) {
     return {
       redirect: {
         //We redirect the user back to the root page.
-        destination: '/',
+        destination: '/?message=error',
         permanent: false,
+        message: 'Sending some sort of message back'
       },
     }
   }
   
-  const data = await res.json()
+  const data = await res.json();
 
   if (!data) {
     return {

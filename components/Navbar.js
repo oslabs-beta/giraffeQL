@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
 const Navbar = (props) => {
@@ -25,7 +25,7 @@ const Navbar = (props) => {
         <div id='navbar'>
 
             <Link href='/'>
-                <h1>GraphitiQL</h1>
+                <h1>giraffeQL</h1>
             </Link>
             <h2>Codesmith NY 23</h2>
 

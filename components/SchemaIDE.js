@@ -4,30 +4,29 @@ import { useStoreState } from 'react-flow-renderer';
 import generateAllTypes from '../converters/typeDefs.js';
 
 import hljs from 'highlight.js';
-// import hljsDefineGraphQL from 'highlightjs-graphql';
 import javascript from 'highlight.js/lib/languages/javascript';
 
 const SchemaIDE = (props) => {
 
+    // Create instance of store
     const store = useStoreState((store) => store);
 
     const [tables, updateTable] = useState([]);
     const [schema, writeSchema] = useState('');
 
+    // Tells code highlighter which language to read.
     useEffect(() => {
         hljs.registerLanguage("javascript", javascript);
-        // hljsDefineGraphQL(hljs);
     }, []);
 
+    // Taking the data from all nodes/elements whenever there is a change and turning them back to original format. 
     useEffect(() => {
-
-        // if (!props.updated)
-        //     return;
 
         const newTables = [];
 
         const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
+        // ONLY iterating through the node's by filtering out the connections.
         store.elements.filter(node => !node.id.includes('reactflow')).forEach((node, i) => {
 
             const newTable = {};
@@ -36,6 +35,7 @@ const SchemaIDE = (props) => {
             newTable.columns = node.data.label.props.children.props.columns;
             newTable.connections = [];
 
+            // Iterate through the nodes connections
             store.elements.filter(connection => connection.id.includes('reactflow') && connection.source === i.toString()).forEach(connection => {
 
                 const newConnection = {};
@@ -58,11 +58,14 @@ const SchemaIDE = (props) => {
 
     }, [props.updated]);
 
+    // If tables array is changed, outputted schema is refreshed
     useEffect(() => {
         refreshSchema();
         props.resetUpdate(false);
     }, [tables]);
 
+    // Simultaneously, highlighting is updated
+    // TODO: Need to get highlighting working. 
     useEffect(() => {
         hljs.initHighlighting();
     }, [schema]);
@@ -77,7 +80,7 @@ const SchemaIDE = (props) => {
             <div className='sidebar' >
 
                 <div id='gql'><h1>GraphQL</h1><h2>Query</h2></div>
-
+                <button onClick={()=>navigator.clipboard.writeText(schema)}>Copy</button>
                 <pre><code>{schema}</code></pre>
 
             </div>
@@ -151,6 +154,23 @@ const SchemaIDE = (props) => {
                 ::-webkit-scrollbar-track-piece:start {
                     background: transparent;
                     margin-top: 16px;
+                }
+
+                button{
+                    position: fixed;
+                    color: #12b3ab;
+                    border: 1px solid #12b3ab;
+                    border-radius: 4px;
+                    padding: 8px;
+                    outline: none;
+                    background-color: transparent;
+                    margin-top: 20px;
+                    margin-left: 246px;
+
+                    &:hover{
+                        cursor: pointer;
+                        background-color: #1a4949;
+                    }
                 }
 
             `}</style>

@@ -3,30 +3,37 @@ import { useStoreState } from 'react-flow-renderer';
 
 import Column from './Column.js';
 
-//By default custom Nodes use React.memo() so that their data becomes memoized.
+// By default custom Nodes use React.memo() so that their data becomes memoized.
 export default memo(({ data }) => {
 
-    //We access our "props" by going into the passed in data and extracting it from several nested objects
-    //This is only necessaray because of how data gets passed by the element label
+    // We access our "props" by going into the passed in data and extracting it from several nested objects
+    // This is only necessaray because of how data gets passed by the element label
     const props = data.label.props.children.props;
     const store = useStoreState((store) => store);
 
-    //State for whether this is the activeNode or not
+    // State for whether this is the activeNode or not
     const [selected, selectNode] = useState(false);
-    //State for expand/collapse functionality
+    // State for expand/collapse functionality
     const [expand, showTable] = useState(false);
-    //An array storing all in-going and out-going edges
+    // An array storing all in-going and out-going edges
     const [edges, populateEdges] = useState([]);
 
-    //useEffect #1 on [store.edges]:
-    //Populate the edges array on first render, and every time our edges change
+    // useEffect #0 (only called on new nodes):
     useEffect(() => {
-        populateEdges(props.selectedEdges([store.elements[props.nodeid]], store.edges));
+        if (props.startExpanded)
+            showTable(true);
+    }, [])
+
+    // useEffect #1 on [store.edges]:
+    // Populate the edges array on first render, and every time our edges change
+    useEffect(() => {
+        const target = store.elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.id === props.nodeid.toString());
+        populateEdges(props.selectedEdges([store.elements.filter(node => !node.id.includes('reactflow'))[target]], store.edges));
     }, [store.edges.length]);
 
-    //useEffect #2 on [selectedElements]:
-    //Checks the selectedElement's id against this node's id
-    //If they match, this becomes the selected node.
+    // useEffect #2 on [selectedElements]:
+    // Checks the selectedElement's id against this node's id
+    // If they match, this becomes the selected node.
     useEffect(() => {
 
         if (!store.selectedElements && selected)
@@ -48,15 +55,15 @@ export default memo(({ data }) => {
 
     }, [store.selectedElements]);
 
-    //useEffect #3 on [edges]:
-    //Checks for changes in the edges state array length
-    //When the array becomes greater than 0, we highlight the edges and color in-going and out-going
+    // useEffect #3 on [edges]:
+    // Checks for changes in the edges state array length
+    // When the array becomes greater than 0, we highlight the edges and color in-going and out-going
     useEffect(() => {
 
         if (!selected)
             return;
 
-            edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
+        edges.forEach(edge => edge.source === props.nodeid.toString() ? edge.style = { stroke: 'rgba(3, 115, 252, 1)', strokeWidth: '5px' } : edge.style = { stroke: 'rgba(255, 107, 107, 1)', strokeWidth: '5px' });
 
     }, [selected])
 
@@ -69,8 +76,8 @@ export default memo(({ data }) => {
         });
     }
 
-    //Array of possible header colors
-    //TOOD: Expand, make editable
+    // Array of possible header colors
+    // TODO: replace with palette module
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
@@ -83,7 +90,8 @@ export default memo(({ data }) => {
                 {props.tablename}
             </div>
             
-            <div className='tables' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0.6s ease'}`}} >
+            {/* How each column is populated in each node */}
+            <div className='columns' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0.6s ease'}`}} >
                 {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} nodeid={props.nodeid} index={i} dataType={column.dataType} edges={edges} expanded={expand} selected={selected} selectedEdges={props.selectedEdges} />)}
             </div>
 
@@ -165,7 +173,7 @@ export default memo(({ data }) => {
                     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
                 }
 
-                .tables{
+                .columns{
                     // max-height: 250px;
                     // margin: 8px;
                     margin-top: 16px;

@@ -1,4 +1,4 @@
-import '../styles/globals.css'
+import '../styles/globals.scss'
 import 'highlight.js/styles/an-old-hope.css';
 
 const MyApp = ({ Component, pageProps }) => {
