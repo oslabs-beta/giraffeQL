@@ -51,11 +51,17 @@ function generateAllTypes(tables) {
   let tableQuery = `type Query {\n`;
   const [baseTables, joinTables] = sortTables(tables);
   const allJoinConnections = joinConnections(joinTables);
+  let resolvers = 'const resolvers = {\n';
+  let objectResolvers = '';
   baseTables.forEach((table) => {
-    allTypes += tableToType(table, allJoinConnections[table.name]) + '\n\n';
+    allTypes += `${tableToType(table, allJoinConnections[table.name])}\n\n`;
     tableQuery += `  ${mapConnection(table.name)}\n`;
+    resolvers += `  ${generateResolverFunc(table.name)}\n`;
+    // objectResolvers += generateObjectResolver();
+    objectResolvers += `${generateObjectResolver(table, allJoinConnections[table.name])}\n`;
   });
-  return allTypes + '\n\n' + tableQuery + '}' + '`';
+  resolvers += objectResolvers + '}';
+  return allTypes + '\n' + tableQuery + '}`\n\n' + resolvers;
 }
 
 /*
@@ -66,6 +72,33 @@ function generateAllTypes(tables) {
     planets: [Planet]
   }
   */
+function generateResolverFunc(table) {
+  return (
+    `${table}: (parent, args, context, info) => {
+      try {
+        // fill in with your db query
+      } catch (err) {
+        throw new Error(err);
+      }
+    },`
+  )
+}
 
-
+function generateObjectResolver(table, joinConnections) {
+  const object = capitalizeFirstLetter(singular(table.name));
+  let objResolver = ` ${object}: {\n`;
+  table.connections.forEach((conn) => {
+    objResolver += `  ${generateResolverFunc(conn.destinationTable)}\n`
+  })
+  if (joinConnections) {
+    joinConnections.forEach((jc) => {
+      objResolver += `  ${generateResolverFunc(jc)}\n`;
+    })
+  }
+  return objResolver + '},\n';
+}
 module.exports = generateAllTypes;
+// module.exports = {
+//   generateAllTypes,
+//   generateObjectResolver
+// };
