@@ -1,10 +1,30 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar.js';
 
 const Home = (props) => {
 
     const [URI, setURI] = useState('');
+
+    const router = useRouter();
+
+    useEffect(() => {
+      setURI('');
+    }, []);
+
+    const checkURLStatus = () =>{
+
+      let path = '';
+
+      if (!URI.includes('postgres://')) path = 'postgres://' + URI;
+      else path = URI;
+
+      const href = { pathname: '/canvas', query: { data: [path] } }
+
+      router.push(href)
+    }
+
+    const instructions = props.message === 'error' ? 'Invalid URI, please try again:' : 'Type a database URI below to get started:';
 
     return (
         <div id='home'>
@@ -28,12 +48,13 @@ const Home = (props) => {
 
               <h2>and a short tagline!</h2>
 
-              <h3>Type a database URI below to get started:</h3>
+              <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
 
               <div id='homesearch'>
 
+                <h4>postgres://</h4>
                 <input type='text' spellCheck='false' placeholder='Enter a valid PostgreSQL URI' val={URI} onChange={e => setURI(e.target.value)} />
-                <Link href={{ pathname: '/canvas', query: { data: URI } }}><button disabled={URI.length < 1 ? true : false}><span>Enter</span></button></Link>
+                <button onClick={checkURLStatus} disabled={URI.length < 1 ? true : false}><span>Enter</span></button>
 
               </div>
 
@@ -123,12 +144,28 @@ const Home = (props) => {
                 text-align: center;
                 margin: 4px;
               }
+              
+              h4{
+                margin-top: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                border-radius: 4px 0px 0px 4px;
+                padding: 8px;
+                outline: none;
+                font-size: 12px;
+                border: 1px solid #6f8195;
+                color: #6f8195;
+                background-color: #d9e1e7;
+                box-shadow: none;
+              }
 
               input{
 
                 border: 1px solid #6f8195;
                 border-right: none;
-                border-radius: 4px 0px 0px 4px;
+                // border-radius: 4px 0px 0px 4px;
                 color: #6f8195;
                 background-color: white;
                 outline: none;
@@ -198,6 +235,7 @@ const Home = (props) => {
 
             #homesearch{
               display: flex;
+              height: 32px;
             }
 
           `}</style>
@@ -207,3 +245,17 @@ const Home = (props) => {
 }
 
 export default Home;
+
+export async function getServerSideProps({ query }) {
+
+  if (!query.message)
+    return {
+      props: {}
+    }
+
+  const message = query.message;
+
+  return {
+    props: {message},
+  }
+}
