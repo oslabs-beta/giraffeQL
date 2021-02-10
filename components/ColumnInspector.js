@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useStoreState } from 'react-flow-renderer';
 
+import ColumnOptions from './ColumnOptions.js';
+import Star from './icons/Star.js';
+
 const ColumnInspector = (props) => {
 
     // Create instance of store.
@@ -9,6 +12,8 @@ const ColumnInspector = (props) => {
     const [name, setName] = useState(props.name);
     const [type, setType] = useState(props.dataType);
     const [prevNode, nextNode] = useState(null);
+    
+    const [options, toggleOptions] = useState(false);
     
     // Whenever name or datatype changes, we update the info and push it back up to the inspector's activeNode. 
     useEffect(() => {
@@ -37,6 +42,9 @@ const ColumnInspector = (props) => {
 
     }, [store.selectedElements])
 
+    const starButton = (
+        <svg className='star' width={24} height={24} viewBox="0 0 24 24" ><path d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>);
+
     const dataTypes = ['integer', 'bigint', 'date', 'character varying', 'boolean'];
 
     return (
@@ -51,11 +59,15 @@ const ColumnInspector = (props) => {
                 {/* TODO: Make this work!! Gets overwritten once a value is selected. */}
                 <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist>
 
-            <input type='checkbox' checked={props.isRequired} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+            <input type='checkbox' checked={props.isRequired} onChange={()=>console.log('cool')} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
 
-            <input type='checkbox' checked={props.isPrimary} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+            <button onClick={console.log('changing primary key!')} className='column' className='right' className='primarykey' >
+                <div className='star'>
+                    <svg width={24} height={24} viewBox="0 0 24 24" ><path fill={`${props.isPrimary ? '#0373fc' : 'transparent' }`} d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>
+                </div>
+            </button>
 
-            <button className='column' className='columnoptions'>{`⋮`}</button>
+            <button onClick={()=>toggleOptions(!options)} className='column' className='columnoptions'>{`⋮`}</button> <ColumnOptions expanded={options} className='optionmodal' />
 
             <style jsx>{`
 
@@ -127,6 +139,35 @@ const ColumnInspector = (props) => {
                     background-color: transparent;
                     color: #12b3ab;
                     cursor: pointer;
+                }
+
+                .primarykey{
+                    border: none;
+                    outline: none;
+                    background-color: transparent;
+                }
+
+                .star{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 6px;
+                    transform: scale(.5);
+                    height: 0;
+                    margin-bottom: 5px;
+
+                    svg{
+                        path{
+                            stroke-width: 2;
+                            stroke: #6f8195;
+                        }
+                    }
+
+                    svg{
+                        &:hover > path{
+                            stroke: #0373fc;
+                        }
+                    }
                 }
 
             `}</style>
