@@ -77,8 +77,10 @@ const NodeInspector = (data) =>{
 
         addColumns(newColumns);
         
+        const target = store.elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.id === activeNode.id);
+
         // Pushes columns into state. 
-        store.elements.filter(node => !node.id.includes('reactflow'))[activeNode.id].data.label.props.children.props.columns.push(column)
+        store.elements.filter(node => !node.id.includes('reactflow'))[target].data.label.props.children.props.columns.push(column)
         savechanges();
     }
 

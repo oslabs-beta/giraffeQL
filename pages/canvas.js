@@ -41,12 +41,16 @@ const Canvas = (props) => {
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
 
   const [deleteNode, selectDelete] = useState(null);
+  const [deleteWarning, toggleWarning] = useState(true);
 
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
   const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), updateData(true));
 
   const onElementsRemove = (elementsToRemove) => {
-    selectDelete(elementsToRemove);
+    if (deleteWarning)
+      selectDelete(elementsToRemove);
+    else
+      confirmRemoveElement(elementsToRemove);
   }
   
   const [activeNode, selectNode] = useState(null);
@@ -263,7 +267,7 @@ const Canvas = (props) => {
   
   // Toggle betwween defaultInspector and nodeInspector when a node is selected.
   const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
-  const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} />;
+  const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} toggleWarning={toggleWarning} />;
 
   return (
     <div id='root'>
