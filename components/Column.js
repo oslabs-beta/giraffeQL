@@ -1,6 +1,8 @@
 import { Handle, useStoreState } from 'react-flow-renderer';
 import { useState, useEffect } from 'react';
 
+import Star from '../components/icons/Star.js';
+
 const Column = (props) => {
     
     // Create a reference to our store and set up state to hold active column and activeEdges
@@ -93,8 +95,10 @@ const Column = (props) => {
 
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
+    const star = props.isPrimary && props.expanded ? <Star /> : null;
+
     return (
-        <div className='container' onMouseOver={()=>selectColumn(true)} onMouseLeave={()=>selectColumn(false)}>
+        <div className='container' onMouseOver={()=>selectColumn(true)} onMouseLeave={()=>selectColumn(false)} >
 
             {/* Our Table component is split into two columns: the column name and it's associated Data Type.
                 Each of these also contains an input (target) and output (source) "Handle" component that allows
@@ -117,6 +121,7 @@ const Column = (props) => {
                 />
 
                 {/* Column Name */}
+                {star}
                 {props.name}
 
             </div>

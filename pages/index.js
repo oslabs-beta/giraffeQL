@@ -85,11 +85,21 @@ const Home = (props) => {
 
               <div id='homesearch'>
               
-                <div id='postgres'>postgres://</div>
+                <div id='postgres'><input id='databaselist' type='text' list='databases' placeholder='postgres://' /><datalist id='databases' ><option value='postgres://' /></datalist></div>
                 <input type='text' spellCheck='false' placeholder='Enter a valid PostgreSQL URI' val={URI} onChange={e => setURI(e.target.value)} />
                 <button onClick={checkURLStatus} disabled={URI.length < 1 ? true : false}><span>Enter</span></button>
 
               </div>
+
+              <br/>
+
+              <h3> - or - </h3>
+
+              <br/>
+
+              <Link href='canvas'>
+                <button id='newprojectbtn'><span>New Project</span></button>
+              </Link>
               
             </div>
             
@@ -134,7 +144,7 @@ const Home = (props) => {
               box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
               border-radius: 8px;
               width: 400px;
-              height: 330px; 
+              height: 420px; 
               background-color: white;
             }
 
@@ -218,6 +228,14 @@ const Home = (props) => {
                 }
   
               }
+
+              #databaselist{
+                padding: 0;
+                margin: 0;
+                border: none;
+                outline: none;
+                background-color: transparent;
+              }
   
               button{
                 transition: 0s;
@@ -263,6 +281,17 @@ const Home = (props) => {
                   top: 0px;
                 }
 
+              }
+            }
+
+            #newprojectbtn{
+              border: none !important;
+              border-radius: 0 !important;
+              background-color: #9b5de5 !important;
+              box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5 !important;
+
+              &:hover{
+                box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%) !important;
               }
             }
 
