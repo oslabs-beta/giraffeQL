@@ -94,7 +94,16 @@ const Home = (props) => {
             </div>
             
            </div>
-           { pageLoading ? (<div id='loading'>Searching for your database...<div><Image src='/searchGiraffe.jpeg' width='250' height='250' /></div></div>): <div/>}
+           { pageLoading ? (<div id='loading'>Searching for your database...
+           <div>
+             <Image
+                src='/searchGiraffe.jpeg' 
+                width='330' 
+                height='330'
+                rel='prefetch'
+             />
+           </div>
+           </div>) : <div/>}
           <style jsx>{`
 
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
@@ -272,7 +281,7 @@ const Home = (props) => {
             }
 
             #loading{
-              font-size: 36px;  
+              font-size: 28px;  
               font-weight: 700;
               color: #2d3748;
               text-align: center;
