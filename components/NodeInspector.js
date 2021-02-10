@@ -54,20 +54,11 @@ const NodeInspector = (data) =>{
 
     }, [tableName]);
 
-    // useEffect(() => {
-    //   if (columns.length === 0) return;
-    //   toggleEdit(true) // --> Can't get it to get out of edit mode
-    // },[columns.length])
-
-    // Submit????
     const submit = (e) => {
-
         if (e.code === 'Enter' && editable)
             return savechanges();
-
     }
 
-    // Saves changes... or does it?
     const savechanges = () => {
         return (toggleEdit(false), data.nodeValueChange(activeNode));
     }
@@ -94,7 +85,7 @@ const NodeInspector = (data) =>{
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div onDoubleClick={() => toggleEdit(true)} className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
+        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
 
             <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(278px)' }`}} >{expand ? '<' : '>'}</button>
 
@@ -104,12 +95,12 @@ const NodeInspector = (data) =>{
                 <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil editable={editable ? 1 : undefined} /></div>
 
                 {/* Tablename */}
-                <div className='tablename' onDoubleClick={() => toggleEdit(true)} style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} >
+                <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} onDoubleClick={() => toggleEdit(true)} >
                     <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
                 </div>
 
                 {/* Columns */}
-                {columns.map((column, i) => <ColumnInspector name={column.name} index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} dataType={column.dataType} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
+                {columns.map((column, i) => <ColumnInspector name={column.name} index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} dataType={column.dataType} editable={editable} activeNode={activeNode} updateNode={updateNode} onDoubleClick={() => toggleEdit(true)} />)}
 
                 <div id='options'><button onClick={newColumn} >Add Column</button></div>
 

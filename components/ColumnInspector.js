@@ -40,7 +40,7 @@ const ColumnInspector = (props) => {
     const dataTypes = ['integer', 'bigint', 'date', 'character varying', 'boolean'];
 
     return (
-        <div className='container' style={{backgroundColor: `${props.editable ? '#c0dbfd' : 'transparent'}`}}>
+        <div className='container' style={{backgroundColor: `${props.editable ? '#c0dbfd' : 'transparent'}`}} onDoubleClick={props.onDoubleClick}>
 
             {/* Our Table component is split into two columns: the column name and it's associated Data Type.*/}
 
