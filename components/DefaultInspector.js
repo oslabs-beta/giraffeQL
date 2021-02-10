@@ -23,7 +23,7 @@ const DefaultInspector = (props) => {
     return (
         <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-395px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}}>
 
-            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(313px)' }`}} >{expand ? '<' : '>'}</button>
+            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(299px)' }`}} >{expand ? '<' : '>'}</button>
 
             <div id='header' >Tables <button id='createbtn' onClick={props.createNode} >+</button></div>
 
@@ -41,7 +41,7 @@ const DefaultInspector = (props) => {
                 .inspector {
                     position: fixed;
                     height: 100%;
-                    width: 23%;
+                    width: 25%;
                     float: left;
                     background-color: white;
                     z-index: 999999998;
@@ -54,7 +54,7 @@ const DefaultInspector = (props) => {
                     position: fixed;
                     padding: 4px 8px;
                     border-bottom-right-radius: 8px;
-                    margin-left: 23%;
+                    margin-left: 25%;
                     margin-top: 0;
                     color: #6f8195;
                     background-color: #d8e3e8;

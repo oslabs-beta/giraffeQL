@@ -3,6 +3,7 @@ import { useStoreState } from 'react-flow-renderer';
 
 import ColumnInspector from './ColumnInspector.js';
 import Pencil from './icons/Pencil.js';
+import Key from './icons/Key.js';
 
 const NodeInspector = (data) =>{
 
@@ -87,9 +88,9 @@ const NodeInspector = (data) =>{
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-360px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
+        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-385px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
 
-            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(278px)' }`}} >{expand ? '<' : '>'}</button>
+            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(290px)' }`}} >{expand ? '<' : '>'}</button>
 
             <div className='sidebar' >
 
@@ -101,8 +102,12 @@ const NodeInspector = (data) =>{
                     <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
                 </div>
 
+                <div id="tableofcontents">
+                    <h1>Name</h1> <h1>|</h1> <h1>Type</h1> <h1>|</h1> <h1>Req</h1> <h1>|</h1> <Key /> <h1>|</h1> <h1></h1>
+                </div>
+
                 {/* Columns */}
-                {columns.map((column, i) => <ColumnInspector name={column.name} index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} dataType={column.dataType} editable={editable} activeNode={activeNode} updateNode={updateNode} onDoubleClick={() => toggleEdit(true)} />)}
+                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} activeNode={activeNode} updateNode={updateNode} onDoubleClick={() => toggleEdit(true)} />)}
 
                 <div id='options'><button onClick={newColumn} >Add Column</button></div>
 
@@ -117,7 +122,7 @@ const NodeInspector = (data) =>{
                 .inspector {
                     position: fixed;
                     height: 100%;
-                    width: 23%;
+                    width: 25%;
                     float: left;
                     background-color: white;
                     z-index: 999999998;
@@ -125,6 +130,8 @@ const NodeInspector = (data) =>{
                 }
 
                 .tablename{
+                    position: relative;
+                    z-index: 1;
                     font-size: 24px;
                     text-align: left;
                     background-color: white;
@@ -153,7 +160,7 @@ const NodeInspector = (data) =>{
                     position: fixed;
                     padding: 4px 8px;
                     border-bottom-right-radius: 8px;
-                    margin-left: 23%;
+                    margin-left: 25%;
                     margin-top: 0;
                     color: #6f8195;
                     background-color: #d8e3e8;
@@ -165,6 +172,24 @@ const NodeInspector = (data) =>{
                     &:hover{
                         color: #12b3ab;
                         background-color: #cad5e0;
+                    }
+                }
+
+                #tableofcontents{
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-flow: row nowrap;
+                    background-color: #f0f0f0;
+                    border-bottom: 2px solid #cccccc;
+                    height: 16px;
+                    padding: 8px;
+
+                    h1{
+                        font-size: 12px;
+                        font-weight: 300;
+                        color: #6f8195;
                     }
                 }
 

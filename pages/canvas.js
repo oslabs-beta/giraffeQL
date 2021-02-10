@@ -195,6 +195,9 @@ const Canvas = (props) => {
   //Runs only once when this page renders
   useEffect(() => {
 
+    if (!props.data)
+      return;
+
     const newElements = [];
    
     for (let i = 0; i < props.data.tables.length; i++){
@@ -341,20 +344,9 @@ const Canvas = (props) => {
 //Runs on page load
 export async function getServerSideProps({ query }) {
 
-  if (!query)
-    return {
-      redirect: {
-        destination: '/?message=error',
-        permanent: false,
-      }
-    }
-
   if (!query.data)
     return {
-      redirect: {
-        destination: '/?message=error',
-        permanent: false,
-      }
+      props: {}, 
     }
 
   //We grab the URI directly from the page's URL (in the context's query)
