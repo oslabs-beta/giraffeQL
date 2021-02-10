@@ -100,6 +100,7 @@ function generateAllTypes(tables) {
   let tableQuery = `  type Query {\n`;
   //Forming type mutation
   let typeMutation = `  type Mutation {\n`;
+  let mutationResolvers = `  Mutation: {\n`;
   const [baseTables, joinTables] = sortTables(tables);
   const allJoinConnections = joinConnections(joinTables);
   let resolvers = 'const resolvers = {\n';
@@ -109,11 +110,13 @@ function generateAllTypes(tables) {
     tableQuery += `    ${mapConnection(table.name)}\n`;
     typeMutation += `${createObjMutations(table)}\n`;
     resolvers += `  ${generateResolverFunc(table.name)}\n`;
+    mutationResolvers += `${generateMutationResolvers(table.name)}\n`;
     // objectResolvers += generateObjectResolver();
     objectResolvers += `${generateObjectResolver(table, allJoinConnections[table.name])}\n`;
   });
-  resolvers += objectResolvers + '}';
-  return allTypes + '\n' + tableQuery + '  }\n\n' + typeMutation + '  }\n' + '}`\n\n' + resolvers;
+  resolvers += objectResolvers + mutationResolvers + '  }\n' + '}';
+  const exportText = `module.exports = {\n  typeDefs,\n  resolvers\n}`;
+  return allTypes + '\n' + tableQuery + '  }\n\n' + typeMutation + '  }\n' + '}`\n\n' + resolvers + '\n\n' + exportText;
 }
 
 /*
@@ -124,6 +127,17 @@ function generateAllTypes(tables) {
     planets: [Planet]
   }
   */
+
+function generateMutationResolvers(tableName) {
+  const mutations = ['create', 'update', 'delete'];
+  let mutationResolvers = '';
+  mutations.forEach((mutation) => {
+    const funcName = `    ${mutation}${capitalizeFirstLetter(singular(tableName))}`;
+    mutationResolvers += generateResolverFunc(funcName) + '\n';
+  })
+  return mutationResolvers;
+}
+
 function generateResolverFunc(table) {
   return (
     `${table}: (parent, args, context, info) => {
@@ -147,11 +161,6 @@ function generateObjectResolver(table, joinConnections) {
       objResolver += `  ${generateResolverFunc(jc)}\n`;
     })
   }
-  return objResolver + '},\n';
+  return objResolver + '  },\n';
 }
 module.exports = generateAllTypes;
-// module.exports = {
-//   generateAllTypes,
-//   generateObjectResolver,
-//   createObjMutations
-// };
