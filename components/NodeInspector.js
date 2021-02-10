@@ -20,6 +20,8 @@ const NodeInspector = (data) =>{
     const [activeNode, updateNode] = useState(data.data);
     const [columns, addColumns] = useState(props.columns);
     
+    const [expandedOptions, setOptionsMenu] = useState(null);
+
     // When a new node is created, we automatically start in edit mode.
     useEffect(() => {
         if (data.startEdit){
@@ -85,6 +87,19 @@ const NodeInspector = (data) =>{
         savechanges();
     }
 
+    const deleteColumn = (index) => {
+      const newColumns = [...columns];
+      newColumns.splice(index, 1);
+
+      addColumns(newColumns);
+      
+      const target = store.elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.id === activeNode.id);
+
+      // Pushes columns into state. 
+      store.elements.filter(node => !node.id.includes('reactflow'))[target].data.label.props.children.props.columns.splice(index, 1)
+      savechanges();
+    }
+
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
@@ -107,7 +122,7 @@ const NodeInspector = (data) =>{
                 </div>
 
                 {/* Columns */}
-                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
+                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} expandedOptions={expandedOptions} setOptionsMenu={setOptionsMenu} deleteColumn={deleteColumn} isPrimary={column.primaryKey} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
 
                 <div id='options'><button onClick={newColumn} >Add Column</button></div>
 
