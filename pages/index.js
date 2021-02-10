@@ -244,6 +244,12 @@ const Home = (props) => {
                 border: none;
                 outline: none;
                 background-color: transparent;
+                width: 96px;
+                color: #6f8195;
+
+                ::placeholder{
+                  color: #6f8195;
+                }
               }
   
               button{

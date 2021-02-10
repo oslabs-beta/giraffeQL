@@ -103,11 +103,11 @@ const NodeInspector = (data) =>{
                 </div>
 
                 <div id="tableofcontents">
-                    <h1>Name</h1> <h1>|</h1> <h1>Type</h1> <h1>|</h1> <h1>Req</h1> <h1>|</h1> <Key /> <h1>|</h1> <h1></h1>
+                    <h1 className='column1'>Name</h1> <h1>|</h1> <h1 className='column2'>Type</h1> <h1>|</h1> <h1 className='column3'>Req</h1> <h1>|</h1> <div className='column4' ><Key /></div> <h1>|</h1> <h1 className='column5'></h1>
                 </div>
 
                 {/* Columns */}
-                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} activeNode={activeNode} updateNode={updateNode} onDoubleClick={() => toggleEdit(true)} />)}
+                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
 
                 <div id='options'><button onClick={newColumn} >Add Column</button></div>
 
@@ -179,7 +179,7 @@ const NodeInspector = (data) =>{
                     position: relative;
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
+                    // text-align: center;
                     flex-flow: row nowrap;
                     background-color: #f0f0f0;
                     border-bottom: 2px solid #cccccc;
@@ -190,6 +190,24 @@ const NodeInspector = (data) =>{
                         font-size: 12px;
                         font-weight: 300;
                         color: #6f8195;
+                    }
+
+                    .column1{
+                        width: 120px;
+                    }
+                    .column2{
+                        width: 120px;
+                    }
+                    .column3{
+                        text-align: center;
+                        width: 60px;
+                    }
+                    .column4{
+                        text-align: center;
+                        width: 30px;
+                    }
+                    .column5{
+                        width: 10px;
                     }
                 }
 
