@@ -11,10 +11,21 @@ const ColumnInspector = (props) => {
 
     const [name, setName] = useState(props.name);
     const [type, setType] = useState(props.dataType);
+    const [required, setRequired] = useState(props.isRequired);
     const [prevNode, nextNode] = useState(null);
     
     const [options, toggleOptions] = useState(false);
     
+    useEffect(() => {
+      if (props.expandedOptions === null) {
+        toggleOptions(false);
+        return;
+        };
+
+      if (props.expandedOptions === props.index) toggleOptions(true)
+      else toggleOptions(false);
+
+    }, [props.expandedOptions])
     // Whenever name or datatype changes, we update the info and push it back up to the inspector's activeNode. 
     useEffect(() => {
 
@@ -27,10 +38,11 @@ const ColumnInspector = (props) => {
 
         newNode.data.label.props.children.props.columns[props.index].name = name;
         newNode.data.label.props.children.props.columns[props.index].dataType = type;
+        newNode.data.label.props.children.props.columns[props.index].required = required;
 
         props.updateNode(newNode);
 
-    }, [name, type]);
+    }, [name, type, required]);
 
     // When selected Node changes, the inspector changes to new node. 
     useEffect(() => {
@@ -59,15 +71,15 @@ const ColumnInspector = (props) => {
                 {/* TODO: Make this work!! Gets overwritten once a value is selected. */}
                 <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist>
 
-            <input type='checkbox' checked={props.isRequired} onChange={()=>console.log('cool')} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+            <input type='checkbox' disabled={props.editable ? '' : 'disabled'} checked={required} onChange={()=> setRequired(!required)} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
 
-            <button onClick={console.log('changing primary key!')} className='column' className='right' className='primarykey' >
+            <button disabled={props.editable ? '' : 'disabled'} className='column' className='right' className='primarykey' >
                 <div className='star'>
                     <svg width={24} height={24} viewBox="0 0 24 24" ><path fill={`${props.isPrimary ? '#0373fc' : 'transparent' }`} d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>
                 </div>
             </button>
 
-            <button onClick={()=>toggleOptions(!options)} className='column' className='columnoptions'>{`⋮`}</button> <ColumnOptions expanded={options} className='optionmodal' />
+            <button onClick={()=> toggleOptions(props.options ? props.setOptionsMenu(null) : props.setOptionsMenu(props.index) )} className='column' className='columnoptions'>{`⋮`}</button> <ColumnOptions setOptionsMenu={props.setOptionsMenu} index={props.index} deleteColumn={props.deleteColumn} expanded={options} className='optionmodal' />
 
             <style jsx>{`
 
