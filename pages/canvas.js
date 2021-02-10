@@ -9,7 +9,7 @@ import NodeInspector from '../components/NodeInspector.js';
 import DefaultInspector from '../components/DefaultInspector.js';
 import SchemaIDE from '../components/SchemaIDE.js';
 import Navbar from '../components/Navbar.js';
-import DeleteNodeModal from '../components/DeleteNodeModal.js';
+import DeleteModal from '../components/DeleteModal.js';
 
 // Set our custom node component from Node.js
 const nodeTypes = {
@@ -39,15 +39,20 @@ const Canvas = (props) => {
   // Zoom prevention
   const [zoomOnScroll, setZoomOnScroll] = useState(true);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
-  const [deleteConfirmed, confirmNodeDeletion] = useState(null);
+
+  const [deleteNode, selectDelete] = useState(null);
+  const [deleteWarning, toggleWarning] = useState(true);
+
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
-  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), updateData(true), confirmNodeDeletion(null));
+  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), updateData(true));
 
   const onElementsRemove = (elementsToRemove) => {
-    confirmNodeDeletion(elementsToRemove);
+    if (deleteWarning)
+      selectDelete(elementsToRemove);
+    else
+      confirmRemoveElement(elementsToRemove);
   }
   
-
   const [activeNode, selectNode] = useState(null);
   
   // Where node/element is created
@@ -262,7 +267,7 @@ const Canvas = (props) => {
   
   // Toggle betwween defaultInspector and nodeInspector when a node is selected.
   const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
-  const deleteNode = !deleteConfirmed ? <div/> : <DeleteNodeModal deleteConfirmed={deleteConfirmed} confirmRemoveElement={confirmRemoveElement} confirmNodeDeletion={confirmNodeDeletion}/>;
+  const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} toggleWarning={toggleWarning} />;
 
   return (
     <div id='root'>
@@ -306,8 +311,7 @@ const Canvas = (props) => {
               {/* Background pattern, can be lines or dots */}
               
           </ReactFlow>
-          {deleteNode}
-          {/* { !deleteConfirmed ? (<DeleteNodeModal />): <div/>} */}
+          {deleteModal}
           <SchemaIDE updated={updated} resetUpdate={updateData} />
         </ReactFlowProvider>
         
