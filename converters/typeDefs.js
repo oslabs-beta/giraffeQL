@@ -131,8 +131,9 @@ function generateAllTypes(tables) {
 function generateMutationResolvers(tableName) {
   const mutations = ['create', 'update', 'delete'];
   let mutationResolvers = '';
+  const objName = capitalizeFirstLetter(singular(tableName));
   mutations.forEach((mutation) => {
-    const funcName = `    ${mutation}${capitalizeFirstLetter(singular(tableName))}`;
+    const funcName = `    ${mutation}${objName}`;
     mutationResolvers += generateResolverFunc(funcName) + '\n';
   })
   return mutationResolvers;
