@@ -1,15 +1,17 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
-import { useStoreState } from 'react-flow-renderer';
 
-const DeleteNodeModal = (props) => {
+const DeleteModal = (props) => {
 
   return (
     <div id='deletemodal'>
+
       <div id='content'>
       Are you sure you want to delete this table, dummy?
       </div>
-      <button onClick={()=> props.confirmRemoveElement(props.deleteConfirmed)}>Yes</button><button onClick={() => props.confirmNodeDeletion(null)}>No</button>
+
+      <button onClick={()=> props.confirmRemoveElement(props.deleteNode)}>Yes</button>
+      <button onClick={() => props.selectDelete(null)}>No</button>
+
     <style jsx>{`
 
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
@@ -74,4 +76,4 @@ const DeleteNodeModal = (props) => {
   )
 }
 
-export default DeleteNodeModal;
+export default DeleteModal;
