@@ -2,16 +2,18 @@
 module.exports = {
   convertDataType: (sqlDataType) => {
     switch (sqlDataType) {
-      case "character varying":
-        return "String";
-      case "integer":
-        return "Int";
-      case "bigint":
-        return "Int";
-      case "date":
-        return "Int";
+      case 'character varying':
+        return 'String';
+      case 'integer':
+        return 'Int';
+      case 'bigint':
+        return 'Float';
+      case 'date':
+        return 'Int';
+      case 'boolean': 
+        return 'Boolean'
       default:
-        return "Unknown";
+        return 'String';
     }
   },
 
