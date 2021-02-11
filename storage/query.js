@@ -1,5 +1,6 @@
 // Store all SQL syntax
 module.exports = {
+
   dbDataQuery: `SELECT a.name,
       a.columns,
       json_agg(CASE 
@@ -15,11 +16,21 @@ module.exports = {
         jsonb_agg(json_build_object(
           'name', col.column_name,
           'dataType', col.data_type,
-          'required', CASE col.is_nullable WHEN 'YES' THEN false ELSE true END
+          'required', CASE col.is_nullable WHEN 'YES' THEN false ELSE true END,
+		  'primaryKey', CASE WHEN pks.column_name IS NOT NULL THEN true ELSE false END
         )) as columns
       FROM information_schema.tables tbs 
       JOIN information_schema.columns col 
       ON tbs.table_name = col.table_name 
+ 	  LEFT JOIN (
+		  SELECT kcu.table_name, kcu.column_name
+		  FROM information_schema.table_constraints tc 
+		  JOIN information_schema.key_column_usage kcu 
+		  ON tc.constraint_name = kcu.constraint_name 
+		  WHERE tc.constraint_type = 'PRIMARY KEY'
+	  ) pks
+	  ON tbs.table_name = pks.table_name
+	  AND col.column_name = pks.column_name
       WHERE tbs.table_schema = 'public'
         AND table_type = 'BASE TABLE'
       GROUP BY tbs.table_name

@@ -92,7 +92,7 @@ export default memo(({ data }) => {
             
             {/* How each column is populated in each node */}
             <div className='columns' style={{maxHeight: `${expand ? '4000px' : '0px'}`, overflowY: `${expand ? 'visible' : 'hidden'}`, transition: `${!  expand ? 'all .6s ease' : 'all 0.6s ease'}`}} >
-                {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} nodeid={props.nodeid} index={i} dataType={column.dataType} edges={edges} expanded={expand} selected={selected} selectedEdges={props.selectedEdges} />)}
+                {props.columns.map((column, i) => <Column name={column.name} id={`${column.name}#${i}`} key={`${column.name}#${i}`} nodeid={props.nodeid} index={i} dataType={column.dataType} isPrimary={column.primaryKey} edges={edges} expanded={expand} selected={selected} selectedEdges={props.selectedEdges} />)}
             </div>
 
             <div className='nodecontainer' />

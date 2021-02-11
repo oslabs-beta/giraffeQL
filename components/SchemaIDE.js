@@ -90,7 +90,7 @@ const SchemaIDE = (props) => {
                 #ide {
                     position: fixed;
                     height: 100%;
-                    width: 20%;
+                    width: 25%;
                     padding: 0px 16px;
                     margin: 0;
                     right: 0;
@@ -133,6 +133,7 @@ const SchemaIDE = (props) => {
 
                 ::-webkit-scrollbar {
                     width: 5px;
+                    height: 5px;
                 }
 
                 ::-webkit-scrollbar-track {
@@ -165,7 +166,7 @@ const SchemaIDE = (props) => {
                     outline: none;
                     background-color: transparent;
                     margin-top: 20px;
-                    margin-left: 246px;
+                    margin-left: 325px;
 
                     &:hover{
                         cursor: pointer;

@@ -29,18 +29,19 @@ const Pencil = (props) => {
                 margin-top: 21px;
                 color: transparent;
                 user-select: none;
+                z-index: 9999;
 
-                margin-left: 310px;
+                margin-left: 333px;
             }
 
             svg {
                 position: fixed;
                 transform: scale(.1);
 
-                z-index: 10;
+                z-index: 10000;
 
                 margin-top: -269px;
-                margin-left: -76px;
+                margin-left: -50px;
 
                 &:hover{
                     cursor: pointer;
@@ -49,7 +50,7 @@ const Pencil = (props) => {
                 &:hover ~ h1 {
                     transition: .6s;
                     color: #ababab;
-                    margin-left: 265px;
+                    margin-left: 290px;
                 }
 
                 &:hover > #pencilbg{

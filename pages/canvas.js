@@ -9,6 +9,7 @@ import NodeInspector from '../components/NodeInspector.js';
 import DefaultInspector from '../components/DefaultInspector.js';
 import SchemaIDE from '../components/SchemaIDE.js';
 import Navbar from '../components/Navbar.js';
+import DeleteModal from '../components/DeleteModal.js';
 
 // Set our custom node component from Node.js
 const nodeTypes = {
@@ -38,9 +39,20 @@ const Canvas = (props) => {
   // Zoom prevention
   const [zoomOnScroll, setZoomOnScroll] = useState(true);
   const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false);
-  
+
+  const [deleteNode, selectDelete] = useState(null);
+  const [deleteWarning, toggleWarning] = useState(true);
+
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
-  const onElementsRemove = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), updateData(true));
+  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), updateData(true));
+
+  const onElementsRemove = (elementsToRemove) => {
+    if (deleteWarning)
+      selectDelete(elementsToRemove);
+    else
+      confirmRemoveElement(elementsToRemove);
+  }
+  
   const [activeNode, selectNode] = useState(null);
   
   // Where node/element is created
@@ -167,7 +179,7 @@ const Canvas = (props) => {
   
   // Anytime we update values in editable mode, this is used to update the elements array in state. 
   const nodeValueChange = (node) => {
-
+    
     if(!node.data.label.props.children.props.selectedEdges)
       node.data.label.props.children.props.selectedEdges = selectedEdges;
 
@@ -182,6 +194,9 @@ const Canvas = (props) => {
 
   //Runs only once when this page renders
   useEffect(() => {
+
+    if (!props.data)
+      return;
 
     const newElements = [];
    
@@ -255,6 +270,7 @@ const Canvas = (props) => {
   
   // Toggle betwween defaultInspector and nodeInspector when a node is selected.
   const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
+  const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} toggleWarning={toggleWarning} />;
 
   return (
     <div id='root'>
@@ -296,13 +312,14 @@ const Canvas = (props) => {
               {/* Bottom-left UI zoom and fit screen controls */}
               {/*<Controls style={{zIndex: '999999999', marginBottom: '8px', marginLeft: '96.5vw', position: 'fixed'}} />*/}
               {/* Background pattern, can be lines or dots */}
-
+              
           </ReactFlow>
+          {deleteModal}
           <SchemaIDE updated={updated} resetUpdate={updateData} />
         </ReactFlowProvider>
-
+        
       </div>
-
+      
       <style jsx>{`
 
         #root{
@@ -327,20 +344,9 @@ const Canvas = (props) => {
 //Runs on page load
 export async function getServerSideProps({ query }) {
 
-  if (!query)
-    return {
-      redirect: {
-        destination: '/?message=error',
-        permanent: false,
-      }
-    }
-
   if (!query.data)
     return {
-      redirect: {
-        destination: '/?message=error',
-        permanent: false,
-      }
+      props: {}, 
     }
 
   //We grab the URI directly from the page's URL (in the context's query)

@@ -18,7 +18,6 @@ const ColumnInspector = (props) => {
 
         if (!props.editable || prevNode !== store.selectedElements[0])
             return;
-
         const newNode = JSON.parse(JSON.stringify(props.activeNode));
 
         newNode.data.label.props.children.props.columns[props.index].name = name;
@@ -38,10 +37,10 @@ const ColumnInspector = (props) => {
 
     }, [store.selectedElements])
 
-    const dataTypes = ['integer', 'bigint', 'date', 'character varying'];
+    const dataTypes = ['integer', 'bigint', 'date', 'character varying', 'boolean'];
 
     return (
-        <div className='container' style={{backgroundColor: `${props.editable ? '#c0dbfd' : 'transparent'}`}}>
+        <div className='container' style={{backgroundColor: `${props.editable ? '#c0dbfd' : 'transparent'}`}} onDoubleClick={props.onDoubleClick}>
 
             {/* Our Table component is split into two columns: the column name and it's associated Data Type.*/}
 
@@ -52,12 +51,18 @@ const ColumnInspector = (props) => {
                 {/* TODO: Make this work!! Gets overwritten once a value is selected. */}
                 <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist>
 
+            <input type='checkbox' checked={props.isRequired} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+
+            <input type='checkbox' checked={props.isPrimary} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+
+            <button className='column' className='columnoptions'>{`⋮`}</button>
+
             <style jsx>{`
 
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 
                 *{
-                    font-size: 12px;
+                    font-size: 9px;
                     transition: all 0s;
                     font-family: 'Inter', sans-serif;
                 }
@@ -101,17 +106,27 @@ const ColumnInspector = (props) => {
                 }
 
                 .column{
-                    flex: 25%;
+                    flex: 20%;
                 }
 
                 .left{
                     font-weight: bold;
                     color: #5e6f7a;
-                    margin-right: 32px;
+                    // margin-right: 32px;
                 }
 
                 .right{
                     color: #cccccc;
+                }
+
+                .columnoptions{
+                    font-size: 16px;
+                    font-weight: bold;
+                    border: none;
+                    outline: none;
+                    background-color: transparent;
+                    color: #12b3ab;
+                    cursor: pointer;
                 }
 
             `}</style>

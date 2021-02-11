@@ -60,14 +60,22 @@ const Home = (props) => {
             
             <div id='homecontainer'>
 
-              <svg viewBox="0 0 100 100">
+              {<svg viewBox="0 0 100 100">
                 <g fill="transparent" stroke="#12b3ab" strokeWidth="8">
                   <circle cx="50" cy="50" r="42" fill="#edf2f7" />
                   <circle cx="25" cy="50" r="4" />
                   <circle cx="75" cy="50" r="4" />
                   <path d="M 25 65 C 35 85, 65 85, 75 65"/>
                 </g>
-              </svg>
+              </svg>}
+
+              {/*<svg viewBox="0 0 100 100">
+                <g fill="transparent" stroke="#12b3ab" strokeWidth="12">
+                  <rect x="0" y="0" width="40" height="20" rx="2" stroke="#f54c4c" fill="#f54c4c" strokeWidth="0" transform="rotate(-10 50 -1)" />
+                  <rect x="60" y="80" width="40" height="20" rx="2" stroke="#4361ee" fill="#4361ee" strokeWidth="0" transform="rotate(-10 50 90)" />
+                  <path d="M 60 90 C 10 90, 90 10, 40 10" stroke="#f54c4c" strokeWidth="4" stroke-dasharray="4"/>
+                </g>
+              </svg>*/}
 
               <h1>Logo goes here</h1>
 
@@ -77,20 +85,38 @@ const Home = (props) => {
 
               <div id='homesearch'>
               
-                <div id='postgres'>postgres://</div>
+                <div id='postgres'><input id='databaselist' type='text' list='databases' placeholder='postgres://' /><datalist id='databases' ><option value='postgres://' /></datalist></div>
                 <input type='text' spellCheck='false' placeholder='Enter a valid PostgreSQL URI' val={URI} onChange={e => setURI(e.target.value)} />
                 <button onClick={checkURLStatus} disabled={URI.length < 1 ? true : false}><span>Enter</span></button>
 
               </div>
+
+              <br/>
+
+              <h3> - or - </h3>
+
+              <br/>
+
+              <Link href='canvas'>
+                <button id='newprojectbtn'><span>New Project</span></button>
+              </Link>
               
             </div>
             
            </div>
-           { pageLoading ? (<div id='loading'>Searching for your database...<div><Image src='/searchGiraffe.jpeg' width='250' height='250' /></div></div>): <div/>}
+           { pageLoading ? (<div id='loading'>Searching for your database...
+           <div>
+             <Image
+                src='/searchGiraffe.jpeg' 
+                width='330' 
+                height='330'
+                rel='prefetch'
+             />
+           </div>
+           </div>) : <div/>}
           <style jsx>{`
 
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
-
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
 
             *{
               font-family: 'Inter', sans-serif;
@@ -127,7 +153,7 @@ const Home = (props) => {
               box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
               border-radius: 8px;
               width: 400px;
-              height: 330px; 
+              height: 420px; 
               background-color: white;
             }
 
@@ -211,6 +237,14 @@ const Home = (props) => {
                 }
   
               }
+
+              #databaselist{
+                padding: 0;
+                margin: 0;
+                border: none;
+                outline: none;
+                background-color: transparent;
+              }
   
               button{
                 transition: 0s;
@@ -259,13 +293,24 @@ const Home = (props) => {
               }
             }
 
+            #newprojectbtn{
+              border: none !important;
+              border-radius: 0 !important;
+              background-color: #9b5de5 !important;
+              box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5 !important;
+
+              &:hover{
+                box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%) !important;
+              }
+            }
+
             #homesearch{
               display: flex;
               height: 32px;
             }
 
             #loading{
-              font-size: 36px;  
+              font-size: 28px;  
               font-weight: 700;
               color: #2d3748;
               text-align: center;
