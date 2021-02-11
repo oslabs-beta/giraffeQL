@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useStoreState } from 'react-flow-renderer';
 
+import ColumnOptions from './ColumnOptions.js';
+
 const ColumnInspector = (props) => {
 
     // Create instance of store.
@@ -8,8 +10,21 @@ const ColumnInspector = (props) => {
 
     const [name, setName] = useState(props.name);
     const [type, setType] = useState(props.dataType);
+    const [required, setRequired] = useState(props.isRequired);
     const [prevNode, nextNode] = useState(null);
     
+    const [options, toggleOptions] = useState(false);
+    
+    useEffect(() => {
+      if (props.expandedOptions === null) {
+        toggleOptions(false);
+        return;
+        };
+
+      if (props.expandedOptions === props.index) toggleOptions(true)
+      else toggleOptions(false);
+
+    }, [props.expandedOptions])
     // Whenever name or datatype changes, we update the info and push it back up to the inspector's activeNode. 
     useEffect(() => {
 
@@ -22,10 +37,11 @@ const ColumnInspector = (props) => {
 
         newNode.data.label.props.children.props.columns[props.index].name = name;
         newNode.data.label.props.children.props.columns[props.index].dataType = type;
+        newNode.data.label.props.children.props.columns[props.index].required = required;
 
         props.updateNode(newNode);
 
-    }, [name, type]);
+    }, [name, type, required]);
 
     // When selected Node changes, the inspector changes to new node. 
     useEffect(() => {
@@ -36,6 +52,15 @@ const ColumnInspector = (props) => {
         nextNode(store.selectedElements[0]);
 
     }, [store.selectedElements])
+
+    const changePrimary = () =>{
+
+        if (props.activePrimary === props.index)
+            return;
+
+        props.switchPrimary(props.index);
+
+    }
 
     const dataTypes = ['integer', 'bigint', 'date', 'character varying', 'boolean'];
 
@@ -51,11 +76,15 @@ const ColumnInspector = (props) => {
                 {/* TODO: Make this work!! Gets overwritten once a value is selected. */}
                 <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist>
 
-            <input type='checkbox' checked={props.isRequired} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+            <input type='checkbox' disabled={props.editable ? '' : 'disabled'} checked={required} onChange={()=> setRequired(!required)} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
 
-            <input type='checkbox' checked={props.isPrimary} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+            <button onClick={changePrimary} disabled={props.editable ? '' : 'disabled'} className='column' className='right' className='primarykey' >
+                <div className='star'>
+                    <svg width={24} height={24} viewBox="0 0 24 24" ><path fill={`${props.isPrimary ? '#0373fc' : 'transparent' }`} d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>
+                </div>
+            </button>
 
-            <button className='column' className='columnoptions'>{`⋮`}</button>
+            <button onClick={()=> toggleOptions(props.options ? props.setOptionsMenu(null) : props.setOptionsMenu(props.index) )} className='column' className='columnoptions'>{`⋮`}</button> <ColumnOptions setOptionsMenu={props.setOptionsMenu} index={props.index} toggleEdit={props.toggleEdit} deleteColumn={props.deleteColumn} expanded={options} className='optionmodal' />
 
             <style jsx>{`
 
@@ -127,6 +156,35 @@ const ColumnInspector = (props) => {
                     background-color: transparent;
                     color: #12b3ab;
                     cursor: pointer;
+                }
+
+                .primarykey{
+                    border: none;
+                    outline: none;
+                    background-color: transparent;
+                }
+
+                .star{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 6px;
+                    transform: scale(.5);
+                    height: 0;
+                    margin-bottom: 5px;
+
+                    svg{
+                        path{
+                            stroke-width: 2;
+                            stroke: #6f8195;
+                        }
+                    }
+
+                    svg{
+                        &:hover > path{
+                            stroke: #0373fc;
+                        }
+                    }
                 }
 
             `}</style>
