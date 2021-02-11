@@ -93,7 +93,6 @@ function createObjMutations(table) {
 // highest level function that takes a list of tables and their connections
 // returns the graphQL TypeDefs 
 function generateAllTypes(tables) {
-  console.log(tables);
   //Forming GraphQL database
   let allTypes = 'const typeDefs = `\n';
   //Forming GraphQL Query

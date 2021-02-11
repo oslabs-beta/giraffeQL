@@ -67,11 +67,23 @@ const SchemaIDE = (props) => {
     // Simultaneously, highlighting is updated
     // TODO: Need to get highlighting working. 
     useEffect(() => {
-        hljs.initHighlighting();
+        hljs.highlightAll();
     }, [schema]);
 
     const refreshSchema = () => {
         writeSchema(generateAllTypes(tables));
+    }
+
+    const downloadCode = () => {
+        const url = window.URL.createObjectURL(new Blob([schema]));
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.setAttribute('download', 'schema.js');
+
+        document.getElementById('ide').appendChild(link);
+
+        link.click();
     }
 
     return (
@@ -80,7 +92,8 @@ const SchemaIDE = (props) => {
             <div className='sidebar' >
 
                 <div id='gql'><h1>GraphQL</h1><h2>Query</h2></div>
-                <button onClick={()=>navigator.clipboard.writeText(schema)}>Copy</button>
+                <button id='copy' onClick={()=>navigator.clipboard.writeText(schema)}>Copy</button>
+                <button id='download' onClick={downloadCode}>Export</button>
                 <pre><code>{schema}</code></pre>
 
             </div>
@@ -157,7 +170,7 @@ const SchemaIDE = (props) => {
                     margin-top: 16px;
                 }
 
-                button{
+                #copy{
                     position: fixed;
                     color: #12b3ab;
                     border: 1px solid #12b3ab;
@@ -166,11 +179,28 @@ const SchemaIDE = (props) => {
                     outline: none;
                     background-color: transparent;
                     margin-top: 20px;
-                    margin-left: 325px;
+                    margin-left: 260px;
 
                     &:hover{
                         cursor: pointer;
-                        background-color: #1a4949;
+                        background-color: rgba(18, 179, 171, .25);
+                    }
+                }
+
+                #download{
+                    position: fixed;
+                    color: #9b5de5;
+                    border: 1px solid #9b5de5;
+                    border-radius: 4px;
+                    padding: 8px;
+                    outline: none;
+                    background-color: transparent;
+                    margin-top: 20px;
+                    margin-left: 315px;
+
+                    &:hover{
+                        cursor: pointer;
+                        background-color: rgba(155, 93, 229, .25);
                     }
                 }
 
