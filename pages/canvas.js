@@ -1,6 +1,7 @@
 //🦒
 import ReactFlow, { removeElements, ReactFlowProvider, getConnectedEdges, isNode}  from 'react-flow-renderer';
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import Head from 'next/head';
 
 import dagre from 'dagre';
 
@@ -275,6 +276,11 @@ const Canvas = (props) => {
 
   return (
     <div id='root'>
+
+      <Head>
+        <title>giraffeQL - Canvas</title>
+        <link rel="shortcut icon" href="/favicon.png" />
+      </Head>
 
       <div id='canvascontainer'>
             
