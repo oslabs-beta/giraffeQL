@@ -3,7 +3,7 @@ const ColumnOptions = (props) => {
     return (
         <div className='optioncontainer' style={{visibility: `${props.expanded ? 'visible' : 'hidden'}`}}>
 
-            <h2>Options</h2>
+            <h1>Options</h1>
             <button id='edit'>Edit</button>
             <button onClick={()=> {props.setOptionsMenu(null); props.deleteColumn(props.index)}} id='delete'>Delete</button>
 
@@ -20,32 +20,24 @@ const ColumnOptions = (props) => {
                     margin-top: -10px;
                     margin-left: 25%;
                     padding: 8px;
-                    width: 2%;
-                    height: 4%;
+                    width: 50px;
+                    height: 50px;
                     border-radius: 4px;
                     background-color: #2d3748;
                 }
 
                 h1{
-                    font-weight: 500;
-                    color: white;
-                    // border-bottom: 2px solid #a0afc0;
-                    margin: 0;
-                }
-
-                h2{
                     color: #a0afc0;
                 }
 
                 button{
-                  font-weight: 500;
                   color: white;
-                  // border-bottom: 2px solid #a0afc0;
                   margin: 0;
                   border: none;
                   outline: none;
                   background-color: transparent;
                   cursor: pointer;
+                  text-align: left;
 
                   &:hover{
                     color: darken(white, 20%)

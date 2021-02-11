@@ -19,6 +19,7 @@ const NodeInspector = (data) =>{
     // We make an exact copy of our currently activeNode in our state
     const [activeNode, updateNode] = useState(data.data);
     const [columns, addColumns] = useState(props.columns);
+    const [activePrimary, newPrimary] = useState(data.data.data.label.props.children.props.columns.findIndex(column => column.primaryKey));
     
     const [expandedOptions, setOptionsMenu] = useState(null);
 
@@ -34,6 +35,7 @@ const NodeInspector = (data) =>{
     useEffect(()=>{
         updateNode(data.data);
         addColumns(props.columns);
+        newPrimary(data.data.data.label.props.children.props.columns.findIndex(column => column.primaryKey));
     }, [data]);
 
     // When a different element is selected, edit mode is automatically toggled off. 
@@ -95,9 +97,20 @@ const NodeInspector = (data) =>{
       
       const target = store.elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.id === activeNode.id);
 
-      // Pushes columns into state. 
       store.elements.filter(node => !node.id.includes('reactflow'))[target].data.label.props.children.props.columns.splice(index, 1)
       savechanges();
+    }
+
+    const switchPrimary = (newIndex) => {
+    
+        const newColumns = [...columns];
+
+        newColumns[activePrimary].primaryKey = false;
+        newColumns[newIndex].primaryKey = true;
+
+        addColumns(newColumns);
+
+        savechanges();
     }
 
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
@@ -122,7 +135,7 @@ const NodeInspector = (data) =>{
                 </div>
 
                 {/* Columns */}
-                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} expandedOptions={expandedOptions} setOptionsMenu={setOptionsMenu} deleteColumn={deleteColumn} isPrimary={column.primaryKey} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
+                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} activePrimary={activePrimary} switchPrimary={switchPrimary} expandedOptions={expandedOptions} setOptionsMenu={setOptionsMenu} deleteColumn={deleteColumn} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
 
                 <div id='options'><button onClick={newColumn} >Add Column</button></div>
 
