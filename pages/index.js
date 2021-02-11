@@ -1,7 +1,12 @@
+import Head from 'next/head';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+
+import Header from '../components/icons/Header.js';
+import GiraffeQL from '../components/icons/GiraffeQL.js';
 
 const Home = (props) => {
 
@@ -54,32 +59,20 @@ const Home = (props) => {
     return (
         <div id='home'>
 
+          <Head>
+            <title>giraffeQL</title>
+            <link rel="shortcut icon" href="/favicon.png" />
+          </Head>
+
+          <Header />
+
           <div id='homemodal'>
 
-            <div id='header'>Welcome to <span style={{color: 'white', fontWeight: '500'}}>giraffeQL</span> 🦒</div>
+            <div id='header'>Connect to a database</div>
             
             <div id='homecontainer'>
 
-              {<svg viewBox="0 0 100 100">
-                <g fill="transparent" stroke="#12b3ab" strokeWidth="8">
-                  <circle cx="50" cy="50" r="42" fill="#edf2f7" />
-                  <circle cx="25" cy="50" r="4" />
-                  <circle cx="75" cy="50" r="4" />
-                  <path d="M 25 65 C 35 85, 65 85, 75 65"/>
-                </g>
-              </svg>}
-
-              {/*<svg viewBox="0 0 100 100">
-                <g fill="transparent" stroke="#12b3ab" strokeWidth="12">
-                  <rect x="0" y="0" width="40" height="20" rx="2" stroke="#f54c4c" fill="#f54c4c" strokeWidth="0" transform="rotate(-10 50 -1)" />
-                  <rect x="60" y="80" width="40" height="20" rx="2" stroke="#4361ee" fill="#4361ee" strokeWidth="0" transform="rotate(-10 50 90)" />
-                  <path d="M 60 90 C 10 90, 90 10, 40 10" stroke="#f54c4c" strokeWidth="4" stroke-dasharray="4"/>
-                </g>
-              </svg>*/}
-
-              <h1>Logo goes here</h1>
-
-              <h2>and a short tagline!</h2>
+              <GiraffeQL />
 
               <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
 
@@ -108,8 +101,8 @@ const Home = (props) => {
            <div>
              <Image
                 src='/searchGiraffe.jpeg' 
-                width='330' 
-                height='330'
+                width='150' 
+                height='150'
                 rel='prefetch'
              />
            </div>
@@ -153,8 +146,9 @@ const Home = (props) => {
               box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
               border-radius: 8px;
               width: 400px;
-              height: 420px; 
+              height: 375px; 
               background-color: white;
+              z-index: 10;
             }
 
             #homecontainer{
@@ -194,6 +188,7 @@ const Home = (props) => {
                 color: #2d3748;
                 text-align: center;
                 margin: 4px;
+                // margin-top: 16px;
               }
               
               #postgres{
@@ -302,11 +297,11 @@ const Home = (props) => {
             #newprojectbtn{
               border: none !important;
               border-radius: 0 !important;
-              background-color: #9b5de5 !important;
-              box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5 !important;
+              // background-color: #9b5de5 !important;
+              // box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5 !important;
 
               &:hover{
-                box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%) !important;
+                // box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%) !important;
               }
             }
 
@@ -316,11 +311,15 @@ const Home = (props) => {
             }
 
             #loading{
-              font-size: 28px;  
+              position: fixed;
+              font-size: 16px;  
               font-weight: 700;
               color: #2d3748;
-              text-align: center;
+              text-align: left;
               margin: 0;
+              bottom: 0;
+              left: 0;
+              margin-left: 32px;
             }
 
           `}</style>
