@@ -29,7 +29,7 @@ const Navbar = (props) => {
             </Link>
             <h2>Codesmith NY 23</h2>
 
-            <input value={searchquery} placeholder='Search for a table name . . .' onChange={(e)=>typeSearch(e.target.value)} onKeyDown={submit} />
+            <input value={searchquery} placeholder='Search for a table name...' onChange={(e)=>typeSearch(e.target.value)} onKeyDown={submit} />
 
             <style jsx>{`
 
