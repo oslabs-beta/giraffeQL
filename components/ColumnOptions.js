@@ -4,8 +4,8 @@ const ColumnOptions = (props) => {
         <div className='optioncontainer' style={{visibility: `${props.expanded ? 'visible' : 'hidden'}`}}>
 
             <h1>Options</h1>
-            <button id='edit'>Edit</button>
-            <button onClick={()=> {props.setOptionsMenu(null); props.deleteColumn(props.index)}} id='delete'>Delete</button>
+            <button onClick={() => {props.setOptionsMenu(null); props.toggleEdit(true)}} id='edit'>Edit</button>
+            <button onClick={() => {props.setOptionsMenu(null); props.deleteColumn(props.index)}} id='delete'>Delete</button>
 
             <style jsx>{`
 
@@ -19,29 +19,46 @@ const ColumnOptions = (props) => {
                     position: fixed;
                     margin-top: -10px;
                     margin-left: 25%;
-                    padding: 8px;
+                    padding: 0px 4px;
                     width: 50px;
-                    height: 50px;
+                    height: 40px;
                     border-radius: 4px;
                     background-color: #2d3748;
+
+                    &:before {
+                        content:"";
+                        position: absolute;
+                        height: 0px;
+                        width: 0px;
+                        top: 15px;
+                        left: -11px;
+                        border-width: 6px;
+                        border-color: transparent #2d3748 transparent transparent;
+                        border-style: solid;
+                    }
+
                 }
 
                 h1{
                     color: #a0afc0;
+                    margin: 0;
+                    margin-top: 2px;
+                    // margin-bottom: 8px;
                 }
 
                 button{
-                  color: white;
-                  margin: 0;
-                  border: none;
-                  outline: none;
-                  background-color: transparent;
-                  cursor: pointer;
-                  text-align: left;
+                    color: white;
+                    margin: 0;
+                    border: none;
+                    outline: none;
+                    background-color: transparent;
+                    cursor: pointer;
+                    text-align: left;
 
-                  &:hover{
-                    color: darken(white, 20%)
-                  }
+                    &:hover{
+                    color: darken(white, 20%);
+                    background-color: lighten(#2d3748, 10%);
+                    }
                 }
 
             `}</style>

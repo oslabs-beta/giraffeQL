@@ -84,7 +84,7 @@ const ColumnInspector = (props) => {
                 </div>
             </button>
 
-            <button onClick={()=> toggleOptions(props.options ? props.setOptionsMenu(null) : props.setOptionsMenu(props.index) )} className='column' className='columnoptions'>{`⋮`}</button> <ColumnOptions setOptionsMenu={props.setOptionsMenu} index={props.index} deleteColumn={props.deleteColumn} expanded={options} className='optionmodal' />
+            <button onClick={()=> toggleOptions(props.options ? props.setOptionsMenu(null) : props.setOptionsMenu(props.index) )} className='column' className='columnoptions'>{`⋮`}</button> <ColumnOptions setOptionsMenu={props.setOptionsMenu} index={props.index} toggleEdit={props.toggleEdit} deleteColumn={props.deleteColumn} expanded={options} className='optionmodal' />
 
             <style jsx>{`
 

@@ -73,7 +73,8 @@ const NodeInspector = (data) =>{
         const column = {
             name: 'newColumn',
             dataType: 'character varying',
-            required: true
+            required: true,
+            primaryKey: false
         };
 
         // Pushes all new columns into inspector columns.
@@ -86,19 +87,20 @@ const NodeInspector = (data) =>{
 
         // Pushes columns into state. 
         store.elements.filter(node => !node.id.includes('reactflow'))[target].data.label.props.children.props.columns.push(column)
+        
         savechanges();
     }
 
     const deleteColumn = (index) => {
-      const newColumns = [...columns];
-      newColumns.splice(index, 1);
+        const newColumns = [...columns];
+        newColumns.splice(index, 1);
 
-      addColumns(newColumns);
-      
-      const target = store.elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.id === activeNode.id);
+        addColumns(newColumns);
+        
+        const target = store.elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.id === activeNode.id);
+        store.elements.filter(node => !node.id.includes('reactflow'))[target].data.label.props.children.props.columns.splice(index, 1)
 
-      store.elements.filter(node => !node.id.includes('reactflow'))[target].data.label.props.children.props.columns.splice(index, 1)
-      savechanges();
+        savechanges();
     }
 
     const switchPrimary = (newIndex) => {
@@ -109,7 +111,6 @@ const NodeInspector = (data) =>{
         newColumns[newIndex].primaryKey = true;
 
         addColumns(newColumns);
-
         savechanges();
     }
 
@@ -135,7 +136,7 @@ const NodeInspector = (data) =>{
                 </div>
 
                 {/* Columns */}
-                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} activePrimary={activePrimary} switchPrimary={switchPrimary} expandedOptions={expandedOptions} setOptionsMenu={setOptionsMenu} deleteColumn={deleteColumn} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} activeNode={activeNode} updateNode={updateNode} />)}
+                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} activePrimary={activePrimary} switchPrimary={switchPrimary} expandedOptions={expandedOptions} setOptionsMenu={setOptionsMenu} deleteColumn={deleteColumn} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} toggleEdit={toggleEdit} activeNode={activeNode} updateNode={updateNode} />)}
 
                 <div id='options'><button onClick={newColumn} >Add Column</button></div>
 

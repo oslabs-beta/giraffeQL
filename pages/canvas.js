@@ -61,7 +61,8 @@ const Canvas = (props) => {
     const defaultColumn = {
       name: 'newColumn',
       dataType: 'character varying',
-      required: true
+      required: true,
+      primaryKey: true
     };
 
     const column = {
@@ -70,7 +71,7 @@ const Canvas = (props) => {
       data: {
         label: (
           <div>
-            <div id={`NewTable-${index}`} key={`NewTable-${index}`} nodeid={index} tablename={`New Table #${index}`} columns={[defaultColumn]} selectedEdges={selectedEdges} startExpanded={true} />
+            <div id={`NewTable-${index}`} key={`NewTable-${index}`} nodeid={index} tablename={`new_table_#${index}`} columns={[defaultColumn]} selectedEdges={selectedEdges} startExpanded={true} />
           </div>
           ),
         },
