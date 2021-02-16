@@ -1,21 +1,17 @@
 {
-  "name": "graphitiql",
-  "version": "0.1.0",
+  "name": "giraffeql",
+  "version": "1.0.0",
   "private": true,
   "homepage": "./",
-  "main": "./electron/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT",
-    "electron": "electron ."
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
     "dagre": "^0.8.5",
-    "electron": "^11.2.1",
     "highlight.js": "^10.6.0",
-    "highlightjs-graphql": "^1.0.2",
     "next": "^10.0.6",
     "pg": "^8.5.1",
     "pluralize": "^8.0.0",
