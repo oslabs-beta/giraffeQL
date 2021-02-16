@@ -361,7 +361,7 @@ export async function getServerSideProps({ query }) {
     URI: query.data
   }
 
-  const res = await fetch(`http://localhost:3000/api/scrapedb`, {method: 'POST', headers: {'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
+  const res = await fetch(`https://localhost:3000/api/scrapedb`, {method: 'POST', headers: {'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
   
   //Check if we just fetched from a bad URI... don't want to crash the whole app!
   if (res.status === 400) {
