@@ -306,17 +306,3 @@ const Home = (props) => {
 }
 
 export default Home;
-
-export async function getServerSideProps({ query }) {
-
-  if (!query.message)
-    return {
-      props: {}
-    }
-
-  const message = query.message;
-
-  return {
-    props: {message},
-  }
-}
