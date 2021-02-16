@@ -94,7 +94,7 @@ function createObjMutations(table) {
 // returns the graphQL TypeDefs 
 function generateAllTypes(tables) {
   //Forming GraphQL database
-  let allTypes = 'const typeDefs = `\n';
+  let allTypes = '<span class="hljs-name">const</span> <span class="hljs-attribute">typeDefs</span> = <span class="hljs-string">`\n';
   //Forming GraphQL Query
   let tableQuery = `  type Query {\n`;
   //Forming type mutation
@@ -102,7 +102,7 @@ function generateAllTypes(tables) {
   let mutationResolvers = `  Mutation: {\n`;
   const [baseTables, joinTables] = sortTables(tables);
   const allJoinConnections = joinConnections(joinTables);
-  let resolvers = 'const resolvers = {\n';
+  let resolvers = '<span class="hljs-name">const</span> <span class="hljs-attribute">resolvers</span> = {\n';
   let objectResolvers = '';
   baseTables.forEach((table) => {
     allTypes += `${tableToType(table, allJoinConnections[table.name])}\n\n`;
@@ -115,7 +115,7 @@ function generateAllTypes(tables) {
   });
   resolvers += objectResolvers + mutationResolvers + '  }\n' + '}';
   const exportText = `module.exports = {\n  typeDefs,\n  resolvers\n}`;
-  return allTypes + '\n' + tableQuery + '  }\n\n' + typeMutation + '  }\n' + '}`\n\n' + resolvers + '\n\n' + exportText;
+  return [allTypes + '\n' + tableQuery + '  }\n\n' + typeMutation + '  }\n' + '}`</span>\n\n', resolvers, '\n\n' + exportText];
 }
 
 /*
@@ -140,11 +140,11 @@ function generateMutationResolvers(tableName) {
 
 function generateResolverFunc(table) {
   return (
-    `${table}: (parent, args, context, info) => {
-      try {
-        // fill in with your db query
-      } catch (err) {
-        throw new Error(err);
+    `<span class="hljs-class">${table}</span>: (<span class="hljs-attribute">parent</span>, <span class="hljs-attribute">args</span>, <span class="hljs-attribute">context</span>, <span class="hljs-attribute">info</span>) => {
+      <span class="hljs-variable">try</span> {
+        <span class="hljs-comment">// fill in with your db query</span>
+      } <span class="hljs-variable">catch</span> (<span class="hljs-attribute">err</span>) {
+        <span class="hljs-variable">throw</span> <span class="hljs-name">new</span> <span class="hljs-type">Error</span>(<span class="hljs-attribute">err</span>);
       }
     },`
   )
@@ -152,7 +152,7 @@ function generateResolverFunc(table) {
 
 function generateObjectResolver(table, joinConnections) {
   const object = capitalizeFirstLetter(singular(table.name));
-  let objResolver = ` ${object}: {\n`;
+  let objResolver = ` <span class="hljs-attribute">${object}</span>: {\n`;
   table.connections.forEach((conn) => {
     objResolver += `  ${generateResolverFunc(conn.destinationTable)}\n`
   })
