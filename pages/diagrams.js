@@ -3,13 +3,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { parseCookies } from 'nookies';
+import Image from 'next/image';
 
 import Header from '../components/icons/Header.js';
 import GiraffeQL from '../components/icons/GiraffeQL.js';
-import GitHub from '../components/icons/GitHub.js';
 
-const Home = (props) => {
+const Diagrams = (props) => {
 
     const [URI, setURI] = useState('');
     const [pageLoading, setPageLoading] = useState(false);
@@ -47,6 +46,8 @@ const Home = (props) => {
       router.push(href)
     }
 
+    const instructions = props.message === 'error' ? 'Invalid URI, please try again:' : 'Type a database URI below to get started:';
+
     useEffect(() => {
       const handleStart = () => { setPageLoading(true); };
       const handleComplete = () => { setPageLoading(false); };
@@ -56,7 +57,7 @@ const Home = (props) => {
       }, [router]);
 
     return (
-        <div id='home'>
+        <div id='diagram'>
 
           <Head>
             <title>giraffeQL</title>
@@ -65,24 +66,47 @@ const Home = (props) => {
 
           <Header />
 
-          <div id='homemodal'>
+          <div id='diagrammodal'>
 
-            <div id='header'>Welcome to giraffeQL</div>
+            <div id='header'>Connect to a database</div>
             
-            <div id='homecontainer'>
+            <div id='diagramcontainer'>
 
               <GiraffeQL />
 
+              <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
+
+              <div id='diagramsearch'>
+              
+                <div id='postgres'><input id='databaselist' type='text' list='databases' placeholder='postgres://' /><datalist id='databases' ><option value='postgres://' /></datalist></div>
+                <input type='text' spellCheck='false' placeholder='Enter a valid PostgreSQL URI' val={URI} onChange={e => setURI(e.target.value)} />
+                <button onClick={checkURLStatus} disabled={URI.length < 1 ? true : false}><span>Enter</span></button>
+
+              </div>
+
               <br/>
 
-              <Link href='http://localhost:3001/auth/github'>
-                <button id='newprojectbtn'><span>Sign in With GitHub<GitHub /></span></button>
+              <h3> - or - </h3>
+
+              <br/>
+
+              <Link href='canvas'>
+                <button id='newprojectbtn'><span>New Project</span></button>
               </Link>
               
             </div>
             
-          </div>
-
+           </div>
+           { pageLoading ? (<div id='loading'>Searching for your database...
+           <div>
+             <Image
+                src='/searchGiraffe.jpeg' 
+                width='150' 
+                height='150'
+                rel='prefetch'
+             />
+           </div>
+           </div>) : <div/>}
           <style jsx>{`
 
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
@@ -93,7 +117,7 @@ const Home = (props) => {
               font-weight: 300;
             }
 
-            #home{
+            #diagram{
               display: flex;
               flex-direction: column;
               align-items: center;
@@ -116,18 +140,18 @@ const Home = (props) => {
               border-radius: 8px 8px 0px 0px;
             }
 
-            #homemodal{
+            #diagrammodal{
               display: flex;
               flex-direction: column;
               box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
               border-radius: 8px;
               width: 400px;
-              height: 300px; 
+              height: 375px; 
               background-color: white;
               z-index: 10;
             }
 
-            #homecontainer{
+            #diagramcontainer{
               display: flex;
               align-items: center;
               margin-top: 16px;
@@ -235,8 +259,6 @@ const Home = (props) => {
                 box-shadow: inset 0px -2px 0px darken(#12b3ab, 20%), 0px -1px 0px #12b3ab;
 
                 span {
-                  display: flex;
-                  align-items: center;
                   transition: 0s;
                   font-size: 12px;
                   font-weight: 500;
@@ -283,7 +305,7 @@ const Home = (props) => {
               }
             }
 
-            #homesearch{
+            #diagramsearch{
               display: flex;
               height: 32px;
             }
@@ -303,18 +325,21 @@ const Home = (props) => {
           `}</style>
             
         </div>
-
     );
 }
 
-Home.getInitialProps = (ctx) => {
+export default Diagrams;
 
-  const { authorization } = parseCookies(ctx);
-  const {token} = ctx.query
+export async function getServerSideProps({ query }) {
+
+  if (!query.message)
+    return {
+      props: {}
+    }
+
+  const message = query.message;
+
   return {
-    authorization: authorization || token,
-  };
+    props: {message},
+  }
 }
-
-export default Home;
-
