@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import { parseCookies } from 'nookies';
 
 import Header from '../components/icons/Header.js';
 import GiraffeQL from '../components/icons/GiraffeQL.js';
@@ -302,7 +303,18 @@ const Home = (props) => {
           `}</style>
             
         </div>
+
     );
 }
 
+Home.getInitialProps = (ctx) => {
+
+  const { authorization } = parseCookies(ctx);
+  const {token} = ctx.query
+  return {
+    authorization: authorization || token,
+  };
+}
+
 export default Home;
+
