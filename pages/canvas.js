@@ -361,14 +361,16 @@ export async function getServerSideProps({ query }) {
     URI: query.data
   }
 
-  const res = await fetch(`https://giraffeql.io/api/scrapedb`, {method: 'POST', headers: {'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
+  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000/api/scrapedb` : `https://giraffeql.io/api/scrapedb`;
+
+  const res = await fetch(fetchURL, {method: 'POST', headers: {'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
   
   //Check if we just fetched from a bad URI... don't want to crash the whole app!
   if (res.status === 400) {
     return {
       redirect: {
         //We redirect the user back to the root page.
-        destination: '/?message=error',
+        destination: '/diagrams/?message=error',
         permanent: false,
         message: 'Sending some sort of message back'
       },
