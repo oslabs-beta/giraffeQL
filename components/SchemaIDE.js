@@ -3,21 +3,16 @@ import { useStoreState } from 'react-flow-renderer';
 
 import generateAllTypes from '../converters/typeDefs.js';
 
-import hljs from 'highlight.js';
-import javascript from 'highlight.js/lib/languages/javascript';
-
 const SchemaIDE = (props) => {
 
     // Create instance of store
     const store = useStoreState((store) => store);
 
     const [tables, updateTable] = useState([]);
-    const [schema, writeSchema] = useState('');
-
-    // Tells code highlighter which language to read.
-    useEffect(() => {
-        hljs.registerLanguage("javascript", javascript);
-    }, []);
+    const [typeDefs, writeTypeDefs] = useState('');
+    const [resolvers, writeResolvers] = useState('');
+    const [schema, writeSchema] = useState([]);
+    const [activeCode, toggleCode] = useState(true);
 
     // Taking the data from all nodes/elements whenever there is a change and turning them back to original format. 
     useEffect(() => {
@@ -64,18 +59,17 @@ const SchemaIDE = (props) => {
         props.resetUpdate(false);
     }, [tables]);
 
-    // Simultaneously, highlighting is updated
-    // TODO: Need to get highlighting working. 
-    useEffect(() => {
-        hljs.highlightAll();
-    }, [schema]);
-
     const refreshSchema = () => {
         writeSchema(generateAllTypes(tables));
     }
 
+    useEffect(() => {
+        writeTypeDefs(schema[0]);
+        writeResolvers(schema[1]);
+    }, [schema]);
+
     const downloadCode = () => {
-        const url = window.URL.createObjectURL(new Blob([schema]));
+        const url = window.URL.createObjectURL(new Blob([document.getElementById('schema').innerText]));
         const link = document.createElement('a');
 
         link.href = url;
@@ -92,9 +86,10 @@ const SchemaIDE = (props) => {
             <div className='sidebar' >
 
                 <div id='gql'><h1>GraphQL</h1><h2>Query</h2></div>
-                <button id='copy' onClick={()=>navigator.clipboard.writeText(schema)}>Copy</button>
+                <button onClick={()=>toggleCode(!activeCode)}>TAB</button>
+                <button id='copy' onClick={()=>navigator.clipboard.writeText(document.getElementById('schema').innerText)}>Copy</button>
                 <button id='download' onClick={downloadCode}>Export</button>
-                <pre><code>{schema}</code></pre>
+                <pre><code id='schema' className='hljs'> <div dangerouslySetInnerHTML={{ __html: activeCode ? typeDefs : resolvers }} /> </code></pre>
 
             </div>
 
@@ -138,12 +133,16 @@ const SchemaIDE = (props) => {
                     margin: 0;
                 }
 
-                .hljs{
+                .hljs {
                     border-radius: 8px;
                     overflow: auto;
                     height: 600px;
+                    display: block;
+                    padding: 0.5em;
+                    background: #1E1E1E;
+                    color: #DCDCDC;
                 }
-
+                                
                 ::-webkit-scrollbar {
                     width: 5px;
                     height: 5px;
