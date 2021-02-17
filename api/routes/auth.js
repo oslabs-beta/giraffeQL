@@ -30,14 +30,16 @@ router.get('/github', (req, res, next) => {
   const authenticator = passport.authenticate('github', { scope: [], state, session: true });
   authenticator(req, res, next);
 }, (req, res, next) =>{
-  next();
+  return next();
 });
 
 router.get(
   '/github/callback',
-  passport.authenticate('github', { failureRedirect: '/login' }), (req, res, next) => {
+  passport.authenticate('github', { failureRedirect: '/login' }), 
+  (req, res, next) => {
     const token = jwt.sign({id: req.user.id}, JWT_KEY, {expiresIn: 60 * 60 * 24 * 1000})
     req.logIn(req.user, function(err) {
+      console.log('req.user: ', req.user);
       if (err) return next(err); ;
       res.redirect(`http://localhost:3000?token=${token}`)
     });
