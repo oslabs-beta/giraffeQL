@@ -14,7 +14,7 @@ module.exports = {
       return Error('User not found');
     }
   },
-  fineById: async (id) => {
+  findById: async (id) => {
     return User.findOne({ oAuthId: id });
   }
 };

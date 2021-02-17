@@ -1,5 +1,5 @@
 import Head from 'next/head';
-
+import fetch from 'isomorphic-fetch'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -11,49 +11,13 @@ import GitHub from '../components/icons/GitHub.js';
 
 const Home = (props) => {
 
-    const [URI, setURI] = useState('');
-    const [pageLoading, setPageLoading] = useState(false);
-
     const router = useRouter();
 
     useEffect(() => {
-      setURI('');
-    }, []);
-
-    useEffect(() => {
-
-      const submitURI = (e) => {
-        if (e.code === 'Enter' && URI.length > 0)
-          return checkURLStatus();
+      if (props.authorization) {
+        router.push('/diagrams');
       }
-
-      document.addEventListener('keydown', submitURI);
-
-      return () => {
-       document.removeEventListener('keydown', submitURI);
-      };
-
-    });
-
-    const checkURLStatus = () => {
-
-      let path = '';
-
-      if (!URI.includes('postgres://')) path = 'postgres://' + URI;
-      else path = URI;
-
-      const href = { pathname: '/canvas', query: { data: [path] } }
-
-      router.push(href)
-    }
-
-    useEffect(() => {
-      const handleStart = () => { setPageLoading(true); };
-      const handleComplete = () => { setPageLoading(false); };
-      router.events.on('routeChangeStart', handleStart);
-      router.events.on('routeChangeComplete', handleComplete);
-      router.events.on('routeChangeError', handleComplete);
-      }, [router]);
+    }, []);
 
     return (
         <div id='home'>
@@ -74,7 +38,7 @@ const Home = (props) => {
               <GiraffeQL />
 
               <br/>
-
+              
               <Link href='http://localhost:3001/auth/github'>
                 <button id='newprojectbtn'><span>Sign in With GitHub<GitHub /></span></button>
               </Link>
@@ -307,13 +271,19 @@ const Home = (props) => {
     );
 }
 
-Home.getInitialProps = (ctx) => {
+async function getUser(authorization) {
+  const res = await fetch('http://localhost:3001/user', { headers: { authorization } })
 
+
+  if (res.status === 200) return { authorization, user: res.data }
+  else return { authorization }
+}
+
+Home.getInitialProps = (ctx) => {
   const { authorization } = parseCookies(ctx);
-  const {token} = ctx.query
-  return {
-    authorization: authorization || token,
-  };
+  const {code} = ctx.query
+  const props = getUser(authorization || code);
+  return props;
 }
 
 export default Home;

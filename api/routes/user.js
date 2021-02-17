@@ -1,5 +1,5 @@
 const express = require('express');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 const userService = require('../db/services/user')
 const JWT_KEY = "something_private_and_long_enough_to_secure"
 
@@ -19,7 +19,7 @@ router.use((req, res, next) => {
 })
 
 router.get('/', async (req, res) => {
-    user = await userService.fineById(req.user.id)
+    user = await userService.findById(req.user.id)
 
     res.send(user);
 })
