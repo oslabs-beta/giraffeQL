@@ -32,7 +32,7 @@ Check us out at https://giraffeql.io/.
 
 [Dan Snyder](https://www.linkedin.com/in/daniel-snyder-77aa4bbb/) [@dasnyder3](https://github.com/dasnyder3)
 
-[Eric Peng](https://www.linkedin.com/in/eric-peng-40b37b13b/) [@CodeFuzzCC](https://github.com/CodeFuzzCC)
+[Eric Peng](https://www.linkedin.com/in/eric-peng-40b37b13b/) [@ericpengJoJo](https://github.com/ericpengJoJo)
 
 ## License
 
