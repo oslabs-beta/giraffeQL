@@ -1,0 +1,3 @@
+[submodule "giraffeql-api"]
+	path = giraffeql-api
+	url = https://github.com/oslabs-beta/giraffeql-api
