@@ -4,13 +4,13 @@ const passport = require('passport');
 const { Strategy } = require('passport-github');
 
 const users = require('../db/services/user');
-const JWT_KEY = "something_private_and_long_enough_to_secure"
+const JWT_KEY = "giraffesarecool"
 
 const router = express();
 
-const { GITHUB_CLIENT_ID } = require('../../settings.js');
-const { GITHUB_CLIENT_SECRET } = require('../../settings.js');
-const { GITHUB_CALLBACK_URL } = require('../../settings.js');
+const { GITHUB_CLIENT_ID } = process.env.NODE_ENV === 'development' ? require('../../settings.js') : process.env.GITHUB_CLIENT_ID;
+const { GITHUB_CLIENT_SECRET } = process.env.NODE_ENV === 'development' ? require('../../settings.js') : process.env.GITHUB_CLIENT_SECRET;
+const { GITHUB_CALLBACK_URL } = process.env.NODE_ENV === 'development' ? require('../../settings.js') : process.env.GITHUB_CALLBACK_URL;
 
 passport.use(new Strategy({
   clientID: GITHUB_CLIENT_ID,

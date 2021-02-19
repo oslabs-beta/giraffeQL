@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"next dev\" \"node api/login.js\"",
     "build": "next build",
-    "start": "concurrently \"next start -p $PORT\" \"node api/login.js\""
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",

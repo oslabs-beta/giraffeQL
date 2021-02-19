@@ -16,7 +16,6 @@ app.use((_, res, next) => {
     return next();
 })
 
-
 app.use(passport.initialize());
 
 passport.serializeUser(function (user, cb) {

@@ -1,6 +1,6 @@
 // api/db/mongoose.js
 const mongoose = require('mongoose');
-const { MONGO_URI } = require('../../settings.js');
+const { MONGO_URI } = process.env.NODE_ENV === 'development' ? require('../../settings.js') : process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI,
     {

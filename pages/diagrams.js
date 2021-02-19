@@ -65,7 +65,7 @@ const Diagrams = (props) => {
 
           <Header />
 
-          <div id='diagrammodal' className={pageLoading ? 'exit' : ''}>
+          <div id='diagrammodal'>
 
             <div id='header'>Connect to a database</div>
             
