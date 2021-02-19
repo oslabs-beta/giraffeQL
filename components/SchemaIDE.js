@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useStoreState } from 'react-flow-renderer';
+import { useStore, useStoreState } from 'react-flow-renderer';
 
 import generateAllTypes from '../converters/typeDefs.js';
 
@@ -9,9 +9,11 @@ const SchemaIDE = (props) => {
     const store = useStoreState((store) => store);
 
     const [tables, updateTable] = useState([]);
+
+    const [schema, writeSchema] = useState([]);
     const [typeDefs, writeTypeDefs] = useState('');
     const [resolvers, writeResolvers] = useState('');
-    const [schema, writeSchema] = useState([]);
+
     const [activeCode, toggleCode] = useState(true);
 
     // Taking the data from all nodes/elements whenever there is a change and turning them back to original format. 
@@ -85,11 +87,16 @@ const SchemaIDE = (props) => {
 
             <div className='sidebar' >
 
-                <div id='gql'><h1>GraphQL</h1><h2>Query</h2></div>
-                <button onClick={()=>toggleCode(!activeCode)}>TAB</button>
+                <ul>
+                    <li><button onClick={()=>toggleCode(true)}>TypeDefs</button></li>
+                    <li><button onClick={()=>toggleCode(false)}>Resolvers</button></li>
+                </ul>
+
                 <button id='copy' onClick={()=>navigator.clipboard.writeText(document.getElementById('schema').innerText)}>Copy</button>
                 <button id='download' onClick={downloadCode}>Export</button>
-                <pre><code id='schema' className='hljs'> <div dangerouslySetInnerHTML={{ __html: activeCode ? typeDefs : resolvers }} /> </code></pre>
+                <pre><code id='schema' className='hljs'> <div dangerouslySetInnerHTML={{ __html:
+                    activeCode ? typeDefs : resolvers
+                }} /> </code></pre>
 
             </div>
 
@@ -108,29 +115,19 @@ const SchemaIDE = (props) => {
                     box-shadow: -3px 0px 3px rgba(0,0,0,.05);
                 }
 
-                #gql{
+                ul{
+                    list-style-type: none;
                     display: flex;
-                    align-items: center;
-                    margin-top: 12px;
-                }
-
-                h1{
-                    font-family: 'Inter', sans-serif;
-                    font-weight: 300;
-                    line-height: 0;
-                    color: #e10098;
                     margin: 0;
-                }
 
-                h2{
-                    font-family: 'Inter', sans-serif;
-                    font-weight: 300;
-                    line-height: 0;
-                    color: white;
-                    background-color: #38b2ac;
-                    padding: 24px 8px;
-                    border-radius: 16px 8px;
-                    margin: 0;
+                    li{
+                        margin: 0;
+                        
+                        button{
+                            padding: 8px;
+                            margin: 0;
+                        }
+                    }
                 }
 
                 .hljs {
@@ -138,37 +135,9 @@ const SchemaIDE = (props) => {
                     overflow: auto;
                     height: 600px;
                     display: block;
-                    padding: 0.5em;
                     background: #1E1E1E;
-                    color: #DCDCDC;
                 }
-                                
-                ::-webkit-scrollbar {
-                    width: 5px;
-                    height: 5px;
-                }
-
-                ::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-
-                ::-webkit-scrollbar-thumb {
-                    background: #454954;
-                    border-radius: 16px;
-                    border-right: none;
-                    border-left: none;
-                }
-
-                ::-webkit-scrollbar-track-piece:end {
-                    background: transparent;
-                    margin-bottom: 16px; 
-                }
-                
-                ::-webkit-scrollbar-track-piece:start {
-                    background: transparent;
-                    margin-top: 16px;
-                }
-
+                        
                 #copy{
                     position: fixed;
                     color: #12b3ab;
