@@ -13,7 +13,7 @@ app.use((_, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', '*');
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-    next();
+    return next();
 })
 
 
@@ -23,8 +23,9 @@ passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
 
-app.use('/auth', require('./routes/auth'))
-app.use('/user', require('./routes/user'))
+app.use('/auth', require('./routes/auth'));
+app.use('/user', require('./routes/user'));
+app.use('/profile', require('./routes/profile'));
 
 // start server
 app.listen(3001, () => console.log("Server listening on http://localhost:3001"))

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-
+import fetch from 'isomorphic-fetch'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -11,12 +11,12 @@ import GitHub from '../components/icons/GitHub.js';
 
 const Home = (props) => {
 
-    const [URI, setURI] = useState('');
-
     const router = useRouter();
 
     useEffect(() => {
-      setURI('');
+      if (props.authorization) {
+        router.push('/diagrams');
+      }
     }, []);
 
     return (
@@ -266,13 +266,19 @@ const Home = (props) => {
     );
 }
 
-Home.getInitialProps = (ctx) => {
+async function getUser(authorization) {
+  const res = await fetch('http://localhost:3001/user', { headers: { authorization } })
 
+
+  if (res.status === 200) return { authorization, user: res.data }
+  else return { authorization }
+}
+
+Home.getInitialProps = (ctx) => {
   const { authorization } = parseCookies(ctx);
-  const {token} = ctx.query
-  return {
-    authorization: authorization || token,
-  };
+  const {code} = ctx.query
+  const props = getUser(authorization || code);
+  return props;
 }
 
 export default Home;

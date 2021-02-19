@@ -3,9 +3,9 @@ import { setCookie } from 'nookies';
 
 class MyDocument extends Document {
     static async getInitialProps(ctx) {
-        const initialProps = await Document.getInitialProps(ctx)
-        if (ctx.query.token) {
-            setCookie(ctx, 'authorization', ctx.query.token, {
+        const initialProps = await Document.getInitialProps(ctx);
+        if (ctx.query.code) {
+            setCookie(ctx, 'authorization', ctx.query.code, {
                 maxAge: 30 * 24 * 60 * 60,
                 path: '/',
             });
@@ -13,8 +13,9 @@ class MyDocument extends Document {
 
         return { ...initialProps }
     }
-
+    
     render() {
+        
         return (
             <Html>
                 <Head />
