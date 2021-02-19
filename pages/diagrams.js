@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 
 import Header from '../components/icons/Header.js';
 import GiraffeQL from '../components/icons/GiraffeQL.js';
@@ -54,7 +53,7 @@ const Diagrams = (props) => {
       router.events.on('routeChangeStart', handleStart);
       router.events.on('routeChangeComplete', handleComplete);
       router.events.on('routeChangeError', handleComplete);
-      }, [router]);
+    }, [router]);
 
     return (
         <div id='diagram'>
@@ -66,7 +65,7 @@ const Diagrams = (props) => {
 
           <Header />
 
-          <div id='diagrammodal'>
+          <div id='diagrammodal' className={pageLoading ? 'exit' : ''}>
 
             <div id='header'>Connect to a database</div>
             
@@ -74,6 +73,7 @@ const Diagrams = (props) => {
 
               <GiraffeQL />
 
+              <h3 style={{color: '#f54c4c'}} >{props.error == 'access_denied' ? 'Could not verify user, continue as a guest.' : ''}</h3>
               <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
 
               <div id='diagramsearch'>
@@ -97,16 +97,9 @@ const Diagrams = (props) => {
             </div>
             
            </div>
-           { pageLoading ? (<div id='loading'>Searching for your database...
-           <div>
-             <Image
-                src='/searchGiraffe.jpeg' 
-                width='150' 
-                height='150'
-                rel='prefetch'
-             />
-           </div>
-           </div>) : <div/>}
+
+           { pageLoading ? (<div id='loading'>Searching for your database...</div>) : <div/>}
+
           <style jsx>{`
 
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
@@ -143,12 +136,26 @@ const Diagrams = (props) => {
             #diagrammodal{
               display: flex;
               flex-direction: column;
-              box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+              box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06), 0px 0px 16px 0px rgba(0,0,0,.1);
               border-radius: 8px;
               width: 400px;
               height: 375px; 
               background-color: white;
               z-index: 10;
+            }
+
+            #diagrammodal.exit{
+              position: fixed;
+              animation: slideOutTop .5s ease-in-out;
+            }
+
+            @keyframes slideOutTop {
+              0% {
+                transform: translateY(0%);
+              }
+              100% {
+                transform: translateY(-300%);
+              }
             }
 
             #diagramcontainer{
@@ -317,9 +324,9 @@ const Diagrams = (props) => {
               color: #2d3748;
               text-align: left;
               margin: 0;
-              bottom: 0;
-              left: 0;
-              margin-left: 32px;
+              top: 50;
+              left: 50;
+              // margin-left: 32px;
             }
 
           `}</style>
@@ -332,14 +339,13 @@ export default Diagrams;
 
 export async function getServerSideProps({ query }) {
 
-  if (!query.message)
-    return {
-      props: {}
-    }
+  const props = {};
+  
+  if (query.error)
+    props.error = query.error;
 
-  const message = query.message;
+  if (query.message)
+    props.message = query.message;
 
-  return {
-    props: {message},
-  }
+  return {props};
 }

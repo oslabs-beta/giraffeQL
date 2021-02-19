@@ -4,13 +4,14 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"node api/login.js\"",
     "build": "next build",
     "start": "next start -p $PORT"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
     "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
     "dagre": "^0.8.5",
     "electron": "^11.2.1",
     "express": "^4.17.1",

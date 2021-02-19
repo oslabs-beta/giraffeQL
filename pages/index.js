@@ -12,48 +12,12 @@ import GitHub from '../components/icons/GitHub.js';
 const Home = (props) => {
 
     const [URI, setURI] = useState('');
-    const [pageLoading, setPageLoading] = useState(false);
 
     const router = useRouter();
 
     useEffect(() => {
       setURI('');
     }, []);
-
-    useEffect(() => {
-
-      const submitURI = (e) => {
-        if (e.code === 'Enter' && URI.length > 0)
-          return checkURLStatus();
-      }
-
-      document.addEventListener('keydown', submitURI);
-
-      return () => {
-       document.removeEventListener('keydown', submitURI);
-      };
-
-    });
-
-    const checkURLStatus = () => {
-
-      let path = '';
-
-      if (!URI.includes('postgres://')) path = 'postgres://' + URI;
-      else path = URI;
-
-      const href = { pathname: '/canvas', query: { data: [path] } }
-
-      router.push(href)
-    }
-
-    useEffect(() => {
-      const handleStart = () => { setPageLoading(true); };
-      const handleComplete = () => { setPageLoading(false); };
-      router.events.on('routeChangeStart', handleStart);
-      router.events.on('routeChangeComplete', handleComplete);
-      router.events.on('routeChangeError', handleComplete);
-      }, [router]);
 
     return (
         <div id='home'>
@@ -73,10 +37,14 @@ const Home = (props) => {
 
               <GiraffeQL />
 
-              <br/>
-
               <Link href='http://localhost:3001/auth/github'>
-                <button id='newprojectbtn'><span>Sign in With GitHub<GitHub /></span></button>
+                <button><span>Sign in With GitHub<GitHub /></span></button>
+              </Link>
+
+              <h3> - or - </h3>
+
+              <Link href='diagrams'>
+                <button><span>Continue as a Guest</span></button>
               </Link>
               
             </div>
@@ -119,10 +87,10 @@ const Home = (props) => {
             #homemodal{
               display: flex;
               flex-direction: column;
-              box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+              box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06), 0px 0px 16px 0px rgba(0,0,0,.1);
               border-radius: 8px;
               width: 400px;
-              height: 300px; 
+              height: 375px; 
               background-color: white;
               z-index: 10;
             }
@@ -226,8 +194,9 @@ const Home = (props) => {
               button{
                 transition: 0s;
                 position: relative;
-                border: 1px solid #12b3ab;
-                border-radius: 0px 4px 4px 0px;
+                border: none;
+                height: 48px;
+                width: 192px;
                 color: white;
                 background-color: #12b3ab;
                 padding: 8px;
@@ -237,6 +206,7 @@ const Home = (props) => {
                 span {
                   display: flex;
                   align-items: center;
+                  justify-content: center;
                   transition: 0s;
                   font-size: 12px;
                   font-weight: 500;
@@ -269,17 +239,6 @@ const Home = (props) => {
                   top: 0px;
                 }
 
-              }
-            }
-
-            #newprojectbtn{
-              border: none !important;
-              border-radius: 0 !important;
-              // background-color: #9b5de5 !important;
-              // box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5 !important;
-
-              &:hover{
-                // box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%) !important;
               }
             }
 
