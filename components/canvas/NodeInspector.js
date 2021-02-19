@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useStoreState } from 'react-flow-renderer';
 
 import ColumnInspector from './ColumnInspector.js';
-import Pencil from './icons/Pencil.js';
-import Key from './icons/Key.js';
+import Pencil from '../../components/icons/Pencil.js';
+import Key from '../../components/icons/Key.js';
 
 const NodeInspector = (data) =>{
 

@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
-import Header from '../components/icons/Header.js';
 import GiraffeQL from '../components/icons/GiraffeQL.js';
+import DiagramSideBar from '../components/diagrams/DiagramSidebar.js';
+import Profile from '../components/diagrams/Profile.js';
+import DiagramModal from '../components/diagrams/DiagramModal.js';
 
 const Diagrams = (props) => {
 
@@ -55,6 +57,8 @@ const Diagrams = (props) => {
       router.events.on('routeChangeError', handleComplete);
     }, [router]);
 
+    const sidebar = <DiagramSideBar />
+
     return (
         <div id='diagram'>
 
@@ -62,43 +66,15 @@ const Diagrams = (props) => {
             <title>giraffeQL</title>
             <link rel="shortcut icon" href="/favicon.png" />
           </Head>
+          
+          <div id='browsediagrams'>
+            {sidebar}
+            <Profile />
+          </div>
 
-          <Header />
+          <DiagramModal instructions={instructions} />
 
-          <div id='diagrammodal'>
-
-            <div id='header'>Connect to a database</div>
-            
-            <div id='diagramcontainer'>
-
-              <GiraffeQL />
-
-              <h3 style={{color: '#f54c4c'}} >{props.error == 'access_denied' ? 'Could not verify user, continue as a guest.' : ''}</h3>
-              <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
-
-              <div id='diagramsearch'>
-              
-                <div id='postgres'><input id='databaselist' type='text' list='databases' placeholder='postgres://' /><datalist id='databases' ><option value='postgres://' /></datalist></div>
-                <input type='text' spellCheck='false' placeholder='Enter a valid PostgreSQL URI' val={URI} onChange={e => setURI(e.target.value)} />
-                <button onClick={checkURLStatus} disabled={URI.length < 1 ? true : false}><span>Enter</span></button>
-
-              </div>
-
-              <br/>
-
-              <h3> - or - </h3>
-
-              <br/>
-
-              <Link href='canvas'>
-                <button id='newprojectbtn'><span>New Project</span></button>
-              </Link>
-              
-            </div>
-            
-           </div>
-
-           { pageLoading ? (<div id='loading'>Searching for your database...</div>) : <div/>}
+          { pageLoading ? (<div id='loading'>Searching for your database...</div>) : <div/>}
 
           <style jsx>{`
 
@@ -108,6 +84,15 @@ const Diagrams = (props) => {
               font-family: 'Inter', sans-serif;
               transition: all .3s ease;
               font-weight: 300;
+            }
+
+            header{
+              display: flex;
+              z-index: 999999999999;
+            }
+
+            #profile{
+              color: #b2b7ff;
             }
 
             #diagram{
@@ -121,6 +106,17 @@ const Diagrams = (props) => {
               background-color: #edf2f7;
             }
 
+            #browsediagrams{
+              display: flex;
+              flex-direction: column;
+              box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06), 0px 0px 16px 0px rgba(0,0,0,.1);
+              border-radius: 8px;
+              width: 55%;
+              height: 575px; 
+              background-color: white;
+              z-index: 10;
+            }
+
             #header{
               width:  100%;
               height: 48px;
@@ -131,31 +127,6 @@ const Diagrams = (props) => {
               background-color: #5661b3;
               color: #b2b7ff;
               border-radius: 8px 8px 0px 0px;
-            }
-
-            #diagrammodal{
-              display: flex;
-              flex-direction: column;
-              box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06), 0px 0px 16px 0px rgba(0,0,0,.1);
-              border-radius: 8px;
-              width: 400px;
-              height: 375px; 
-              background-color: white;
-              z-index: 10;
-            }
-
-            #diagrammodal.exit{
-              position: fixed;
-              animation: slideOutTop .5s ease-in-out;
-            }
-
-            @keyframes slideOutTop {
-              0% {
-                transform: translateY(0%);
-              }
-              100% {
-                transform: translateY(-300%);
-              }
             }
 
             #diagramcontainer{
