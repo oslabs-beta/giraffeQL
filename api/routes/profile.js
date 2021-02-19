@@ -18,7 +18,7 @@ router.use((req, res, next) => {
   })
 })
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   user = await userService.findById(req.user.id);
 
   res.send(user);
