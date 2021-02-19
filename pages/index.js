@@ -37,7 +37,7 @@ const Home = (props) => {
 
               <GiraffeQL />
 
-              <Link href='http://localhost:3001/auth/github'>
+              <Link href={process.env.NODE_ENV === 'development' ? `http://localhost:3001/auth/github` : `https://giraffeql-api.herokuapp.com/auth/github`}>
                 <button><span>Sign in With GitHub<GitHub /></span></button>
               </Link>
 
@@ -267,8 +267,9 @@ const Home = (props) => {
 }
 
 async function getUser(authorization) {
-  const res = await fetch('http://localhost:3001/user', { headers: { authorization } })
 
+  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3001` : `https://giraffeql-api.herokuapp.com`;
+  const res = await fetch(`${fetchURL}/user`, { headers: { authorization } })
 
   if (res.status === 200) return { authorization, user: res.data }
   else return { authorization }
