@@ -267,7 +267,10 @@ const Home = (props) => {
 }
 
 async function getUser(authorization) {
-  const res = await fetch('http://localhost:3001/user', { headers: { authorization } })
+
+  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000` : `https://giraffeql.io`;
+
+  const res = await fetch(`${fetchURL}/user`, { headers: { authorization } })
 
   if (res.status === 200) return { authorization, user: res.data }
   else return { authorization }
