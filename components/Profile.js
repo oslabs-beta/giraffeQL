@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image'
 import ProfileOptions from './ProfileOptions';
 
-import Carot from  '../../components/icons/Carot.js'
+import Carot from  './icons/Carot.js'
 
 const Profile = (props) => {
 

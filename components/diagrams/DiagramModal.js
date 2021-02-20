@@ -3,8 +3,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
-import GiraffeQL from '../../components/icons/GiraffeQL.js';
-
 const DiagramModal = (props) => {
 
   const [URI, setURI] = useState('');

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Profile from '../../components/diagrams/Profile.js';
+import Profile from '../../components/Profile.js';
 import Giraffe from '../../components/icons/Giraffe.js'
 
 const DiagramNavbar = () => {

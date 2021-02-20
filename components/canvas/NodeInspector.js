@@ -117,28 +117,32 @@ const NodeInspector = (data) =>{
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-385px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}} onKeyDown={submit} >
+        <div>
 
-            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(290px)' }`}} >{expand ? '<' : '>'}</button>
+            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{marginLeft: `${expand ? '25%' : '0%' }`}} >{expand ? '<' : '>'}</button>
 
-            <div className='sidebar' >
+            <div className='inspector' style={{opacity: `${expand ? '1' : '0' }`}} onKeyDown={submit} >
 
-                {/* Edit Button */}
-                <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil editable={editable ? 1 : undefined} /></div>
+                <div className='sidebar' >
 
-                {/* Tablename */}
-                <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} onDoubleClick={() => toggleEdit(true)} >
-                    <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
+                    {/* Edit Button */}
+                    <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil id='pencil' editable={editable ? 1 : undefined} /></div>
+
+                    {/* Tablename */}
+                    <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} onDoubleClick={() => toggleEdit(true)} >
+                        <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
+                    </div>
+
+                    <div id="tableofcontents">
+                        <h1 className='column1'>Name</h1> <h1>|</h1> <h1 className='column2'>Type</h1> <h1>|</h1> <h1 className='column3'>Req</h1> <h1>|</h1> <div className='column4' ><Key /></div> <h1>|</h1> <h1 className='column5'></h1>
+                    </div>
+
+                    {/* Columns */}
+                    {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} activePrimary={activePrimary} switchPrimary={switchPrimary} expandedOptions={expandedOptions} setOptionsMenu={setOptionsMenu} deleteColumn={deleteColumn} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} toggleEdit={toggleEdit} activeNode={activeNode} updateNode={updateNode} />)}
+
+                    <div id='options'><button onClick={newColumn} >Add Column</button></div>
+
                 </div>
-
-                <div id="tableofcontents">
-                    <h1 className='column1'>Name</h1> <h1>|</h1> <h1 className='column2'>Type</h1> <h1>|</h1> <h1 className='column3'>Req</h1> <h1>|</h1> <div className='column4' ><Key /></div> <h1>|</h1> <h1 className='column5'></h1>
-                </div>
-
-                {/* Columns */}
-                {columns.map((column, i) => <ColumnInspector name={column.name} dataType={column.dataType} isRequired={column.required} isPrimary={column.primaryKey} activePrimary={activePrimary} switchPrimary={switchPrimary} expandedOptions={expandedOptions} setOptionsMenu={setOptionsMenu} deleteColumn={deleteColumn} className='star' index={i} id={`${column.name}#${i}`} key={`${column.name}#${i}`} editable={editable} toggleEdit={toggleEdit} activeNode={activeNode} updateNode={updateNode} />)}
-
-                <div id='options'><button onClick={newColumn} >Add Column</button></div>
 
             </div>
 
@@ -165,7 +169,6 @@ const NodeInspector = (data) =>{
                     text-align: left;
                     background-color: white;
                     padding: 16px;
-                    // border-bottom: 3px solid #b8c2cc;
                     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
                 }
 
@@ -208,7 +211,6 @@ const NodeInspector = (data) =>{
                     position: relative;
                     display: flex;
                     align-items: center;
-                    // text-align: center;
                     flex-flow: row nowrap;
                     background-color: #f0f0f0;
                     border-bottom: 2px solid #cccccc;
@@ -222,21 +224,21 @@ const NodeInspector = (data) =>{
                     }
 
                     .column1{
-                        width: 120px;
+                        width: 35%;
                     }
                     .column2{
-                        width: 120px;
+                        width: 35%;
                     }
                     .column3{
                         text-align: center;
-                        width: 60px;
+                        width: 15%;
                     }
                     .column4{
                         text-align: center;
-                        width: 30px;
+                        width: 10%;
                     }
                     .column5{
-                        width: 10px;
+                        width: 5%;
                     }
                 }
 
