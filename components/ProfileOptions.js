@@ -1,6 +1,16 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import { parseCookies, destroyCookie } from 'nookies';
 
 const ProfileModal = (props) => {
+
+  const router = useRouter();
+
+  const logOut = () => {
+    destroyCookie({}, 'authorization');
+    router.push('/');
+  }
 
   return (
     <div className='optionscontainer' style={{opacity: `${props.expand ? '1' : '0'}`}}>
@@ -17,7 +27,7 @@ const ProfileModal = (props) => {
         <button>Contact Us</button>
       </Link>
       <hr />
-      <button style={{color: '#12b3ab'}}>Log Out</button>
+      <button style={{color: '#12b3ab'}} onClick={logOut}>Log Out</button>
     
       <style jsx>{`
 

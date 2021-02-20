@@ -267,9 +267,9 @@ const Home = (props) => {
 }
 
 async function getUser(authorization) {
-
   const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3001` : `https://giraffeql-api.herokuapp.com`;
   const res = await fetch(`${fetchURL}/user`, { headers: { authorization } })
+  .catch(err => console.log(err));
 
   if (res.status === 200) return { authorization, user: res.data }
   else return { authorization }
