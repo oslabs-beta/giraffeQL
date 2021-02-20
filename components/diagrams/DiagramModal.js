@@ -1,6 +1,54 @@
 import GiraffeQL from '../../components/icons/GiraffeQL.js';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 const DiagramModal = (props) => {
+
+  const [URI, setURI] = useState('');
+
+    const router = useRouter();
+
+    useEffect(() => {
+      setURI('');
+    }, []);
+
+    useEffect(() => {
+
+      const submitURI = (e) => {
+        if (e.code === 'Enter' && URI.length > 0)
+          return checkURLStatus();
+      }
+
+      document.addEventListener('keydown', submitURI);
+
+      return () => {
+       document.removeEventListener('keydown', submitURI);
+      };
+
+    });
+
+    const checkURLStatus = () => {
+
+      let path = '';
+
+      if (!URI.includes('postgres://')) path = 'postgres://' + URI;
+      else path = URI;
+
+      const href = { pathname: '/canvas', query: { data: [path] } }
+
+      router.push(href)
+    }
+
+    const instructions = props.message === 'error' ? 'Invalid URI, please try again:' : 'Type a database URI below to get started:';
+
+    useEffect(() => {
+      const handleStart = () => { setPageLoading(true); };
+      const handleComplete = () => { setPageLoading(false); };
+      router.events.on('routeChangeStart', handleStart);
+      router.events.on('routeChangeComplete', handleComplete);
+      router.events.on('routeChangeError', handleComplete);
+    }, [router]);
 
     return (
         <div id='diagrammodal'>
@@ -12,7 +60,7 @@ const DiagramModal = (props) => {
                 <GiraffeQL />
 
                 <h3 style={{color: '#f54c4c'}} >{props.error == 'access_denied' ? 'Could not verify user, continue as a guest.' : ''}</h3>
-                <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{props.instructions}</h3>
+                <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
 
                 <div id='diagramsearch'>
                 
@@ -45,18 +93,27 @@ const DiagramModal = (props) => {
                 height: 375px; 
                 background-color: white;
                 z-index: 10;
-            }
-
-            #diagrammodal.exit{
                 position: fixed;
                 animation: slideOutTop .5s ease-in-out;
             }
 
+            #header{
+              width:  100%;
+              height: 48px;
+              margin-top: -32px;
+              text-align: center;
+              font-size: 24px;
+              line-height: 2em;
+              background-color: #5661b3;
+              color: #b2b7ff;
+              border-radius: 8px 8px 0px 0px;
+            }
+
             @keyframes slideOutTop {
-                0% {
+                100% {
                     transform: translateY(0%);
                 }
-                100% {
+                0% {
                     transform: translateY(-300%);
                 }
             }

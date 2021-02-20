@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image'
+import ProfileModal from './ProfileModal';
 
 const Profile = (props) => {
+  // figure out props
+    const [expand, showProfile] = useState(false);
 
-    const [expand, showProfile] = useState(true);
-  
+    const profilemodal = expand ? <ProfileModal /> : '';
+
     return (
         <div className='profilemodal'>
           <div id='profile'>
             <Image 
             src="/../public/favicon.png"
             alt="Picture of the author"
-            width={50}
-            height={50}
+            width={36}
+            height={36}
             />
             <div id='profilename'>Put Profile Name here</div><button id='profilebtn' onClick={()=>showProfile(!expand)} >V</button>
+            {profilemodal}
           </div>
-            {/* Populate panel with all the nodes */}
-            {/* {allNodes.map((node, i) => <div className='tablename' key={`defaultnode#${i}`} onClick={()=>(setSelectedElements(node), props.selectNode(node))} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)} */}
 
             <style jsx>{`
 
@@ -29,13 +31,12 @@ const Profile = (props) => {
 
                 #profile {
                     display: flex;
-                    height: 10%;
-                    width: 25%;
+                    width: 250px;
                     background-color: none;
                     z-index: 999999998;
                     box-shadow: 3px 0px 3px rgba(0,0,0,.05);
-                    float: right;
-                    font-size: 36px;
+                    font-size: 12px;
+                    text-align: center;
                 }
 
                 #profilename{
@@ -48,7 +49,7 @@ const Profile = (props) => {
                     border-bottom-right-radius: 8px;
                     margin-top: 0;
                     color: #6f8195;
-                    background-color: white;
+                    background-color: none;
                     border: none;
                     outline: none;
                     cursor: pointer;
