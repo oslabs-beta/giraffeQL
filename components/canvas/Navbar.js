@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
-import Giraffe from '../components/icons/Giraffe.js';
+import Giraffe from '../../components/icons/Giraffe.js';
 
 const Navbar = (props) => {
 

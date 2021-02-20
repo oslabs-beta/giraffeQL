@@ -1,7 +1,7 @@
 import { Handle, useStoreState } from 'react-flow-renderer';
 import { useState, useEffect } from 'react';
 
-import Star from '../components/icons/Star.js';
+import Star from '../../components/icons/Star.js';
 
 const Column = (props) => {
     

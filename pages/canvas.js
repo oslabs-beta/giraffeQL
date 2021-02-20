@@ -5,12 +5,12 @@ import Head from 'next/head';
 
 import dagre from 'dagre';
 
-import Node from '../components/Node.js';
-import NodeInspector from '../components/NodeInspector.js';
-import DefaultInspector from '../components/DefaultInspector.js';
-import SchemaIDE from '../components/SchemaIDE.js';
-import Navbar from '../components/Navbar.js';
-import DeleteModal from '../components/DeleteModal.js';
+import Node from '../components/canvas/Node.js';
+import NodeInspector from '../components/canvas/NodeInspector.js';
+import DefaultInspector from '../components/canvas/DefaultInspector.js';
+import SchemaIDE from '../components/canvas/SchemaIDE.js';
+import Navbar from '../components/canvas/Navbar.js';
+import DeleteModal from '../components/canvas/DeleteModal.js';
 
 // Set our custom node component from Node.js
 const nodeTypes = {
