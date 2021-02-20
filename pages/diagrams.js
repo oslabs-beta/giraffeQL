@@ -1,10 +1,9 @@
 import Head from 'next/head';
 
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
-import GiraffeQL from '../components/icons/GiraffeQL.js';
+import Header from '../components/icons/Header.js';
+
 import DiagramSideBar from '../components/diagrams/DiagramSidebar.js';
 import DiagramNavbar from '../components/diagrams/DiagramNavbar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
@@ -14,19 +13,9 @@ const Diagrams = (props) => {
   const [newDiagram, setNewDiagram] = useState(false)
   const [pageLoading, setPageLoading] = useState(false);
 
-  const router = useRouter();
-  
-  useEffect(() => {
-    const handleStart = () => { setPageLoading(true); };
-    const handleComplete = () => { setPageLoading(false); };
-    router.events.on('routeChangeStart', handleStart);
-    router.events.on('routeChangeComplete', handleComplete);
-    router.events.on('routeChangeError', handleComplete);
-  }, [router]);
-
   const sidebar = <DiagramSideBar />
 
-  const diagrammodal = newDiagram ? <DiagramModal message={props.message} /> : '';
+  const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} /> : '';
 
   return (
       <div id='diagram'>
@@ -35,6 +24,8 @@ const Diagrams = (props) => {
           <title>giraffeQL</title>
           <link rel="shortcut icon" href="/favicon.png" />
         </Head>
+
+        <Header />
         
         <DiagramNavbar />
 
