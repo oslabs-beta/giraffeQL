@@ -19,8 +19,6 @@
 
 Users can create new tables, connect columns, and edit data while seeing their changes take effect in a _real-time_ GraphQL code preview. The code can be exported ready-to-go in any application.
 
-<br/>
-
 # <image width=30 align="center" src="./public/readme-logo.svg"> **Features**
 
 - **Sign-in page**: Sign up for an account through GitHub OAuth, or just continue as a guest. Registered users enjoy additional project-saving functionality.
@@ -42,8 +40,6 @@ Users can create new tables, connect columns, and edit data while seeing their c
 
 - **Export your code**: Easily copy your generated code to your clipboard or export as a Javascript file to add to your project.
 
-<br/>
-
 # <image width=30 align="center" src="./public/readme-logo.svg"> **Contributors**
 
 [Benjamin Trosch](https://www.linkedin.com/in/benjitrosch/) [@benjitrosch](https://github.com/benjitrosch)
@@ -55,8 +51,6 @@ Users can create new tables, connect columns, and edit data while seeing their c
 [Eric Peng](https://www.linkedin.com/in/eric-peng-40b37b13b/) [@ericpengJoJo](https://github.com/ericpengJoJo)
 
 ___
-
-<br/>
 
 ## License
 
