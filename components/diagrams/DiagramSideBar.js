@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
 const DiagramSideBar = (props) => {
 

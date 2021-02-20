@@ -1,7 +1,7 @@
 const Pencil = (props) => {
   return (
     <div>
-        <svg width={800} height={600} xmlns="http://www.w3.org/2000/svg" {...props}>
+        <svg width={800} height={600} >
             <path id='pencil'
                 strokeWidth={1.5}
                 stroke="#000"
@@ -29,7 +29,7 @@ const Pencil = (props) => {
                 user-select: none;
                 z-index: 9999;
 
-                margin-left: 333px;
+                margin-left: 22%;
             }
 
             svg {
@@ -39,7 +39,7 @@ const Pencil = (props) => {
                 z-index: 10000;
 
                 margin-top: -269px;
-                margin-left: -50px;
+                margin-left: -3%;
 
                 &:hover{
                     cursor: pointer;
@@ -48,7 +48,7 @@ const Pencil = (props) => {
                 &:hover ~ h1 {
                     transition: .6s;
                     color: #ababab;
-                    margin-left: 290px;
+                    margin-left: 19%;
                 }
 
                 &:hover > #pencilbg{

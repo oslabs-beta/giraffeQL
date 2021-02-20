@@ -21,14 +21,18 @@ const DefaultInspector = (props) => {
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     return (
-        <div className='inspector' style={{transform: `${expand ? '' : 'translateX(-395px)' }`, position: `${expand ? 'fixed' : 'fixed'}`}}>
+        <div>
 
-            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{transform: `${expand ? '' : 'translateX(299px)' }`}} >{expand ? '<' : '>'}</button>
+            <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{marginLeft: `${expand ? '25%' : '0%' }`}} >{expand ? '<' : '>'}</button>
 
-            <div id='header' >Tables <button id='createbtn' onClick={props.createNode} >+</button></div>
+            <div className='inspector' style={{opacity: `${expand ? '1' : '0' }`}}>
 
-            {/* Populate panel with all the nodes */}
-            {allNodes.map((node, i) => <div className='tablename' key={`defaultnode#${i}`} onClick={()=>(setSelectedElements(node), props.selectNode(node))} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)}
+                <div id='header' >Tables <button id='createbtn' onClick={props.createNode} >+</button></div>
+
+                {/* Populate panel with all the nodes */}
+                {allNodes.map((node, i) => <div className='tablename' key={`defaultnode#${i}`} onClick={()=>(setSelectedElements(node), props.selectNode(node))} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)}
+
+            </div>
 
             <style jsx>{`
 

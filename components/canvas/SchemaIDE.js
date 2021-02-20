@@ -16,6 +16,8 @@ const SchemaIDE = (props) => {
 
     const [activeCode, toggleCode] = useState(true);
 
+    const [expand, showTable] = useState(true);
+    
     // Taking the data from all nodes/elements whenever there is a change and turning them back to original format. 
     useEffect(() => {
 
@@ -83,9 +85,12 @@ const SchemaIDE = (props) => {
     }
 
     return (
-        <div id='ide' >
 
-            <div className='sidebar' >
+        <div style={{width: '33%', margin: '0'}}>
+
+            <button className='schemabtn' onClick={()=>showTable(!expand)} style={{marginLeft: `${expand ? '0%' : '24.8%'}`}} >{expand ? '>' : '<'}</button>
+
+            <div id='ide' style={{opacity: `${expand? '1' : '0'}`}} >
 
                 <ul>
                     <li><button onClick={()=>toggleCode(true)}>TypeDefs</button></li>
@@ -94,7 +99,7 @@ const SchemaIDE = (props) => {
 
                 <button id='copy' onClick={()=>navigator.clipboard.writeText(document.getElementById('schema').innerText)}>Copy</button>
                 <button id='download' onClick={downloadCode}>Export</button>
-                <pre><code id='schema' className='hljs'> <div dangerouslySetInnerHTML={{ __html:
+                <pre><code className='hljs'> <div dangerouslySetInnerHTML={{ __html:
                     activeCode ? typeDefs : resolvers
                 }} /> </code></pre>
 
@@ -103,9 +108,7 @@ const SchemaIDE = (props) => {
             <style jsx>{`
 
                 #ide {
-                    position: fixed;
-                    height: 100%;
-                    width: 25%;
+                    height: 100vh;
                     padding: 0px 16px;
                     margin: 0;
                     right: 0;
@@ -113,6 +116,26 @@ const SchemaIDE = (props) => {
                     z-index: 999999998;
                     overflow: hidden;
                     box-shadow: -3px 0px 3px rgba(0,0,0,.05);
+                }
+
+                .schemabtn{
+                    font-size: 24px;
+                    font-family: 'Inter', sans-serif;
+                    position: fixed;
+                    padding: 4px 8px;
+                    border-bottom-left-radius: 8px;
+                    color: #6f8195;
+                    background-color: #d8e3e8;
+                    border: none;
+                    outline: none;
+                    cursor: pointer;
+                    z-index: 999999999999999999999999999999999999;
+                    transform: translateX(-32px);
+
+                    &:hover{
+                        color: #12b3ab;
+                        background-color: #cad5e0;
+                    }
                 }
 
                 ul{
@@ -133,7 +156,8 @@ const SchemaIDE = (props) => {
                 .hljs {
                     border-radius: 8px;
                     overflow: auto;
-                    height: 600px;
+                    height: 80vh;
+                    width: 96%;
                     display: block;
                     background: #1E1E1E;
                 }

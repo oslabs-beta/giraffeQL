@@ -69,22 +69,22 @@ const ColumnInspector = (props) => {
 
             {/* Our Table component is split into two columns: the column name and it's associated Data Type.*/}
 
-            <input type='text' value={name} className='column' className='left' onChange={(e)=>setName(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#5e6f7a'}`}} />
+            <input type='text' value={name} className='column1' onChange={(e)=>setName(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#5e6f7a'}`}} />
 
-            <input type='text' list='types' placeholder={type} className='column' className='right' onChange={(e)=>setType(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+            <input type='text' list='types' placeholder={type} className='column2' onChange={(e)=>setType(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
                 {/* List of data-types */}
                 {/* TODO: Make this work!! Gets overwritten once a value is selected. */}
                 <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist>
 
-            <input type='checkbox' disabled={props.editable ? '' : 'disabled'} checked={required} onChange={()=> setRequired(!required)} className='column' className='right' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+            <input type='checkbox' disabled={props.editable ? '' : 'disabled'} checked={required} onChange={()=> setRequired(!required)} className='column3' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
 
-            <button onClick={changePrimary} disabled={props.editable ? '' : 'disabled'} className='column' className='right' className='primarykey' >
+            <button onClick={changePrimary} disabled={props.editable ? '' : 'disabled'} className='column4' >
                 <div className='star'>
                     <svg width={24} height={24} viewBox="0 0 24 24" ><path fill={`${props.isPrimary ? '#0373fc' : 'transparent' }`} d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>
                 </div>
             </button>
 
-            <button onClick={()=> toggleOptions(props.options ? props.setOptionsMenu(null) : props.setOptionsMenu(props.index) )} className='column' className='columnoptions'>{`⋮`}</button> <ColumnOptions setOptionsMenu={props.setOptionsMenu} index={props.index} toggleEdit={props.toggleEdit} deleteColumn={props.deleteColumn} expanded={options} className='optionmodal' />
+            <button onClick={()=> toggleOptions(props.options ? props.setOptionsMenu(null) : props.setOptionsMenu(props.index) )} className='column5' >{`⋮`}</button> <ColumnOptions setOptionsMenu={props.setOptionsMenu} index={props.index} toggleEdit={props.toggleEdit} deleteColumn={props.deleteColumn} expanded={options} className='optionmodal' />
 
             <style jsx>{`
 
@@ -98,11 +98,11 @@ const ColumnInspector = (props) => {
 
                 .container{
                     display: flex;
-                    justify-content: space-between;
+                    align-items: center;
+                    flex-flow: row nowrap;
                     padding: 8px;
                     border-top: .5px solid transparent;
                     border-bottom: .5px solid #e4eaf1;
-                    flex-flow: row nowrap;
 
                     &:hover{
                         border-top: .5px solid #0373fc;
@@ -114,12 +114,43 @@ const ColumnInspector = (props) => {
                         border-bottom: .5px solid #0373fc;
                     }
 
-                    &:active > .left{
+                    &:active > .column1{
                         color: #0373fc;
                     }
 
-                    &:active > .right{
+                    &:active > .column2{
                         color: #0373fc;
+                    }
+
+                    .column1{
+                        width: 35%;
+                        font-weight: bold;
+                        color: #5e6f7a;
+                    }
+                    .column2{
+                        width: 35%;
+                        color: #0373fc;
+                    }
+                    .column3{
+                        text-align: center;
+                        width: 15%;
+                    }
+                    .column4{
+                        text-align: center;
+                        width: 10%;
+                        border: none;
+                        outline: none;
+                        background-color: transparent;
+                    }
+                    .column5{
+                        width: 5%;
+                        font-size: 16px;
+                        font-weight: bold;
+                        border: none;
+                        outline: none;
+                        background-color: transparent;
+                        color: #12b3ab;
+                        cursor: pointer;
                     }
                 }
 
@@ -132,36 +163,6 @@ const ColumnInspector = (props) => {
                     ::placeholder{
                         color: #cccccc;
                     }
-                }
-
-                .column{
-                    flex: 20%;
-                }
-
-                .left{
-                    font-weight: bold;
-                    color: #5e6f7a;
-                    // margin-right: 32px;
-                }
-
-                .right{
-                    color: #cccccc;
-                }
-
-                .columnoptions{
-                    font-size: 16px;
-                    font-weight: bold;
-                    border: none;
-                    outline: none;
-                    background-color: transparent;
-                    color: #12b3ab;
-                    cursor: pointer;
-                }
-
-                .primarykey{
-                    border: none;
-                    outline: none;
-                    background-color: transparent;
                 }
 
                 .star{

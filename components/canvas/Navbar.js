@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
+import Profile from '../../components/Profile.js';
 import Giraffe from '../../components/icons/Giraffe.js';
+import { connection } from 'mongoose';
 
 const Navbar = (props) => {
 
@@ -33,9 +35,11 @@ const Navbar = (props) => {
                 </div>
             </Link>
 
-            <h2>Diagrams {`>`} <span style={{fontWeight: '500', color: 'white'}} >Untitled-database-diagram</span></h2>
+            <input id='search' value={searchquery} placeholder='Search for a table name...' onChange={(e)=>typeSearch(e.target.value)} onKeyDown={submit} />
 
-            <input value={searchquery} placeholder='Search for a table name...' onChange={(e)=>typeSearch(e.target.value)} onKeyDown={submit} />
+            <h2 id='diagramname' >Diagrams {`>`} <span style={{fontWeight: '500', color: 'white'}} >Untitled-database-diagram</span></h2>
+
+            <Profile id='profile' />
 
             <style jsx>{`
 
@@ -61,7 +65,7 @@ const Navbar = (props) => {
 
                 .homebtn{
                     display: flex;
-                    
+                    width: 12.5%;
                     &:hover{
                         background-color: #5f81e7;
                         cursor: pointer;
@@ -71,7 +75,7 @@ const Navbar = (props) => {
                 .navbar {
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
+                    // justify-content: space-between;
                     overflow: hidden;
                     background-color: #5661b3;
                     position: fixed;
@@ -88,13 +92,12 @@ const Navbar = (props) => {
                     background-color: #727ed4;
                     border-radius: 32px;
                     height: 16px;
-                    width: 250px;
+                    width: 12.5%;
                     padding: 8px;
                     margin: 16px;
                     border: none;
                     outline: none;
                     box-shadow: inset 2px 2px 0px #262f6e;
-
                     &:focus{
                         background-color: #b2b7ff;
                     }
@@ -102,6 +105,16 @@ const Navbar = (props) => {
                     ::placeholder{
                         color: #b2b7ff;
                     }
+                }
+
+                #diagramname{
+                  width: 50%;
+                  margin-left: 20%;
+                }
+
+                #profile{
+                  margin-left: 75%;
+                  width: 25%;
                 }
 
             `}</style>
