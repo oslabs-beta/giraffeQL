@@ -24,10 +24,10 @@ const Navbar = (props) => {
     }
 
     return (
-        <div id='navbar'>
+        <div className='navbar'>
 
             <Link href='/'>
-                <div id='homebtn'>
+                <div className='homebtn'>
                     <Giraffe /> 
                     <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
                 </div>
@@ -59,7 +59,7 @@ const Navbar = (props) => {
                     margin: 0px 16px;
                 }
 
-                #homebtn{
+                .homebtn{
                     display: flex;
                     
                     &:hover{
@@ -68,7 +68,7 @@ const Navbar = (props) => {
                     }
                 }
 
-                #navbar {
+                .navbar {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;

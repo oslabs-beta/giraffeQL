@@ -1,5 +1,3 @@
-import * as React from "react"
-
 const Pencil = (props) => {
   return (
     <div>
