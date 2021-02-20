@@ -9,10 +9,10 @@ const DiagramNavbar = () => {
     <div className='navbar'>
 
       <Link href='/'>
-          <div className='homebtn'>
-              <Giraffe /> 
-              <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
-          </div>
+        <div className='homebtn'>
+            <Giraffe /> 
+            <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
+        </div>
       </Link>
 
       <Profile />
