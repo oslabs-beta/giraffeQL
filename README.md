@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">
-<a href='https://www.giraffeql.io'>giraffeql</a>
+<a href='https://www.giraffeql.io'>giraffeql.io</a>
 <br/>
 <img alt="twitter" src="https://img.shields.io/twitter/follow/giraffeQL?label=%40giraffeQL&logoColor=%2357d3af&style=social"></h1>
 </h1>
