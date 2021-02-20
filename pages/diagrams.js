@@ -7,6 +7,8 @@ import Header from '../components/icons/Header.js';
 import DiagramSideBar from '../components/diagrams/DiagramSidebar.js';
 import DiagramNavbar from '../components/diagrams/DiagramNavbar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
+import NavBarHeader from '../components/icons/DiagramsHeader.js';
+import DiagramsHeader from '../components/icons/DiagramsHeader.js';
 
 const Diagrams = (props) => {
 
@@ -25,13 +27,13 @@ const Diagrams = (props) => {
           <link rel="shortcut icon" href="/favicon.png" />
         </Head>
 
-        <Header />
+        <DiagramsHeader />
         
         <DiagramNavbar />
 
         <div id='browsediagrams'>
           {sidebar}
-          <button id='newdiagrambtn' onClick={() => setNewDiagram(!newDiagram)}>New Diagram</button>
+          <button id='newdiagrambtn' onClick={() => setNewDiagram(!newDiagram)}>+</button>
         </div>
 
         {diagrammodal}
@@ -68,108 +70,9 @@ const Diagrams = (props) => {
             height: 575px; 
             background-color: white;
             z-index: 10;
-          }
-
-          #header{
-            width:  100%;
-            height: 48px;
-            margin-top: -32px;
             text-align: center;
-            font-size: 24px;
-            line-height: 2em;
-            background-color: #5661b3;
-            color: #b2b7ff;
-            border-radius: 8px 8px 0px 0px;
+            vertical-align: center;
           }
-
-          #diagramcontainer{
-            display: flex;
-            align-items: center;
-            margin-top: 16px;
-            justify-content: center;
-            flex-direction: column;
-
-            #newdiagrambtn{
-
-              &:hover{
-                
-              }
-
-          }
-            svg{
-              margin: 0;
-              top: 0;
-              width: 150px;
-              height: 150px;
-            }
-
-            h1{
-              font-size: 24px;  
-              font-weight: 700;
-              color: #2d3748;
-              text-align: center;
-              margin: 0;
-            }
-
-            h2{
-              font-size: 16px;
-              font-weight: 500;
-              color: #434190;
-              text-align: center;
-              margin: 0;
-              margin-bottom: 16px;
-            }
-
-            h3{
-              font-size: 12px;
-              font-weight: 700;
-              color: #2d3748;
-              text-align: center;
-              margin: 4px;
-              // margin-top: 16px;
-            }
-            
-            #postgres{
-              margin-top: 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              position: relative;
-              border-radius: 4px 0px 0px 4px;
-              padding: 8px;
-              outline: none;
-              font-size: 12px;
-              border: 1px solid #6f8195;
-              border-right: none;
-              color: #6f8195;
-              background-color: #d9e1e7;
-              box-shadow: none;
-            }
-
-            input{
-
-              border: 1px solid #6f8195;
-              border-right: none;
-              // border-radius: 4px 0px 0px 4px;
-              color: #6f8195;
-              background-color: white;
-              outline: none;
-              font-size: 12px;
-              padding: 8px 16px;
-
-              &:focus{
-                border-right: none;
-  
-                ::placeholder{
-                  color: #6f8195;
-                }
-              }
-            
-              ::placeholder{
-                color: #cccccc;
-              }
-
-            }
 
             #databaselist{
               padding: 0;
@@ -177,89 +80,31 @@ const Diagrams = (props) => {
               border: none;
               outline: none;
               background-color: transparent;
-              width: 96px;
               color: #6f8195;
-
-              ::placeholder{
-                color: #6f8195;
-              }
             }
 
             button{
-              transition: 0s;
-              position: relative;
-              border: 1px solid #12b3ab;
-              border-radius: 0px 4px 4px 0px;
-              color: white;
-              background-color: #12b3ab;
-              padding: 8px;
-              outline: none;
-              box-shadow: inset 0px -2px 0px darken(#12b3ab, 20%), 0px -1px 0px #12b3ab;
-              z-index: 9999999999999;
-
-              span {
-                transition: 0s;
-                font-size: 12px;
-                font-weight: 500;
-                position: relative;
-                top: -1px;
-              }
-
-              &:focus{
+                background-color: transparent;
+                border: 2px solid white;
                 outline: none;
-              }
+                color: white;
+                border-radius: 8px;
+                z-index: 999999999999999;
+                width: 2em;
+                height: 2em;
+                margin-top: 1.1%;
+                margin-left: 12%;
+                padding: 0;
+                font-size: .6em;
+                
 
-              &:hover{
-                box-shadow: inset 0px -1px 0px darken(#12b3ab, 20%);
-              }
-
-              &:hover > span{
-                top: 0px;
-              }
-
-              &:disabled{
-                transition: all .3s;
-                border: 1px solid #6f8195;
-                color: #6f8195;
-                background-color: #d9e1e7;
-                box-shadow: none;
-              }
-
-              &:disabled > span{
-                transition: all .3s;
-                top: 0px;
-              }
-
+                &:hover{
+                  border: 3px solid white;
+                  background-color: darken(#12b3ab, 5%);
+                  width: 2.1em;
+                  height: 2.1em;
+                }
             }
-          }
-
-          #newprojectbtn{
-            border: none !important;
-            border-radius: 0 !important;
-            // background-color: #9b5de5 !important;
-            // box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5 !important;
-
-            &:hover{
-              // box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%) !important;
-            }
-          }
-
-          #diagramsearch{
-            display: flex;
-            height: 32px;
-          }
-
-          #loading{
-            position: fixed;
-            font-size: 16px;  
-            font-weight: 700;
-            color: #2d3748;
-            text-align: left;
-            margin: 0;
-            top: 50;
-            left: 50;
-            // margin-left: 32px;
-          }
 
         `}</style>
           
