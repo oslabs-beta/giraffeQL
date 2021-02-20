@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 const ProfileModal = (props) => {
 
   return (
@@ -5,10 +7,15 @@ const ProfileModal = (props) => {
 
       <h1>Account</h1>
       <button>User Settings</button>
+      <Link href='diagrams' >
+        <button>My Diagrams</button>
+      </Link>
       <hr />
       <h1>Support</h1>
       <button>Changelog</button>
-      <button>Contact Us</button>
+      <Link href='contact' >
+        <button>Contact Us</button>
+      </Link>
       <hr />
       <button style={{color: '#12b3ab'}}>Log Out</button>
     

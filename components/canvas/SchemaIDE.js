@@ -17,7 +17,7 @@ const SchemaIDE = (props) => {
     const [activeCode, toggleCode] = useState(true);
 
     const [expand, showTable] = useState(true);
-    
+
     // Taking the data from all nodes/elements whenever there is a change and turning them back to original format. 
     useEffect(() => {
 
@@ -43,7 +43,7 @@ const SchemaIDE = (props) => {
 
                 newConnection.originKey = alphabet.indexOf(connection.sourceHandle);
                 newConnection.destinationTable = store.elements[targetNode].data.label.props.children.props.tablename;
-                newConnection.destinationKey= alphabet.indexOf(connection.targetHandle);
+                newConnection.destinationKey = alphabet.indexOf(connection.targetHandle);
 
                 newTable.connections.push(newConnection);
 
@@ -73,7 +73,7 @@ const SchemaIDE = (props) => {
     }, [schema]);
 
     const downloadCode = () => {
-        const url = window.URL.createObjectURL(new Blob([document.getElementById('schema').innerText]));
+        const url = window.URL.createObjectURL(new Blob([document.getElementById('unstyledcode').innerText]));
         const link = document.createElement('a');
 
         link.href = url;
@@ -86,22 +86,26 @@ const SchemaIDE = (props) => {
 
     return (
 
-        <div style={{width: '33%', margin: '0'}}>
+        <div style={{ width: '33%', margin: '0' }} >
 
-            <button className='schemabtn' onClick={()=>showTable(!expand)} style={{marginLeft: `${expand ? '0%' : '24.8%'}`}} >{expand ? '>' : '<'}</button>
+            <button className='schemabtn' onClick={() => showTable(!expand)} style={{ marginLeft: `${expand ? '0%' : '24.8%'}` }} >{expand ? '>' : '<'}</button>
 
-            <div id='ide' style={{opacity: `${expand? '1' : '0'}`}} >
+            <div id='ide' style={{ opacity: `${expand ? '1' : '0'}` }} >
 
                 <ul>
-                    <li><button onClick={()=>toggleCode(true)}>TypeDefs</button></li>
-                    <li><button onClick={()=>toggleCode(false)}>Resolvers</button></li>
+                    <li><button id='copy' onClick={() => navigator.clipboard.writeText(document.getElementById('unstyledcode').innerText)} >Copy</button></li>
+                    <li><button id='download' onClick={downloadCode} >Export</button></li>
                 </ul>
 
-                <button id='copy' onClick={()=>navigator.clipboard.writeText(document.getElementById('schema').innerText)}>Copy</button>
-                <button id='download' onClick={downloadCode}>Export</button>
-                <pre><code className='hljs'> <div dangerouslySetInnerHTML={{ __html:
-                    activeCode ? typeDefs : resolvers
+                <button id='typedefs' onClick={() => toggleCode(true)} >TypeDefs</button>
+                <button id='resolvers' onClick={() => toggleCode(false)} >Resolvers</button>
+                
+                <pre style={{position: 'relative', width: '90%'}}><code className='hljs'> <div dangerouslySetInnerHTML={{
+                    __html:
+                        activeCode ? typeDefs : resolvers
                 }} /> </code></pre>
+
+                <pre style={{opacity: '0', width: '0', height: '0'}}><code id='unstyledcode'><div dangerouslySetInnerHTML={{__html: schema.join('') }} /></code></pre>
 
             </div>
 
@@ -141,60 +145,106 @@ const SchemaIDE = (props) => {
                 ul{
                     list-style-type: none;
                     display: flex;
+                    justify-content: space-around;
                     margin: 0;
 
                     li{
                         margin: 0;
                         
                         button{
-                            padding: 8px;
-                            margin: 0;
+                          transition: 0s;
+                          position: relative;
+                          margin-top: 1.25em;
+                          border: none;
+                          height: auto;
+                          width: 7em;
+                          color: white;
+                          background-color: #12b3ab;
+                          padding: 8px;
+                          outline: none;
+                          box-shadow: inset 0px -2px 0px darken(#12b3ab, 20%), 0px -1px 0px #12b3ab;
+                          z-index: 99999999999999999999;
+                          
+                          &:focus{
+                            outline: none;
+                          }
+            
+                          &:hover{
+                            box-shadow: inset 0px -1px 0px darken(#12b3ab, 20%);
+                            cursor: pointer;
+                          }
                         }
                     }
                 }
 
+                #download {
+                  background-color: #9b5de5;
+                  box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5;
+                  margin-left: -1em;
+    
+                  &:hover{
+                    box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%);
+                    cursor: pointer;
+                    top: 1px;
+                  }
+                }
+                
                 .hljs {
                     border-radius: 8px;
                     overflow: auto;
                     height: 80vh;
-                    width: 96%;
+                    width: 333px;
                     display: block;
                     background: #1E1E1E;
+                    // text-overflow: ellipsis;
+                    // white-space: nowrap;
                 }
                         
-                #copy{
+                #typedefs{
+                    font-size: 10px;
+                    transition: all .2s linear;
                     position: fixed;
-                    color: #12b3ab;
                     border: 1px solid #12b3ab;
                     border-radius: 4px;
                     padding: 8px;
                     outline: none;
+                    color: #12b3ab;
                     background-color: transparent;
-                    margin-top: 20px;
-                    margin-left: 260px;
+                    margin-top: 1.5%;
+                    margin-left: 13%;
+                    z-index: 99999999999999999999999999999999999999999999999;
+                    opacity: .5;
 
                     &:hover{
                         cursor: pointer;
                         background-color: rgba(18, 179, 171, .25);
+                        opacity: 1;
                     }
                 }
 
-                #download{
+                #resolvers{
+                    font-size: 10px;
+                    transition: all .2s linear;
                     position: fixed;
-                    color: #9b5de5;
                     border: 1px solid #9b5de5;
                     border-radius: 4px;
                     padding: 8px;
                     outline: none;
+                    color: #9b5de5;
                     background-color: transparent;
-                    margin-top: 20px;
-                    margin-left: 315px;
+                    margin-top: 1.5%;
+                    margin-left: 17.75%;
+                    z-index: 99999999999999999999999999999999999999999999999;
+                    opacity: .5;
 
                     &:hover{
                         cursor: pointer;
                         background-color: rgba(155, 93, 229, .25);
+                        opacity: 1;
                     }
                 }
+
+                
 
             `}</style>
 
