@@ -109,6 +109,36 @@ const Canvas = (props) => {
     
   }, [instance]);
 
+  useEffect(() => {
+
+    if (!updated || instance === null)
+      return;
+
+    const newReactflow = instance.toObject();
+
+    const tables = newReactflow.elements.filter(node => !node.id.includes('reactflow'));
+    const connections = newReactflow.elements.filter(node => node.id.includes('reactflow'));;
+
+    const reactFlowData = {
+      tables,
+      connections,
+      position: newReactflow.position,
+      zoom: newReactflow.zoom
+    };
+
+    const body = {
+      user: 'some donkus',
+      diagramName: 'cool rocks',
+      reactFlowData
+    };
+
+    console.log(body);
+
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql.io';
+    fetch(`${fetchURL}/diagrams`, { method: 'POST', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)});
+
+  }, [updated]);
+
   //Component to get the layouted elements
   //By default, set to 'LR', AKA Left -> Right
   //Can also be set to TB, AKA Top -> Bottom

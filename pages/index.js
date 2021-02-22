@@ -2,7 +2,10 @@ import Head from 'next/head';
 import fetch from 'isomorphic-fetch'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../context/state.js';
+
 import { parseCookies } from 'nookies';
 
 import Header from '../components/icons/Header.js';
@@ -12,6 +15,8 @@ import GitHub from '../components/icons/GitHub.js';
 const Home = (props) => {
 
     const router = useRouter();
+
+    const { user, storeUser } = useContext(UserContext);
 
     useEffect(() => {
       if (props.authorization) {
@@ -272,8 +277,9 @@ async function getUser(authorization) {
   const res = await fetch(`${fetchURL}/api/user`, { headers: { authorization } })
     .catch(err => console.log(err));
 
-  if (res.status === 200) return { authorization, user: res.data }
+  console.log(res.data);
 
+  if (res.status === 200) return { authorization, user: res.data }
   else return !authorization ? {authorization: null} : { authorization };
 }
 
