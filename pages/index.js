@@ -267,18 +267,21 @@ const Home = (props) => {
 }
 
 async function getUser(authorization) {
+  
   const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000` : `https://giraffeql.io`;
   const res = await fetch(`${fetchURL}/api/user`, { headers: { authorization } })
     .catch(err => console.log(err));
+
   if (res.status === 200) return { authorization, user: res.data }
-  else return { authorization }
+
+  else return !authorization ? {authorization: null} : { authorization };
 }
 
-Home.getInitialProps = (ctx) => {
+export async function getServerSideProps (ctx) {
   const { authorization } = parseCookies(ctx);
-  const { code } = ctx.query
-  const props = getUser(authorization || code);
-  return props;
+  const { token } = ctx.query
+  const props = await getUser(authorization || token);
+  return {props};
 }
 
 export default Home;

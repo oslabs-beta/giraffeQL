@@ -7,4 +7,20 @@ module.exports = {
       },
     ]
   },
-};
+  webpack: (config, { isServer, dev }) => {
+
+    if (!isServer) {
+      config.node = {
+        fs: 'empty'
+      }
+    }
+
+    config.module.rules.push(
+      {
+        test: /\.test.js$/,
+        loader: 'ignore-loader'
+      }
+    );
+
+    return config;
+}};

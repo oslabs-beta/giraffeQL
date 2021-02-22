@@ -2,12 +2,9 @@ import Head from 'next/head';
 
 import { useState, useEffect } from 'react';
 
-import Header from '../components/icons/Header.js';
-
-import DiagramSideBar from '../components/diagrams/DiagramSidebar.js';
+import DiagramSideBar from '../components/diagrams/DiagramSideBar.js';
 import DiagramNavbar from '../components/diagrams/DiagramNavbar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
-import NavBarHeader from '../components/icons/DiagramsHeader.js';
 import DiagramsHeader from '../components/icons/DiagramsHeader.js';
 
 const Diagrams = (props) => {
