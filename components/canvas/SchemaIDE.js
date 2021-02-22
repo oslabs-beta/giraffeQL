@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useStore, useStoreState } from 'react-flow-renderer';
 
-import generateAllTypes from '../../converters/typeDefs.js';
+import { generateAllTypes } from '../../converters/typeDefs.js';
 
 const SchemaIDE = (props) => {
 
