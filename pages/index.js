@@ -267,17 +267,16 @@ const Home = (props) => {
 }
 
 async function getUser(authorization) {
-  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3001` : `https://giraffeql-api.herokuapp.com`;
-  const res = await fetch(`${fetchURL}/user`, { headers: { authorization } })
-  .catch(err => console.log(err));
-
+  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000` : `https://giraffeql.io`;
+  const res = await fetch(`${fetchURL}/api/user`, { headers: { authorization } })
+    .catch(err => console.log(err));
   if (res.status === 200) return { authorization, user: res.data }
   else return { authorization }
 }
 
 Home.getInitialProps = (ctx) => {
   const { authorization } = parseCookies(ctx);
-  const {code} = ctx.query
+  const { code } = ctx.query
   const props = getUser(authorization || code);
   return props;
 }
