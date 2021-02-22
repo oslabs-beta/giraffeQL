@@ -16,7 +16,7 @@ const Diagrams = (props) => {
   const sidebar = <DiagramSideBar />
 
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} /> : '';
-
+  console.log(useContext(UserContext));
   return (
       <div id='diagram'>
 

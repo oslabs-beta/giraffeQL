@@ -24,6 +24,7 @@ const Home = (props) => {
       }
     }, []);
 
+
     return (
         <div id='home'>
 
@@ -272,15 +273,16 @@ const Home = (props) => {
 }
 
 async function getUser(authorization) {
-  
+  console.log(authorization)
   const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000` : `https://giraffeql.io`;
   const res = await fetch(`${fetchURL}/api/user`, { headers: { authorization } })
     .catch(err => console.log(err));
 
-  console.log(res.data);
-
-  if (res.status === 200) return { authorization, user: res.data }
-  else return !authorization ? {authorization: null} : { authorization };
+  const data = await res.json();
+  
+  const newAuthorization = !authorization ? null : authorization
+  if (res.status === 200) return { authorization: newAuthorization, user: data }
+  else return { authorization: newAuthorization }
 }
 
 export async function getServerSideProps (ctx) {
