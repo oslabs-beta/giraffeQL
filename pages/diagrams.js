@@ -1,6 +1,7 @@
 import Head from 'next/head';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../context/state.js';
 
 import DiagramSideBar from '../components/diagrams/DiagramSideBar.js';
 import DiagramNavbar from '../components/diagrams/DiagramNavbar.js';
