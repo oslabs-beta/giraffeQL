@@ -22,7 +22,7 @@ const Contact = (props) => {
 
             <div id='contactmodal'>
 
-                <div id='header'>Contact us</div>
+                <div id='header' data-testid='header'>Contact us</div>
                 
                 <div id='contactcontainer'>
 

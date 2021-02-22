@@ -30,7 +30,7 @@ function tableToType(table, joinConnections) {
 }
 
 //turn a single column object into a line in the GraphQL object definition
-function mapColumn(column) {
+const mapColumn = (column)=>{
   let str = `${column.name}: ${convertDataType(column.dataType)}`;
   if (column.required) str += '!';
   return str;
@@ -163,4 +163,4 @@ function generateObjectResolver(table, joinConnections) {
   }
   return objResolver + '  },\n';
 }
-module.exports = generateAllTypes;
+module.exports = {generateAllTypes, mapColumn};
