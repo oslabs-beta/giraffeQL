@@ -8,7 +8,8 @@ import { UserContext } from '../context/state.js';
 
 import { parseCookies } from 'nookies';
 
-import Header from '../components/icons/Header.js';
+import Navbar from '../components/Navbar.js';
+
 import GiraffeQL from '../components/icons/GiraffeQL.js';
 import GitHub from '../components/icons/GitHub.js';
 
@@ -16,28 +17,22 @@ const Home = (props) => {
 
     const router = useRouter();
 
-    const { user, storeUser } = useContext(UserContext);
+    const { storeUser, logout } = useContext(UserContext);
 
     useEffect(() => {
-
       if (props.user) storeUser(props.user)
-
-      // if (props.authorization) {
-      //   router.push('/diagrams');
-      // }
-
+      else logout();
     }, []);
-
 
     return (
         <div id='home'>
+
+          <Navbar />
 
           <Head>
             <title>giraffeQL</title>
             <link rel="shortcut icon" href="/favicon.png" />
           </Head>
-
-          <Header />
 
           <div id='homemodal'>
 

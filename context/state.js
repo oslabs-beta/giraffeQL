@@ -5,23 +5,22 @@ export const UserContext = createContext();
 const Provider = (props) => {
 
   const [user, setUser] = useState({});
-  // const [mongoId, setMongoId] = useState({mongoId: null})
-
+  const [diagram, setDiagram] = useState({});
   
   const storeUser = user => {
-
-    console.log(user)
-
     setUser(user);
-    // setMongoId({ mongoId: user._id});
   }
 
   const logout = () => {
     setUser({});
   }
 
+  const loadDiagram = newDiagram => {
+    setDiagram(newDiagram);
+  }
+
   return (
-    <UserContext.Provider value={{ user, storeUser }} >
+    <UserContext.Provider value={{ user, storeUser, logout, loadDiagram }} >
       {props.children}
     </UserContext.Provider>
   );

@@ -10,13 +10,20 @@ const Profile = (props) => {
 
   const { user, storeUser } = useContext(UserContext);
   const [username, setUsername] = useState('Anonymous');
-  const [image, setImage] = useState('/../public/tempuser.png');
+  const [image, setImage] = useState('/tempuser.png');
+
+  const [loggedIn, toggleLoginStatus] = useState(false);
 
   const [expand, toggleOptions] = useState(false);
 
   useEffect(() => {
 
-    if (!Object.keys(user).length) return;
+    if (!Object.keys(user).length) {
+      setUsername('Anonymous');
+      setImage('/tempuser.png');
+      toggleLoginStatus(false);
+      return;
+    }
     
     if (user.displayName.length > 0) {
       setUsername(user.displayName.split(' ')[0]);
@@ -25,6 +32,7 @@ const Profile = (props) => {
     }
     
     setImage(user.photos[0].value);
+    toggleLoginStatus(true);
 
   }, [user])
 
@@ -46,7 +54,7 @@ const Profile = (props) => {
 
       </div>
       
-      <ProfileOptions expand={expand} />
+      <ProfileOptions expand={expand} loggedIn={loggedIn} />
 
       <style jsx>{`
 
