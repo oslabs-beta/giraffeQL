@@ -10,6 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.12.13",
+    "@emotion/react": "^11.1.5",
     "@zeit/next-sass": "^1.0.1",
     "dagre": "^0.8.5",
     "electron": "^11.2.1",
@@ -25,6 +27,7 @@
     "react": "^17.0.1",
     "react-dom": "17.0.1",
     "react-flow-renderer": "^8.7.0",
+    "react-spinners": "^0.10.6",
     "sass": "^1.32.6"
   },
   "devDependencies": {
