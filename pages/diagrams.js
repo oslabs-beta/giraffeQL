@@ -6,6 +6,14 @@ import { UserContext } from '../context/state.js';
 import DiagramSideBar from '../components/diagrams/DiagramSideBar.js';
 import Navbar from '../components/Navbar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
+import { css } from "@emotion/core";
+import BeatLoader from "react-spinners/BeatLoader";
+
+const override = css`
+  display: block;
+  margin-top: 10px;
+  border-color: #12b3ab;
+`;
 
 const Diagrams = (props) => {
 
@@ -35,7 +43,9 @@ const Diagrams = (props) => {
 
         {diagrammodal}
 
-        { pageLoading ? (<div id='loading'>Searching for your database...</div>) : <div/>}
+        {/* { pageLoading ? (<div id='loading'>Searching for your database...</div>) : <div/>} */}
+
+        {pageLoading ? <BeatLoader id='beatloader' css={override} color='#12b3ab' pageLoading={pageLoading} size={20} /> : null}
 
         <style jsx>{`
 
@@ -93,7 +103,6 @@ const Diagrams = (props) => {
                 margin-left: 12%;
                 padding: 0;
                 font-size: .6em;
-                
 
                 &:hover{
                   border: 3px solid white;
