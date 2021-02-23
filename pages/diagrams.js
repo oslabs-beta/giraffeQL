@@ -4,13 +4,12 @@ import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
 import DiagramSideBar from '../components/diagrams/DiagramSideBar.js';
-import DiagramNavbar from '../components/diagrams/DiagramNavbar.js';
+import Navbar from '../components/Navbar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
-import DiagramsHeader from '../components/icons/DiagramsHeader.js';
 
 const Diagrams = (props) => {
 
-  const { user, storeUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [newDiagram, setNewDiagram] = useState(false)
   const [pageLoading, setPageLoading] = useState(false);
 
@@ -26,10 +25,8 @@ const Diagrams = (props) => {
           <title>giraffeQL</title>
           <link rel="shortcut icon" href="/favicon.png" />
         </Head>
-
-        <DiagramsHeader />
         
-        <DiagramNavbar />
+        <Navbar />
 
         <div id='browsediagrams'>
           {sidebar}

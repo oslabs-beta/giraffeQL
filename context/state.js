@@ -5,15 +5,9 @@ export const UserContext = createContext();
 const Provider = (props) => {
 
   const [user, setUser] = useState({});
-  // const [mongoId, setMongoId] = useState({mongoId: null})
-
   
   const storeUser = user => {
-
-    console.log(user)
-
     setUser(user);
-    // setMongoId({ mongoId: user._id});
   }
 
   const logout = () => {
@@ -21,7 +15,7 @@ const Provider = (props) => {
   }
 
   return (
-    <UserContext.Provider value={{ user, storeUser }} >
+    <UserContext.Provider value={{ user, storeUser, logout }} >
       {props.children}
     </UserContext.Provider>
   );

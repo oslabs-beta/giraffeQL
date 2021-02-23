@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import Profile from '../../components/Profile.js';
-import Giraffe from '../../components/icons/Giraffe.js'
+import Profile from '../components/Profile.js';
+import Giraffe from '../components/icons/Giraffe.js'
 
-const DiagramNavbar = () => {
+const Navbar = () => {
 
   return (
     <div className='navbar'>
@@ -27,14 +27,18 @@ const DiagramNavbar = () => {
             transition: all .3s;
         }
 
+        h1 {
+          color: #edf2f7;
+          border-radius: 8px;
+          padding: 8px;
+        }
+
         .homebtn{
             display: flex;
             width: 12.5%;
             color: #edf2f7;
-            border-radius: 8px;
             padding: 8px;
-            
-            &:hover{
+                        &:hover{
                 background-color: #5f81e7;
                 cursor: pointer;
             }
@@ -65,4 +69,4 @@ const DiagramNavbar = () => {
   );
 }
  
-export default DiagramNavbar;
+export default Navbar;
