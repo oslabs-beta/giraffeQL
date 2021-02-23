@@ -1,11 +1,14 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
-import DiagramSideBar from '../components/diagrams/DiagramSideBar.js';
 import Navbar from '../components/Navbar.js';
+import DiagramSideBar from '../components/diagrams/DiagramSideBar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
+import DiagramPreview from '../components/diagrams/DiagramPreview.js';
+
 import { css } from "@emotion/core";
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -17,14 +20,21 @@ const override = css`
 
 const Diagrams = (props) => {
 
-  const { user } = useContext(UserContext);
+  const router = useRouter();
+
+  const { user, loadDiagram } = useContext(UserContext);
   const [newDiagram, setNewDiagram] = useState(false)
   const [pageLoading, setPageLoading] = useState(false);
 
   const sidebar = <DiagramSideBar />
 
+  const selectDiagram = (id) => {
+    // loadDiagram(id);
+    const href = {pathname: 'canvas', query: {diagram: id}};
+    router.push(href)//, 'diagrams');
+  }
+
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} /> : '';
-  console.log(useContext(UserContext));
 
   return (
       <div id='diagram'>
@@ -42,6 +52,8 @@ const Diagrams = (props) => {
         </div>
 
         {diagrammodal}
+
+        {!user.diagrams ? '' : user.diagrams.map(diagram => <DiagramPreview name={diagram.diagramName} id={diagram._id} key={`diagram#${diagram._id}`} selectDiagram={selectDiagram} />)}
 
         {/* { pageLoading ? (<div id='loading'>Searching for your database...</div>) : <div/>} */}
 

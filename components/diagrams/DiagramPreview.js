@@ -7,8 +7,9 @@ const DiagramPreview = (props) => {
         <div>
 
             <div className='previewcontainer'>
-                {props.name}
-                <button>Open</button>
+                {props.name} <br/>
+                {props.id} <br/>
+                <button onClick={() => props.selectDiagram(props.id)} >Open</button>
                 <button>Delete</button>
             </div>
 
