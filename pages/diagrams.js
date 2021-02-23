@@ -29,9 +29,15 @@ const Diagrams = (props) => {
   const sidebar = <DiagramSideBar />
 
   const selectDiagram = (id) => {
-    // loadDiagram(id);
     const href = {pathname: 'canvas', query: {diagram: id}};
-    router.push(href)//, 'diagrams');
+    router.push(href, 'diagrams');
+  }
+
+  const deleteDiagram = (id) => {
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql-api.herokuapp.com'
+    fetch(`${fetchURL}/diagrams/${id}`, {method: 'DELETE'})
+      .then(res => res.json())
+      .then(data => console.log(data));
   }
 
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} /> : '';
@@ -53,9 +59,7 @@ const Diagrams = (props) => {
 
         {diagrammodal}
 
-        {!user.diagrams ? '' : user.diagrams.map(diagram => <DiagramPreview name={diagram.diagramName} id={diagram._id} key={`diagram#${diagram._id}`} selectDiagram={selectDiagram} />)}
-
-        {/* { pageLoading ? (<div id='loading'>Searching for your database...</div>) : <div/>} */}
+        {!user.diagrams ? '' : user.diagrams.map(diagram => <DiagramPreview name={diagram.diagramName} id={diagram._id} key={`diagram#${diagram._id}`} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} />)}
 
         {pageLoading ? <BeatLoader id='beatloader' css={override} color='#12b3ab' pageLoading={pageLoading} size={20} /> : null}
 

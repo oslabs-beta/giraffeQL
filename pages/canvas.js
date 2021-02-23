@@ -234,30 +234,46 @@ const Canvas = (props) => {
   //Runs only once when this page renders
   useEffect(() => {
 
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
     const imports = [];
 
     if (props.hasOwnProperty('diagramId')){
       const diagram = user.diagrams[user.diagrams.findIndex(diagram => diagram._id === props.diagramId)];
 
+      toggleLayout(true);
+
       setDiagramID(props.diagramId)
       setDiagramName(diagram.diagramName);
-      // setElements([...diagram.reactFlowData.tables, ...diagram.reactFlowData.connections]);
 
       diagram.reactFlowData.tables.forEach(table => {
 
         const tableProps = table.data.label.props.children.props;
 
         const newTable = {
-          name: tableProps.id,
+          name: tableProps.tablename,
           columns: tableProps.columns,
-          connections: []
+          connections: [],
+          position: table.position
         };
+
+        // Iterate through the nodes connections
+        diagram.reactFlowData.connections.forEach(connection => {
+
+          const newConnection = {};
+
+          const targetNode = diagram.reactFlowData.tables.findIndex(target => target.id === connection.target.toString());
+
+          newConnection.originKey = alphabet.indexOf(connection.sourceHandle);
+          newConnection.destinationTable = diagram.reactFlowData.tables[targetNode].data.label.props.children.props.tablename;
+          newConnection.destinationKey = alphabet.indexOf(connection.targetHandle);
+
+          newTable.connections.push(newConnection);
+
+        });
 
         imports.push(newTable);
 
       });
-
-      console.log(imports);
 
     } else if (props.hasOwnProperty('data')){
 
@@ -265,7 +281,7 @@ const Canvas = (props) => {
         imports.push(table);
       });
 
-      console.log(imports);
+      console.log(imports)
 
     } else {
       return;
@@ -293,7 +309,7 @@ const Canvas = (props) => {
           },
         //The starting position of the node.
         //TODO: replace with smart layout-ing using dagre
-        position: { x: 0, y: 0}
+        position: imports[i].hasOwnProperty('position') ? imports[i].position : { x: 0, y: 0}
       }
 
       newElements.push(column);
@@ -302,8 +318,6 @@ const Canvas = (props) => {
 
     // We also iterate AGAIN through the tables data to add each connection
     // We do this after our first loop because the connections must happen AFTER the nodes themselves have been established
-
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
     for (let i = 0; i < imports.length; i++){
 

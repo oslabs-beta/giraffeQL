@@ -10,7 +10,7 @@ const DiagramPreview = (props) => {
                 {props.name} <br/>
                 {props.id} <br/>
                 <button onClick={() => props.selectDiagram(props.id)} >Open</button>
-                <button>Delete</button>
+                <button onClick={() => props.deleteDiagram(props.id)} >Delete</button>
             </div>
 
             <style jsx>{`
