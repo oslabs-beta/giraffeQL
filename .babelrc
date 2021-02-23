@@ -5,8 +5,10 @@
         {
           "styled-jsx": {
             "plugins": ["styled-jsx-plugin-sass"]
-          }
-        }
+          },
+          "presets": ["@babel/preset-react", "@babel/preset-env"],
+          "plugins": ["emotion"]
+        } 
       ]
     ]
 }
