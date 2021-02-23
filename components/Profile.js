@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../context/state.js';
+
 import Image from 'next/image'
 import ProfileOptions from './ProfileOptions';
 
@@ -6,10 +8,25 @@ import Carot from  './icons/Carot.js'
 
 const Profile = (props) => {
 
+  const { user, storeUser } = useContext(UserContext);
   const [username, setUsername] = useState('Anonymous');
   const [image, setImage] = useState('/../public/tempuser.png');
 
   const [expand, toggleOptions] = useState(false);
+
+  useEffect(() => {
+
+    if (!Object.keys(user).length) return;
+    
+    if (user.displayName.length > 0) {
+      setUsername(user.displayName.split(' ')[0]);
+    } else {
+      setUsername(user.username);
+    }
+    
+    setImage(user.photos[0].value);
+
+  }, [user])
 
   return (
     <div>

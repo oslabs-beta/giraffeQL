@@ -19,9 +19,13 @@ const Home = (props) => {
     const { user, storeUser } = useContext(UserContext);
 
     useEffect(() => {
-      if (props.authorization) {
-        router.push('/diagrams');
-      }
+
+      if (props.user) storeUser(props.user)
+
+      // if (props.authorization) {
+      //   router.push('/diagrams');
+      // }
+
     }, []);
 
 

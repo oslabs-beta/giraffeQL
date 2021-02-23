@@ -30,6 +30,10 @@ const DiagramNavbar = () => {
         .homebtn{
             display: flex;
             width: 12.5%;
+            color: #edf2f7;
+            border-radius: 8px;
+            padding: 8px;
+            
             &:hover{
                 background-color: #5f81e7;
                 cursor: pointer;

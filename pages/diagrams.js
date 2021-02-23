@@ -10,6 +10,7 @@ import DiagramsHeader from '../components/icons/DiagramsHeader.js';
 
 const Diagrams = (props) => {
 
+  const { user, storeUser } = useContext(UserContext);
   const [newDiagram, setNewDiagram] = useState(false)
   const [pageLoading, setPageLoading] = useState(false);
 
@@ -17,6 +18,7 @@ const Diagrams = (props) => {
 
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} /> : '';
   console.log(useContext(UserContext));
+
   return (
       <div id='diagram'>
 

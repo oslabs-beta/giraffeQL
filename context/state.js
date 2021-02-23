@@ -4,12 +4,16 @@ export const UserContext = createContext();
 
 const Provider = (props) => {
 
-  const [user, setUser] = useState({username: null});
-  const [mongoId, setMongoId] = useState({mongoId: null})
+  const [user, setUser] = useState({});
+  // const [mongoId, setMongoId] = useState({mongoId: null})
 
+  
   const storeUser = user => {
-    setUser({ userName: user.username});
-    setMongoId({ mongoId: user._id});
+
+    console.log(user)
+
+    setUser(user);
+    // setMongoId({ mongoId: user._id});
   }
 
   const logout = () => {
