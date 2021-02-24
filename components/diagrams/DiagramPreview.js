@@ -2,11 +2,23 @@ import Image from 'next/image'
 
 import { useState } from 'react';
 
+import moment from 'moment';
+
 const DiagramPreview = (props) => {
 
     const [image, setImage] = useState('/logo.svg');
+    const [favorite, setFavorite] = useState(props.favorite);
 
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
+
+    const toggleFavorite = () => {
+        const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql-api.herokuapp.com';
+        fetch(`${fetchURL}/diagrams/favorite/${props.id}`, {method: 'PUT'})
+            .then(res => res.json())
+            .then(data => setFavorite(data.diagram.favorite));
+    }
+
+    const date = moment(props.updated).calendar();
 
     return (
         <div className='diagram'>
@@ -24,12 +36,12 @@ const DiagramPreview = (props) => {
             <div className='nameandstar' >
                 <div className='dgname'>{props.name}</div>
 
-                <div className='star'>
-                    <svg width={24} height={24} viewBox="0 0 24 24" ><path fill={`${props.isPrimary ? '#0373fc' : 'transparent' }`} d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>
+                <div className='star' onClick={toggleFavorite} >
+                    <svg width={24} height={24} viewBox="0 0 24 24" ><path fill={`${favorite ? '#0373fc' : 'transparent' }`} d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>
                 </div>
             </div>
 
-            <div className='dgdesc'>my collections of cool geodes. <br/><span style={{color: '#a1afbf'}}>Last updated {props.updated}</span></div>
+            <div className='dgdesc'>{props.description}<br/><span style={{color: '#a1afbf'}}>Last updated {date}</span></div>
 
             <div className='diagrambtns'>
                 <button onClick={() => props.selectDiagram(props.id)} style={{borderBottomLeftRadius: '8px'}} >✓</button>

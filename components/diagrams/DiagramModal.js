@@ -1,23 +1,19 @@
-import Link from 'next/link';
-
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const DiagramModal = (props) => {
-
-  const [URI, setURI] = useState('');
 
   const router = useRouter();
 
   useEffect(() => {
-    setURI('');
+    props.setURI('');
   }, []);
 
   useEffect(() => {
 
     const submitURI = (e) => {
       if (e.code === 'Enter' && URI.length > 0)
-        return checkURLStatus();
+        return props.checkURLStatus();
     }
 
     document.addEventListener('keydown', submitURI);
@@ -27,18 +23,6 @@ const DiagramModal = (props) => {
     };
 
   });
-
-  const checkURLStatus = () => {
-
-    let path = '';
-
-    if (!URI.includes('postgres://')) path = 'postgres://' + URI;
-    else path = URI;
-
-    const href = { pathname: '/canvas', query: { data: [path] } }
-
-    router.push(href)
-  }
 
   const instructions = props.message === 'error' ? 'Invalid URI, please try again:' : 'Type a database URI below to get started:';
 
@@ -57,34 +41,42 @@ const DiagramModal = (props) => {
       
       <div id='diagramcontainer'>
 
-          <h3 style={{color: '#f54c4c'}} >{props.error == 'access_denied' ? 'Could not verify user, continue as a guest.' : ''}</h3>
-          <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
+        <h3>Enter a name:</h3>
+        <input type='text' placeholder={`Name your new diagram!`} val={props.name} onChange={e => props.setName(e.target.value)} />
 
-          <div id='diagramsearch'>
-          
-              <div id='postgres'><input id='databaselist' type='text' list='databases' placeholder='postgres://' /><datalist id='databases' ><option value='postgres://' /></datalist></div>
-              <input type='text' spellCheck='false' placeholder='Enter a valid PostgreSQL URI' val={URI} onChange={e => setURI(e.target.value)} />
-              <button onClick={checkURLStatus} disabled={URI.length < 1 ? true : false}><span>Enter</span></button>
+        <h3>(Optional) Enter a description:</h3>
+        <input type='text' placeholder={`What's your database for?`} val={props.description} onChange={e => props.setDescription(e.target.value)} />
 
-          </div>
+        <h3 style={{color: '#f54c4c'}} >{props.error == 'access_denied' ? 'Could not verify user, continue as a guest.' : ''}</h3>
+        <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>
 
-          <h3> - or - </h3>
-
-          <Link href='canvas'>
-              <button id='newprojectbtn'><span>New Project</span></button>
-          </Link>
+        <div id='diagramsearch'>
         
+            <div id='postgres'><input id='databaselist' type='text' list='databases' placeholder='postgres://' /><datalist id='databases' ><option value='postgres://' /></datalist></div>
+            <input id='uri' spellCheck='false' type='text' placeholder='Enter a valid PostgreSQL URI' val={props.URI} onChange={e => props.setURI(e.target.value)} />
+            <button onClick={props.checkURLStatus} disabled={props.URI.length < 1 || props.name.length < 1 ? true : false}><span>Enter</span></button>
+
+        </div>
+
+        <h3> - or - </h3>
+
+        <button id='newprojectbtn' onClick={props.newProject} disabled={props.name.length < 1 ? true : false} ><span>New Project</span></button>
+      
       </div>
 
       <style jsx>{`
+
+      *{
+        font-weight: 300;
+      }
 
       #diagrammodal{
         display: flex;
         flex-direction: column;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
         border-radius: 8px;
-        width: 400px;
-        height: 180px; 
+        width: 30%;
+        height: 40%; 
         background-color: white;
         z-index: 10;
         position: fixed;
@@ -124,6 +116,29 @@ const DiagramModal = (props) => {
           top: 0;
           width: 150px;
           height: 150px;
+        }
+
+        input{
+
+          border: 1px solid #6f8195;
+          border-radius: 4px;
+          color: #6f8195;
+          width: 50%;
+          background-color: white;
+          outline: none;
+          font-size: 12px;
+          padding: 8px 16px;
+
+          &:focus{
+            ::placeholder{
+              color: #6f8195;
+            }
+          }
+        
+          ::placeholder{
+            color: #cccccc;
+          }
+
         }
 
         h1{
@@ -169,11 +184,11 @@ const DiagramModal = (props) => {
           box-shadow: none;
         }
 
-        input{
+        #uri{
 
           border: 1px solid #6f8195;
           border-right: none;
-          // border-radius: 4px 0px 0px 4px;
+          border-radius: 0px;
           color: #6f8195;
           background-color: white;
           outline: none;
