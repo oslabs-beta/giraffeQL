@@ -64,7 +64,7 @@ const Canvas = (props) => {
   const [deleteWarning, toggleWarning] = useState(true);
 
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
-  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), formatData(elements), updateData(true));
+  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null));
 
   const onElementsRemove = (elementsToRemove) => {
     if (deleteWarning)
@@ -108,8 +108,6 @@ const Canvas = (props) => {
     selectNode(column);
     
     setNodeCount(index + 1);
-    formatData(elements);
-    updateData(true);
 
   };
   
@@ -131,8 +129,11 @@ const Canvas = (props) => {
 
   useEffect(() => {
 
-    if (!updated || instance === null)
+    if (!updated)
       return;
+
+    console.log(formattedTables);
+    console.log('is this entering');
 
     const body = {
       user: user._id,
@@ -145,7 +146,7 @@ const Canvas = (props) => {
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
       .then(res => res.json())
-      .then(data => setDiagramID(data.diagram._id));
+      .then(data => (setDiagramID(data.diagram._id), updateData(false), console.log('sucess')));
 
   }, [updated]);
 
@@ -230,9 +231,6 @@ const Canvas = (props) => {
 
     newElements.splice(target, 1, node);
     setElements(newElements);
-
-    formatData(elements);
-    updateData(true);
   };
 
   //Runs only once when this page renders
@@ -336,11 +334,26 @@ const Canvas = (props) => {
     setElements([...newElements]);
     setNodeCount(imports.length);
 
-    updateData(true);
-
   }, []);
+
+  useEffect(() => {
+
+    if (!elements.length)
+      return;
+    
+    formatData(elements);
+
+  }, [elements]);
+
+  useEffect(() => {
+
+    if (!formattedTables.length)
+      return;
+
+    updateData(true);
+  }, [formattedTables]);
   
-  // Toggle betwween defaultInspector and nodeInspector when a node is selected.
+  // Toggle between defaultInspector and nodeInspector when a node is selected.
   const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
   const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} toggleWarning={toggleWarning} />;
 

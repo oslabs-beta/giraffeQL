@@ -25,7 +25,7 @@ const ProfileModal = (props) => {
   }
 
   return (
-    <div className='optionscontainer' style={{opacity: `${props.expand ? '1' : '0'}`}}>
+    <div className='optionscontainer' style={{opacity: `${props.expand ? '1' : '0'}`, zIndex: `${props.expand ? '9999999999999999' : '-10'}`, pointerEvents: `${props.expand ? 'auto' : 'none'}`}}>
 
       <h1>Account</h1>
       <button>User Settings</button>
