@@ -1,5 +1,4 @@
 module.exports = {
-
   webpack: (config, { isServer }) => {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {
@@ -7,19 +6,15 @@ module.exports = {
         fs: 'empty'
       }
     }
-
     return config
   },
-  webpack: (config, { webpack }) => {
+    webpack: (config, { webpack }) => {
     config.plugins.push(new webpack.IgnorePlugin(/\/__tests__\//))
     return config
   },
-  
   images: {
     domains: ['avatars.githubusercontent.com'],
-
   },
-  
   async rewrites() {
     return [
       {
@@ -28,13 +23,4 @@ module.exports = {
       },
     ]
   },
-
-    config.module.rules.push(
-      {
-        test: /\.test.js$/,
-        loader: 'ignore-loader'
-      }
-    );
-
-    return config;
-}};
+};
