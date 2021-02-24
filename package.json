@@ -19,6 +19,7 @@
     "highlight.js": "^10.6.0",
     "ignore-loader": "^0.1.2",
     "isomorphic-fetch": "^3.0.0",
+    "moment": "^2.29.1",
     "mongoose": "^5.11.16",
     "next": "^10.0.6",
     "nookies": "^2.5.2",

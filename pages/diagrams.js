@@ -25,8 +25,12 @@ const Diagrams = (props) => {
   const [newDiagram, setNewDiagram] = useState(false)
   const [pageLoading, setPageLoading] = useState(false);
 
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState(null);
+  const [URI, setURI] = useState('');
+
   const selectDiagram = (id) => {
-    const href = {pathname: 'canvas', query: {diagram: id}};
+    const href = {pathname: 'canvas', query: {diagram: id, name, description}};
     router.push(href, 'diagrams');
   }
 
@@ -35,9 +39,26 @@ const Diagrams = (props) => {
     fetch(`${fetchURL}/diagrams/${id}`, {method: 'DELETE'});
   }
 
+  const checkURLStatus = () => {
+
+    let path = '';
+
+    if (!URI.includes('postgres://')) path = 'postgres://' + URI;
+    else path = URI;
+
+    const href = { pathname: '/canvas', query: { data: [path], name, description } }
+
+    router.push(href)
+  }
+
+  const newProject = () => {
+    const href = { pathname: '/canvas', query: { name, description } }
+    router.push(href)
+  }
+
   const sortModes = ['newest', 'oldest', 'most popular', 'favorites'];
 
-  const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} /> : '';
+  const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} name={name} setName={setName} description={description} setDescription={setDescription} URI={URI} setURI={setURI} checkURLStatus={checkURLStatus} newProject={newProject} /> : '';
 
   return (
     <div id='diagram'>
@@ -53,10 +74,13 @@ const Diagrams = (props) => {
 
         <div id='diagramoptions'>
           <div className='header' style={{borderTopLeftRadius: '8px', borderRight: '2px solid #7c81cf'}} >Options</div>
+          <h1>Projects</h1>
           <button onClick={() => setNewDiagram(!newDiagram)} style={{color: '#12b3ab'}} >New Diagram</button>
           <hr />
+          <h1>Folders</h1>
           <button onClick={() => setNewDiagram(!newDiagram)} >My Projects</button>
           <hr />
+          <h1>Quick Start</h1>
           <button onClick={() => setNewDiagram(!newDiagram)} >Template Diagrams</button>
           <button onClick={() => setNewDiagram(!newDiagram)} >Example Databases</button>
         </div>
@@ -70,7 +94,7 @@ const Diagrams = (props) => {
           </div>
 
           <div id='diagramcontainer'>
-            {!user.diagrams ? '' : user.diagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} updated={diagram.updatedAt} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} />)}
+            {!user.diagrams ? '' : user.diagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} />)}
           </div>
 
         </div>
@@ -88,7 +112,6 @@ const Diagrams = (props) => {
         *{
           font-family: 'Inter', sans-serif;
           transition: all .3s ease;
-          font-weight: 300;
         }
 
         #diagram{
@@ -124,6 +147,13 @@ const Diagrams = (props) => {
           color: white;
           background-color: #5661b3;
           padding: 16px;
+        }
+
+        h1{
+          color: #b2becc;
+          font-size: 12px;
+          text-align: left;
+          margin-left: 8px;
         }
 
         button{

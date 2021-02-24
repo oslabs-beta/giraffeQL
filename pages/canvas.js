@@ -32,6 +32,7 @@ const Canvas = (props) => {
   const { user } = useContext(UserContext);
   const [diagramId, setDiagramID] = useState(undefined);
   const [diagramName, setDiagramName] = useState('Untitled-database-diagram');
+  const [description, setDescription] = useState(null);
 
   // Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
   const [elements, setElements] = useState([]);
@@ -122,26 +123,13 @@ const Canvas = (props) => {
     if (!updated || instance === null)
       return;
 
-    /*const newReactflow = instance.toObject();
-
-    const tables = newReactflow.elements.filter(node => !node.id.includes('reactflow'));
-    const connections = newReactflow.elements.filter(node => node.id.includes('reactflow'));;
-
-    const reactFlowData = {
-      tables,
-      connections,
-      position: newReactflow.position,
-      zoom: newReactflow.zoom
-    };*/
-
     const body = {
       user: user._id,
       diagramId,
-      diagramName: 'cool rocks',
+      diagramName: props.name,
+      description: props.description,
       tables: formattedTables
     };
-
-    console.log(formattedTables);
 
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
@@ -242,6 +230,12 @@ const Canvas = (props) => {
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
     const imports = [];
 
+    if (props.hasOwnProperty('name'))
+      setDiagramName(props.name);
+
+    if (props.hasOwnProperty('description'))
+      setDescription(props.description);
+
     if (props.hasOwnProperty('diagramId')){
 
       const diagram = user.diagrams[user.diagrams.findIndex(diagram => diagram._id === props.diagramId)];
@@ -250,12 +244,12 @@ const Canvas = (props) => {
 
       setDiagramID(props.diagramId)
       setDiagramName(diagram.diagramName);
+      if (props.hasOwnProperty('description'))
+        setDescription(diagram.description);
 
       diagram.tables.forEach(table => {
         imports.push(table);
       });
-
-      console.log(imports);
 
     } else if (props.hasOwnProperty('data')){
 
@@ -453,9 +447,9 @@ const Canvas = (props) => {
 //Runs on page load
 export async function getServerSideProps({ query }) {
 
-  if (Object.values(query).length < 1)
+  if (!query.hasOwnProperty('diagram') && !query.hasOwnProperty('data'))
     return {
-      props: {}, 
+      props: {name: query.name, description: query.description}, 
     }
 
   if (query.hasOwnProperty('diagram')){
@@ -495,7 +489,7 @@ export async function getServerSideProps({ query }) {
 
   return {
     //The data we fetch from the database gets passed into our component as props
-    props: {data}, 
+    props: {data, name: query.name, description: query.description}, 
   }
 }
 
