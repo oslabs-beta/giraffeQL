@@ -16,11 +16,11 @@ const Pencil = (props) => {
             />
         </svg>
 
-        <h1 style={{transform: `${props.editable === 1 ? 'translateX(-28px)' : 'translateX(0px)'}`}}>{props.editable === 1 ? 'Submit' : 'Edit'}</h1>
+        <h1 id='submith1' style={{transform: `${props.editable === 1 ? 'translateX(-28px)' : 'translateX(0px)'}`}}>{props.editable === 1 ? 'Submit' : 'Edit'}</h1>
 
         <style jsx>{`
 
-            h1 {
+            #submith1 {
                 transition: all .3s;
                 position: fixed;
                 font-size: 18px;
