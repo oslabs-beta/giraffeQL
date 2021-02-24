@@ -25,6 +25,11 @@ const Profile = (props) => {
       return;
     }
     
+    if (!user.hasOwnProperty('displayName') || !user.hasOwnProperty('photos')){
+      console.log(user.user);
+      return;
+    }
+
     if (user.displayName.length > 0) {
       setUsername(user.displayName.split(' ')[0]);
     } else {

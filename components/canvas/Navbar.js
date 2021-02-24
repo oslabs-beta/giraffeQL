@@ -1,12 +1,14 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useStoreState, useStoreActions } from 'react-flow-renderer';
 
 import Profile from '../../components/Profile.js';
 import Giraffe from '../../components/icons/Giraffe.js';
-import { connection } from 'mongoose';
 
 const Navbar = (props) => {
+
+    const router = useRouter();
 
     const store = useStoreState((store) => store);
 
@@ -29,7 +31,7 @@ const Navbar = (props) => {
         <div className='navbar'>
 
             <Link href='/'>
-                <div className='homebtn'>
+                <div className='homebtn' onClick={() => router.push('/', '', {shallow: true})} >
                     <Giraffe /> 
                     <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
                 </div>

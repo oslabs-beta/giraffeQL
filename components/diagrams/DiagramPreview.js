@@ -2,10 +2,13 @@ import Image from 'next/image'
 
 import { useState } from 'react';
 
+import PreviewOptions from './PreviewOptions.js';
+
 import moment from 'moment';
 
 const DiagramPreview = (props) => {
 
+    const [options, toggleOptions] = useState(false);
     const [image, setImage] = useState('/logo.svg');
     const [favorite, setFavorite] = useState(props.favorite);
 
@@ -23,9 +26,11 @@ const DiagramPreview = (props) => {
     return (
         <div className='diagram'>
 
-            <div className='diagramname' style={{backgroundColor: `${colors[props.index % colors.length]}`}} ></div>
+            <button className='optionstoggle' onClick={()=> toggleOptions(!options)}>{`...`}</button>   <PreviewOptions toggleOptions={toggleOptions} id={props.id} toggleEdit={props.toggleEdit} deleteDiagram={props.deleteDiagram} expanded={options} />
 
-            <div className='previewcontainer'>
+            <div className='diagramname' style={{backgroundColor: `${colors[props.index % colors.length]}`}} onClick={() => props.selectDiagram(props.id)} ></div>
+
+            <div className='previewcontainer' onClick={() => props.selectDiagram(props.id)}>
                 <Image 
                 src={image}
                 width={64}
@@ -41,12 +46,7 @@ const DiagramPreview = (props) => {
                 </div>
             </div>
 
-            <div className='dgdesc'>{props.description}<br/><span style={{color: '#a1afbf'}}>Last updated {date}</span></div>
-
-            <div className='diagrambtns'>
-                <button onClick={() => props.selectDiagram(props.id)} style={{borderBottomLeftRadius: '8px'}} >✓</button>
-                <button onClick={() => props.deleteDiagram(props.id)} style={{borderBottomRightRadius: '8px'}} >...</button>
-            </div>
+            <div className='dgdesc'>{props.description}<br/><span style={{color: '#a1afbf', fontSize: '9px'}}>Last updated {date}</span></div>
 
             <style jsx>{`
 
@@ -105,7 +105,7 @@ const DiagramPreview = (props) => {
                 }
 
                 .dgdesc{
-                    font-size: 9px;
+                    font-size: 12px;
                     text-align: left;
                     color: #6f8195;
                     margin: 0px 8px;
@@ -119,28 +119,23 @@ const DiagramPreview = (props) => {
                     height: 128px;
                 }
 
-                .diagrambtns{
+                .optionstoggle{
                     display: flex;
-                }
-
-                button{
-                    display: flex;
+                    // align-items: center;
                     justify-content: center;
-                    padding: 8px;
-                    width: 100%;
-                    outline: none;
+                    position: fixed;
+                    top: 12px;
+                    right: 6px;
+                    width: 24px;
+                    height: 24px;
+                    font-size: 16px;
+                    font-weight: 900;
                     border: none;
-                    background-color: white;
-                    flex-flow: row nowrap;
-
-                    &:hover{
-                        background-color: #0373fc;
-                        cursor: pointer;
-                    }
-
-                    &:active{
-                        background-color: #eaf4ff;
-                    }
+                    outline: none;
+                    background-color: #50565f;
+                    border-radius: 4px;
+                    color: #fbfdfd;
+                    cursor: pointer;
                 }
 
                 .star{
@@ -169,5 +164,5 @@ const DiagramPreview = (props) => {
         </div>
     );
 }
-// hi benji\ suppppppp B-) 
+
 export default DiagramPreview;
