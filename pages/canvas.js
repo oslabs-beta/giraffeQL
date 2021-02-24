@@ -36,6 +36,7 @@ const Canvas = (props) => {
   // Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
   const [elements, setElements] = useState([]);
   const [index, setNodeCount] = useState(0);
+  const [formattedTables, repackageData] = useState([]);
 
   const [layedout, toggleLayout] = useState(false);
   const [updated, updateData] = useState(false);
@@ -51,7 +52,7 @@ const Canvas = (props) => {
   const [deleteWarning, toggleWarning] = useState(true);
 
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
-  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), updateData(true));
+  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), formatData(elements), updateData(true));
 
   const onElementsRemove = (elementsToRemove) => {
     if (deleteWarning)
@@ -95,6 +96,7 @@ const Canvas = (props) => {
     selectNode(column);
     
     setNodeCount(index + 1);
+    formatData(elements);
     updateData(true);
 
   };
@@ -120,7 +122,7 @@ const Canvas = (props) => {
     if (!updated || instance === null)
       return;
 
-    const newReactflow = instance.toObject();
+    /*const newReactflow = instance.toObject();
 
     const tables = newReactflow.elements.filter(node => !node.id.includes('reactflow'));
     const connections = newReactflow.elements.filter(node => node.id.includes('reactflow'));;
@@ -130,14 +132,16 @@ const Canvas = (props) => {
       connections,
       position: newReactflow.position,
       zoom: newReactflow.zoom
-    };
+    };*/
 
     const body = {
       user: user._id,
       diagramId,
       diagramName: 'cool rocks',
-      reactFlowData
+      tables: formattedTables
     };
+
+    console.log(formattedTables);
 
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
@@ -228,6 +232,7 @@ const Canvas = (props) => {
     newElements.splice(target, 1, node);
     setElements(newElements);
 
+    formatData(elements);
     updateData(true);
   };
 
@@ -238,6 +243,7 @@ const Canvas = (props) => {
     const imports = [];
 
     if (props.hasOwnProperty('diagramId')){
+
       const diagram = user.diagrams[user.diagrams.findIndex(diagram => diagram._id === props.diagramId)];
 
       toggleLayout(true);
@@ -245,35 +251,11 @@ const Canvas = (props) => {
       setDiagramID(props.diagramId)
       setDiagramName(diagram.diagramName);
 
-      diagram.reactFlowData.tables.forEach(table => {
-
-        const tableProps = table.data.label.props.children.props;
-
-        const newTable = {
-          name: tableProps.tablename,
-          columns: tableProps.columns,
-          connections: [],
-          position: table.position
-        };
-
-        // Iterate through the nodes connections
-        diagram.reactFlowData.connections.forEach(connection => {
-
-          const newConnection = {};
-
-          const targetNode = diagram.reactFlowData.tables.findIndex(target => target.id === connection.target.toString());
-
-          newConnection.originKey = alphabet.indexOf(connection.sourceHandle);
-          newConnection.destinationTable = diagram.reactFlowData.tables[targetNode].data.label.props.children.props.tablename;
-          newConnection.destinationKey = alphabet.indexOf(connection.targetHandle);
-
-          newTable.connections.push(newConnection);
-
-        });
-
-        imports.push(newTable);
-
+      diagram.tables.forEach(table => {
+        imports.push(table);
       });
+
+      console.log(imports);
 
     } else if (props.hasOwnProperty('data')){
 
@@ -281,11 +263,7 @@ const Canvas = (props) => {
         imports.push(table);
       });
 
-      console.log(imports)
-
-    } else {
-      return;
-    }
+    } else return;
 
     const newElements = [];
    
@@ -358,6 +336,45 @@ const Canvas = (props) => {
   // Toggle betwween defaultInspector and nodeInspector when a node is selected.
   const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
   const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} toggleWarning={toggleWarning} />;
+
+  const formatData = (elements) => {
+
+    const newTables = [];
+
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+    // ONLY iterating through the node's by filtering out the connections.
+    elements.filter(node => !node.id.includes('reactflow')).forEach((node, i) => {
+
+        const newTable = {};
+
+        newTable.name = node.data.label.props.children.props.tablename;
+        newTable.columns = node.data.label.props.children.props.columns;
+        newTable.connections = [];
+        newTable.position = node.position;
+
+        // Iterate through the nodes connections
+        elements.filter(connection => connection.id.includes('reactflow') && connection.source === i.toString()).forEach(connection => {
+
+            const newConnection = {};
+
+            const targetNode = elements.findIndex(target => target.id === connection.target.toString());
+
+            newConnection.originKey = node.data.label.props.children.props.columns[alphabet.indexOf(connection.sourceHandle)].name;
+            newConnection.destinationTable = elements[targetNode].data.label.props.children.props.tablename;
+            newConnection.destinationKey = elements[targetNode].data.label.props.children.props.columns[alphabet.indexOf(connection.targetHandle)].name;
+
+            newTable.connections.push(newConnection);
+
+        });
+
+        newTables.push(newTable);
+
+    });
+
+    repackageData(newTables);
+
+  }
 
   return (
     <div id='root'>
