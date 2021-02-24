@@ -20,8 +20,9 @@ const Home = (props) => {
   const { user, storeUser, logout } = useContext(UserContext);
 
   useEffect(() => {
+    if (props.user.authorization === null) return logout();
     if (props.user.user.username === user.username) return;
-    if (props.user) storeUser(props.user.user);
+    if (props.hasOwnProperty('user')) storeUser(props.user.user);
     else logout();
   }, []);
 

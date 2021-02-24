@@ -35,6 +35,7 @@ const Canvas = (props) => {
   const { user, storeUser, logout, diagrams } = useContext(UserContext);
 
   useEffect(() => {
+    if (props.user.authorization === null) return logout();
     if (props.user.user.username === user.username) return;
     if (props.user) storeUser(props.user.user);
     else logout();
