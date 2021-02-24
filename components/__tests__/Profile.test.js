@@ -1,8 +1,6 @@
-import React from 'react';
+import * as React from 'react'
 import ReactDOM from 'react-dom';
-import Profile from '../Profile';
-
-import {render} from '@testing-library/react';
+import Profile from '../Profile'
 
 describe("Profile module",()=>{
     it("renders without crashing", ()=>{

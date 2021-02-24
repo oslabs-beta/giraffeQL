@@ -1,33 +1,35 @@
 import Head from 'next/head';
-import fetch from 'isomorphic-fetch'
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import { parseCookies } from 'nookies';
 
-import Header from '../components/icons/Header.js';
+import { useEffect, useContext } from 'react';
+import { UserContext } from '../context/state.js';
+
+import getUser from '../controller/getUser.js';
+
+import Navbar from '../components/Navbar.js';
 import GiraffeQL from '../components/icons/GiraffeQL.js';
 import GitHub from '../components/icons/GitHub.js';
 
+import { parseCookies } from 'nookies';
+
 const Home = (props) => {
 
-    const router = useRouter();
+    const { storeUser, logout } = useContext(UserContext);
 
     useEffect(() => {
-      if (props.authorization) {
-        router.push('/diagrams');
-      }
+      if (props.user) storeUser(props.user)
+      else logout();
     }, []);
 
     return (
         <div id='home'>
 
+          <Navbar />
+
           <Head>
             <title>giraffeQL</title>
             <link rel="shortcut icon" href="/favicon.png" />
           </Head>
-
-          <Header />
 
           <div id='homemodal'>
 
@@ -266,19 +268,11 @@ const Home = (props) => {
     );
 }
 
-async function getUser(authorization) {
-  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000` : `https://giraffeql.io`;
-  const res = await fetch(`${fetchURL}/api/user`, { headers: { authorization } })
-    .catch(err => console.log(err));
-  if (res.status === 200) return { authorization, user: res.data }
-  else return { authorization }
-}
-
-Home.getInitialProps = (ctx) => {
+export async function getServerSideProps (ctx) {
   const { authorization } = parseCookies(ctx);
-  const { code } = ctx.query
-  const props = getUser(authorization || code);
-  return props;
+  const { token } = ctx.query
+  const props = await getUser(authorization || token);
+  return {props};
 }
 
 export default Home;

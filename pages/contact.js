@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 
 import Header from '../components/icons/Header.js';
-import DiagramNavbar from '../components/diagrams/DiagramNavbar.js';
+import Navbar from '../components/Navbar.js';
 
 const Contact = (props) => {
 
@@ -18,7 +18,7 @@ const Contact = (props) => {
             </Head>
 
             <Header />
-            <DiagramNavbar />
+            <Navbar />
 
             <div id='contactmodal'>
 

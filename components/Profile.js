@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../context/state.js';
+
 import Image from 'next/image'
 import ProfileOptions from './ProfileOptions';
 
@@ -6,10 +8,33 @@ import Carot from  './icons/Carot.js'
 
 const Profile = (props) => {
 
+  const { user, storeUser } = useContext(UserContext);
   const [username, setUsername] = useState('Anonymous');
-  const [image, setImage] = useState('/../public/tempuser.png');
+  const [image, setImage] = useState('/tempuser.png');
+
+  const [loggedIn, toggleLoginStatus] = useState(false);
 
   const [expand, toggleOptions] = useState(false);
+
+  useEffect(() => {
+
+    if (!Object.keys(user).length) {
+      setUsername('Anonymous');
+      setImage('/tempuser.png');
+      toggleLoginStatus(false);
+      return;
+    }
+    
+    if (user.displayName.length > 0) {
+      setUsername(user.displayName.split(' ')[0]);
+    } else {
+      setUsername(user.username);
+    }
+    
+    setImage(user.photos[0].value);
+    toggleLoginStatus(true);
+
+  }, [user])
 
   return (
     <div>
@@ -29,7 +54,7 @@ const Profile = (props) => {
 
       </div>
       
-      <ProfileOptions expand={expand} />
+      <ProfileOptions expand={expand} loggedIn={loggedIn} />
 
       <style jsx>{`
 
@@ -58,7 +83,7 @@ const Profile = (props) => {
           height: 36px;
           margin: 16px;
           background-color: #c5c5c5;
-          border-radius: 50%;
+          clip-path: circle(18px at center);
         }
 
         h1{

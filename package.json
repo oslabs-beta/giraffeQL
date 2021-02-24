@@ -15,11 +15,14 @@
     "testPathIgnorePatterns": [".next", "/node_modules/"]
   },
   "dependencies": {
+    "@babel/preset-react": "^7.12.13",
+    "@emotion/react": "^11.1.5",
     "@zeit/next-sass": "^1.0.1",
     "dagre": "^0.8.5",
     "electron": "^11.2.1",
     "express": "^4.17.1",
     "highlight.js": "^10.6.0",
+    "ignore-loader": "^0.1.2",
     "isomorphic-fetch": "^3.0.0",
     "mongoose": "^5.11.16",
     "next": "^10.0.6",
@@ -29,6 +32,7 @@
     "react": "^17.0.1",
     "react-dom": "17.0.1",
     "react-flow-renderer": "^8.7.0",
+    "react-spinners": "^0.10.6",
     "sass": "^1.32.6"
   },
   "devDependencies": {

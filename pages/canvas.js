@@ -1,7 +1,9 @@
 //🦒
-import ReactFlow, { removeElements, ReactFlowProvider, getConnectedEdges, isNode}  from 'react-flow-renderer';
-import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import ReactFlow, { removeElements, ReactFlowProvider, getConnectedEdges, isNode}  from 'react-flow-renderer';
+
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../context/state.js';
 
 import dagre from 'dagre';
 
@@ -27,9 +29,14 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const Canvas = (props) => {
 
+  const { user } = useContext(UserContext);
+  const [diagramId, setDiagramID] = useState(undefined);
+  const [diagramName, setDiagramName] = useState('Untitled-database-diagram');
+
   // Our main React Hook state that holds the data of every element (node, connection) that gets rendered onto the page
   const [elements, setElements] = useState([]);
   const [index, setNodeCount] = useState(0);
+  const [formattedTables, repackageData] = useState([]);
 
   const [layedout, toggleLayout] = useState(false);
   const [updated, updateData] = useState(false);
@@ -45,7 +52,7 @@ const Canvas = (props) => {
   const [deleteWarning, toggleWarning] = useState(true);
 
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
-  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), updateData(true));
+  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), formatData(elements), updateData(true));
 
   const onElementsRemove = (elementsToRemove) => {
     if (deleteWarning)
@@ -89,6 +96,7 @@ const Canvas = (props) => {
     selectNode(column);
     
     setNodeCount(index + 1);
+    formatData(elements);
     updateData(true);
 
   };
@@ -108,6 +116,39 @@ const Canvas = (props) => {
     instance.zoomTo(.4);
     
   }, [instance]);
+
+  useEffect(() => {
+
+    if (!updated || instance === null)
+      return;
+
+    /*const newReactflow = instance.toObject();
+
+    const tables = newReactflow.elements.filter(node => !node.id.includes('reactflow'));
+    const connections = newReactflow.elements.filter(node => node.id.includes('reactflow'));;
+
+    const reactFlowData = {
+      tables,
+      connections,
+      position: newReactflow.position,
+      zoom: newReactflow.zoom
+    };*/
+
+    const body = {
+      user: user._id,
+      diagramId,
+      diagramName: 'cool rocks',
+      tables: formattedTables
+    };
+
+    console.log(formattedTables);
+
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql.io';
+    fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
+      .then(res => res.json())
+      .then(data => setDiagramID(data.diagram._id));
+
+  }, [updated]);
 
   //Component to get the layouted elements
   //By default, set to 'LR', AKA Left -> Right
@@ -191,18 +232,42 @@ const Canvas = (props) => {
     newElements.splice(target, 1, node);
     setElements(newElements);
 
+    formatData(elements);
     updateData(true);
   };
 
   //Runs only once when this page renders
   useEffect(() => {
 
-    if (!props.data)
-      return;
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const imports = [];
+
+    if (props.hasOwnProperty('diagramId')){
+
+      const diagram = user.diagrams[user.diagrams.findIndex(diagram => diagram._id === props.diagramId)];
+
+      toggleLayout(true);
+
+      setDiagramID(props.diagramId)
+      setDiagramName(diagram.diagramName);
+
+      diagram.tables.forEach(table => {
+        imports.push(table);
+      });
+
+      console.log(imports);
+
+    } else if (props.hasOwnProperty('data')){
+
+      props.data.tables.forEach(table => {
+        imports.push(table);
+      });
+
+    } else return;
 
     const newElements = [];
    
-    for (let i = 0; i < props.data.tables.length; i++){
+    for (let i = 0; i < imports.length; i++){
 
       //For each "column" from our data of tables, we assign the same object information that's expected from a Node element to render properly
       const column = {
@@ -216,13 +281,13 @@ const Canvas = (props) => {
           //In the case of our nodes, we pass in a Node.js component with all of the props from the associated table data index.
           label: (
             <div>
-              <div id={`${props.data.tables[i].name}column#${i}`} key={`${props.data.tables[i].name}column#${i}`} nodeid={i} tablename={props.data.tables[i].name} columns={props.data.tables[i].columns} selectedEdges={selectedEdges} />
+              <div id={`${imports[i].name}column#${i}`} key={`${imports[i].name}column#${i}`} nodeid={i} tablename={imports[i].name} columns={imports[i].columns} selectedEdges={selectedEdges} />
             </div>
             ),
           },
         //The starting position of the node.
         //TODO: replace with smart layout-ing using dagre
-        position: { x: 0, y: 0}
+        position: imports[i].hasOwnProperty('position') ? imports[i].position : { x: 0, y: 0}
       }
 
       newElements.push(column);
@@ -232,17 +297,15 @@ const Canvas = (props) => {
     // We also iterate AGAIN through the tables data to add each connection
     // We do this after our first loop because the connections must happen AFTER the nodes themselves have been established
 
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-
-    for (let i = 0; i < props.data.tables.length; i++){
+    for (let i = 0; i < imports.length; i++){
 
       // Going inside the connections array
-      for (let j = 0; j < props.data.tables[i].connections.length; j++){
+      for (let j = 0; j < imports[i].connections.length; j++){
 
-        const columnNumber = props.data.tables[i].columns.findIndex(column => column.name === props.data.tables[i].connections[j].originKey);
+        const columnNumber = imports[i].columns.findIndex(column => column.name === imports[i].connections[j].originKey);
 
-        const target = props.data.tables.findIndex(table => table.name === props.data.tables[i].connections[j].destinationTable);
-        const targetHandle = props.data.tables[target].columns.findIndex(column => column.name === props.data.tables[i].connections[j].destinationKey);
+        const target = imports.findIndex(table => table.name === imports[i].connections[j].destinationTable);
+        const targetHandle = imports[target].columns.findIndex(column => column.name === imports[i].connections[j].destinationKey);
 
         // All id's and source/target's etc. need to be converted to STRINGS, not INTs
         const connection = {
@@ -264,7 +327,7 @@ const Canvas = (props) => {
     //We replace our existing (or empty by default) elements state with the fetched elements
     //NOTE: we must either always REPLACE the elements array, or ensure we are adding to the array without overlapping id's
     setElements([...newElements]);
-    setNodeCount(props.data.tables.length);
+    setNodeCount(imports.length);
 
     updateData(true);
 
@@ -273,6 +336,45 @@ const Canvas = (props) => {
   // Toggle betwween defaultInspector and nodeInspector when a node is selected.
   const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
   const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} toggleWarning={toggleWarning} />;
+
+  const formatData = (elements) => {
+
+    const newTables = [];
+
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+    // ONLY iterating through the node's by filtering out the connections.
+    elements.filter(node => !node.id.includes('reactflow')).forEach((node, i) => {
+
+        const newTable = {};
+
+        newTable.name = node.data.label.props.children.props.tablename;
+        newTable.columns = node.data.label.props.children.props.columns;
+        newTable.connections = [];
+        newTable.position = node.position;
+
+        // Iterate through the nodes connections
+        elements.filter(connection => connection.id.includes('reactflow') && connection.source === i.toString()).forEach(connection => {
+
+            const newConnection = {};
+
+            const targetNode = elements.findIndex(target => target.id === connection.target.toString());
+
+            newConnection.originKey = node.data.label.props.children.props.columns[alphabet.indexOf(connection.sourceHandle)].name;
+            newConnection.destinationTable = elements[targetNode].data.label.props.children.props.tablename;
+            newConnection.destinationKey = elements[targetNode].data.label.props.children.props.columns[alphabet.indexOf(connection.targetHandle)].name;
+
+            newTable.connections.push(newConnection);
+
+        });
+
+        newTables.push(newTable);
+
+    });
+
+    repackageData(newTables);
+
+  }
 
   return (
     <div id='root'>
@@ -287,7 +389,7 @@ const Canvas = (props) => {
         {/*We set up a component to hold our ReactFlow (the component that holds the methods/functionality of and renders our react-flow)*/}
         {/*Here's where we can set any properties and add custom methods to be accessible throughout the rest of the app*/}
         <ReactFlowProvider>
-          <Navbar search={selectNode} />
+          <Navbar search={selectNode} name={diagramName} />
           {inspector}
           <ReactFlow
               //default zoom properties
@@ -351,10 +453,16 @@ const Canvas = (props) => {
 //Runs on page load
 export async function getServerSideProps({ query }) {
 
-  if (!query.data)
+  if (Object.values(query).length < 1)
     return {
       props: {}, 
     }
+
+  if (query.hasOwnProperty('diagram')){
+    return {
+      props: {diagramId: query.diagram}, 
+    }
+  }
 
   //We grab the URI directly from the page's URL (in the context's query)
   const body = {

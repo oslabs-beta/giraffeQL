@@ -1,15 +1,27 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../context/state.js';
+
 import { parseCookies, destroyCookie } from 'nookies';
 
 const ProfileModal = (props) => {
 
   const router = useRouter();
 
-  const logOut = () => {
-    destroyCookie({}, 'authorization');
-    router.push('/');
+  const { user, logout } = useContext(UserContext);
+
+  const toggleLogin = () => {
+
+    if (props.loggedIn){
+      destroyCookie({}, 'authorization');
+      logout();
+      router.push('/');
+    } else {
+      router.push(process.env.NODE_ENV === 'development' ? `http://localhost:3001/auth/github` : `https://giraffeql-api.herokuapp.com/auth/github`);
+    }
+
   }
 
   return (
@@ -27,7 +39,7 @@ const ProfileModal = (props) => {
         <button>Contact Us</button>
       </Link>
       <hr />
-      <button style={{color: '#12b3ab'}} onClick={logOut}>Log Out</button>
+      <button style={{color: '#12b3ab'}} onClick={toggleLogin}>{props.loggedIn ? 'Log Out' : 'Sign In'}</button>
     
       <style jsx>{`
 

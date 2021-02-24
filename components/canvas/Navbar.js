@@ -37,7 +37,7 @@ const Navbar = (props) => {
 
             <input id='search' value={searchquery} placeholder='Search for a table name...' onChange={(e)=>typeSearch(e.target.value)} onKeyDown={submit} />
 
-            <h2 id='diagramname' >Diagrams {`>`} <span style={{fontWeight: '500', color: 'white'}} >Untitled-database-diagram</span></h2>
+            <h2 id='diagramname' >Diagrams {`>`} <span style={{fontWeight: '500', color: 'white'}} >{props.name}</span></h2>
 
             <Profile id='profile' />
 
