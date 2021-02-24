@@ -7,7 +7,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p $PORT",
-    "test": "jest"
+    "test": "jest --setupFilesAfterEnv"
+  },
+  "jest": {
+    "verbose": true,
+    "setupFilesAfterEnv": ["./jest.setup.js"],
+    "testPathIgnorePatterns": [".next", "/node_modules/"]
   },
   "dependencies": {
     "@babel/preset-react": "^7.12.13",
