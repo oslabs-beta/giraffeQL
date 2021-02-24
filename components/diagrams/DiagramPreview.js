@@ -102,6 +102,8 @@ const DiagramPreview = (props) => {
                     text-align: left;
                     color: #2e3748;
                     margin: 0px 8px;
+                    overflow: hidden;
+                    // word-wrap: break-word;
                 }
 
                 .dgdesc{
@@ -109,6 +111,8 @@ const DiagramPreview = (props) => {
                     text-align: left;
                     color: #6f8195;
                     margin: 0px 8px;
+                    overflow: hidden;
+                    // word-wrap: break-word;
                 }
 
                 .previewcontainer{

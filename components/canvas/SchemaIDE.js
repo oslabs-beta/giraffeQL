@@ -20,7 +20,7 @@ const SchemaIDE = (props) => {
 
     // Taking the data from all nodes/elements whenever there is a change and turning them back to original format. 
     useEffect(() => {
-
+        
         const newTables = [];
 
         const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');

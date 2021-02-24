@@ -79,7 +79,7 @@ const Canvas = (props) => {
   const createElement = () => {
 
     const defaultColumn = {
-      name: 'newColumn',
+      name: 'newColumn#1',
       dataType: 'character varying',
       required: true,
       primaryKey: true
@@ -137,8 +137,8 @@ const Canvas = (props) => {
     const body = {
       user: user._id,
       diagramId,
-      diagramName: props.name,
-      description: props.description,
+      diagramName,
+      description,
       tables: formattedTables
     };
 
@@ -255,8 +255,10 @@ const Canvas = (props) => {
 
       setDiagramID(props.diagramId)
       setDiagramName(diagram.diagramName);
-      if (props.hasOwnProperty('description'))
+      if (diagram.hasOwnProperty('description'))
         setDescription(diagram.description);
+
+      console.log(diagram.diagramName);
 
       diagram.tables.forEach(table => {
         imports.push(table);
