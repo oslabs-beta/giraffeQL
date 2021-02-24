@@ -5,7 +5,7 @@ import ReactFlow, { removeElements, ReactFlowProvider, getConnectedEdges, isNode
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
-import dagre from 'dagre';
+import getUser from '../controller/getUser.js';
 
 import Node from '../components/canvas/Node.js';
 import NodeInspector from '../components/canvas/NodeInspector.js';
@@ -13,6 +13,9 @@ import DefaultInspector from '../components/canvas/DefaultInspector.js';
 import SchemaIDE from '../components/canvas/SchemaIDE.js';
 import Navbar from '../components/canvas/Navbar.js';
 import DeleteModal from '../components/canvas/DeleteModal.js';
+
+import dagre from 'dagre';
+import { parseCookies } from 'nookies';
 
 // Set our custom node component from Node.js
 const nodeTypes = {
@@ -29,7 +32,14 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const Canvas = (props) => {
 
-  const { user } = useContext(UserContext);
+  const { user, storeUser, logout, diagrams } = useContext(UserContext);
+
+  useEffect(() => {
+    if (props.user.user.username === user.username) return;
+    if (props.user) storeUser(props.user.user);
+    else logout();
+  }, []);
+
   const [diagramId, setDiagramID] = useState(undefined);
   const [diagramName, setDiagramName] = useState('Untitled-database-diagram');
   const [description, setDescription] = useState(null);
@@ -238,7 +248,7 @@ const Canvas = (props) => {
 
     if (props.hasOwnProperty('diagramId')){
 
-      const diagram = user.diagrams[user.diagrams.findIndex(diagram => diagram._id === props.diagramId)];
+      const diagram = diagrams[diagrams.findIndex(diagram => diagram._id === props.diagramId)];
 
       toggleLayout(true);
 
@@ -445,17 +455,28 @@ const Canvas = (props) => {
 }
 
 //Runs on page load
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(ctx) {
 
-  if (!query.hasOwnProperty('diagram') && !query.hasOwnProperty('data'))
-    return {
-      props: {name: query.name, description: query.description}, 
-    }
+  const props = {};
+  const query = ctx.query;
+
+  const { authorization } = parseCookies(ctx);
+  const { token } = ctx.query
+  props.user = await getUser(authorization || token);
+
+  if (!query.hasOwnProperty('diagram') && !query.hasOwnProperty('data')){
+
+    if (query.hasOwnProperty('name')) props.name = query.name;
+    if (query.hasOwnProperty('description')) props.description = query.description;
+
+    return {props};
+  }
 
   if (query.hasOwnProperty('diagram')){
-    return {
-      props: {diagramId: query.diagram}, 
-    }
+
+    props.diagramId = query.diagram;
+
+    return {props};
   }
 
   //We grab the URI directly from the page's URL (in the context's query)
@@ -487,10 +508,12 @@ export async function getServerSideProps({ query }) {
     }
   }
 
-  return {
-    //The data we fetch from the database gets passed into our component as props
-    props: {data, name: query.name, description: query.description}, 
-  }
+  props.data = data;
+
+  if (query.hasOwnProperty('name')) props.name = query.name;
+  if (query.hasOwnProperty('description')) props.description = query.description;
+
+  return {props};
 }
 
 export default Canvas;
