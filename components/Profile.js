@@ -83,7 +83,7 @@ const Profile = (props) => {
           height: 36px;
           margin: 16px;
           background-color: #c5c5c5;
-          border-radius: 50%;
+          clip-path: circle(18px at center);
         }
 
         h1{

@@ -1,21 +1,18 @@
 import Head from 'next/head';
-import fetch from 'isomorphic-fetch'
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
-import { parseCookies } from 'nookies';
+import getUser from '../controller/getUser.js';
 
 import Navbar from '../components/Navbar.js';
-
 import GiraffeQL from '../components/icons/GiraffeQL.js';
 import GitHub from '../components/icons/GitHub.js';
 
-const Home = (props) => {
+import { parseCookies } from 'nookies';
 
-    const router = useRouter();
+const Home = (props) => {
 
     const { storeUser, logout } = useContext(UserContext);
 
@@ -269,19 +266,6 @@ const Home = (props) => {
         </div>
 
     );
-}
-
-async function getUser(authorization) {
-  console.log(authorization)
-  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000` : `https://giraffeql.io`;
-  const res = await fetch(`${fetchURL}/api/user`, { headers: { authorization } })
-    .catch(err => console.log(err));
-
-  const data = await res.json();
-  
-  const newAuthorization = !authorization ? null : authorization
-  if (res.status === 200) return { authorization: newAuthorization, user: data }
-  else return { authorization: newAuthorization }
 }
 
 export async function getServerSideProps (ctx) {

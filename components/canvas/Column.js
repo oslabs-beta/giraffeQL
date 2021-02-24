@@ -148,13 +148,11 @@ const Column = (props) => {
 
             <style jsx>{`
 
-                @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 
                 *{
                     font-size: 16px;
                     transition: all 0s;
-                    // font-family: 'Lato', sans-serif;
                     font-family: 'Inter', sans-serif;
                 }
 
@@ -173,14 +171,6 @@ const Column = (props) => {
                     &:hover{
                         border-top: .5px solid #0373fc;
                         border-bottom: .5px solid #0373fc;
-                    }
-
-                    &:hover > .left{
-                        // color: #0373fc;
-                    }
-                    
-                    &:hover > .right{
-                        // color: #0373fc;
                     }
 
                     &:active{
@@ -214,7 +204,6 @@ const Column = (props) => {
                     display: flex;
                     align-items: center;
                     color: #cccccc;
-                    // margin-right: 16px;
                 }
 
             `}</style>
