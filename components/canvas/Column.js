@@ -148,8 +148,6 @@ const Column = (props) => {
 
             <style jsx>{`
 
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
-
                 *{
                     font-size: 16px;
                     transition: all 0s;

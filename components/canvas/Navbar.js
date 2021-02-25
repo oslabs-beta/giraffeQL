@@ -30,12 +30,10 @@ const Navbar = (props) => {
     return (
         <div className='navbar'>
 
-            <Link href='/'>
-                <div className='homebtn' onClick={() => router.push('/diagrams', 'diagrams', {shallow: true})} >
-                    <Giraffe /> 
-                    <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
-                </div>
-            </Link>
+            <div className='homebtn' onClick={() => router.push('diagrams', 'diagrams', {shallow: true})} >
+                <Giraffe /> 
+                <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
+            </div>
 
             <input id='search' value={searchquery} placeholder='Search for a table name...' onChange={(e)=>typeSearch(e.target.value)} onKeyDown={submit} />
 
@@ -44,8 +42,6 @@ const Navbar = (props) => {
             <Profile id='profile' />
 
             <style jsx>{`
-
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
 
                 *{
                     font-family: 'Inter', sans-serif;
