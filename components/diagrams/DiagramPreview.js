@@ -51,6 +51,7 @@ const DiagramPreview = (props) => {
             <style jsx>{`
 
                 *{
+                    font-family: 'Inter', sans-serif;
                     transition: all .2s;
                 }
 
@@ -112,7 +113,8 @@ const DiagramPreview = (props) => {
                     color: #6f8195;
                     margin: 0px 8px;
                     overflow: hidden;
-                    // word-wrap: break-word;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
 
                 .previewcontainer{
