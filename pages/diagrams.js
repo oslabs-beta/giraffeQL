@@ -26,13 +26,16 @@ const Diagrams = (props) => {
 
   const { user, storeUser, logout, diagrams, storeDiagrams } = useContext(UserContext);
 
+  const [displayDiagrams, setDiagrams] = useState([])
+  const [currentSortMode, setSortMode] = useState('newest');
+
   useEffect(() => {
     
-    //TODO: avoid re-render while still updating diagrams in state
     if (props.user.hasOwnProperty('user')){
       if (props.user.user.hasOwnProperty('diagrams')){
         const newDiagrams = [...props.user.user.diagrams];
         storeDiagrams(newDiagrams);
+        setDiagrams(newDiagrams);
       }
     }
 
@@ -40,11 +43,28 @@ const Diagrams = (props) => {
     if (props.user.user.username === user.username) return;
     if (props.user) {
       storeUser(props.user.user);
-      storeDiagrams(props.user.user.diagrams)
+      storeDiagrams(props.user.user.diagrams);
+      setDiagrams(props.user.user.diagrams);
     }
     else logout();
 
   }, []);
+
+  useEffect(() => {
+
+    if (!props.user.authorization)
+      return;
+
+    const user = getUser(props.user.authorization)
+      .then(data => storeDiagrams(data.user.diagrams));
+
+  }, [currentSortMode]);
+
+  useEffect(() => {
+    if (currentSortMode === 'newest') setDiagrams(mostRecentDiagrams([...diagrams]))
+    if (currentSortMode === 'oldest') setDiagrams(oldestDiagrams([...diagrams]))
+    if (currentSortMode === 'favorites') setDiagrams(favoriteDiagrams([...diagrams]))    
+  }, [diagrams]);
 
   const [newDiagram, setNewDiagram] = useState(false)
   const [pageLoading, setPageLoading] = useState(false);
@@ -86,9 +106,34 @@ const Diagrams = (props) => {
     router.push(href)
   }
 
-  const sortModes = ['newest', 'oldest', 'most popular', 'favorites'];
+  const sortModes = ['newest', 'oldest', 'favorites'];
 
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} name={name} setName={setName} description={description} setDescription={setDescription} URI={URI} setURI={setURI} checkURLStatus={checkURLStatus} newProject={newProject} /> : '';
+   
+  const mostRecentDiagrams = (arr) => { 
+    return arr.slice().sort(function (a, b) {
+    if (a.updatedAt < b.updatedAt) return 1;
+    if (a.updatedAt > b.updatedAt) return -1;
+    return 0;
+  })
+}
+
+  const oldestDiagrams = (arr) => {
+
+    return arr.slice().sort(function (a, b) {
+    if (a.updatedAt > b.updatedAt) return 1;
+    if (a.updatedAt < b.updatedAt) return -1;
+    return 0;
+  });
+  }
+
+  
+  const favoriteDiagrams = (arr) => {
+
+    return arr.filter((diagram) => {
+    if (diagram.favorite) return diagram;
+  })
+  }
 
   return (
     <div id='diagram'>
@@ -119,12 +164,13 @@ const Diagrams = (props) => {
           <div className='header' style={{borderTopRightRadius: '8px'}} >My Diagrams</div>
 
           <div id='sort' >Sort by:
-            <input type='text' list='modes' placeholder='newest' />
-            <datalist id='modes'>{sortModes.map((sortMode, i) => <option key={`sortModes#${i}`} value={sortMode} /> )}</datalist>
+            <select onChange={(e)=>setSortMode(e.target.value)} >
+              {sortModes.map((sortMode, i) => <option key={`sortModes#${i}`} value={sortMode} >{sortMode}</option> )}
+            </select>
           </div>
 
           <div id='diagramcontainer'>
-            {!diagrams.length ? '' : diagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
+            {!diagrams.length ? '' : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
           </div>
 
         </div>
