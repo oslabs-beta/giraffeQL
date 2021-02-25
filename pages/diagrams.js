@@ -59,14 +59,14 @@ const Diagrams = (props) => {
   }
 
   const deleteDiagram = (id) => {
-    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'https://giraffeql.io/api'
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io'
     fetch(`${fetchURL}/diagrams/${id}`, {method: 'DELETE', headers: {'Content-Type': 'application/json'}})
       .then(res => res.json())
       .then(data => storeDiagrams(data.diagrams));
   }
 
   const toggleEdit = (id) => {
-    console.log(id);
+    // console.log(id);
   }
 
   const checkURLStatus = () => {

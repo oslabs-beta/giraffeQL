@@ -1,5 +1,14 @@
 const express = require('express');
 const next = require('next');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const authRouter = require('./api/routes/auth');
+const userRouter = require('./api/routes/user');
+const profileRouter = require('./api/routes/profile');
+const diagramsRouter = require('./api/routes/diagrams');
+const { dbDataQuery } = require('./storage/query.js');
+const { connectToDB, asyncQuery } = require('./controller/controller.js');
 
 const port = parseInt(process.env.PORT, 10) || 3000
 
@@ -14,10 +23,14 @@ app
 
     const server = express();
 
+    server.use(bodyParser.json({ limit: '50mb' }));
+    server.use(cookieParser());
+
     server.use((req, res, next) => {
       const hostname = req.hostname === 'www.giraffeql.io' ? 'giraffeql.io' : req.hostname;
 
       if (req.headers['x-forwarded-proto'] === 'http' || req.hostname === 'www.giraffeql.io') {
+        console.log('redirect url: ', `https://${hostname}${req.url}`);
         res.redirect(301, `https://${hostname}${req.url}`);
         return;
       }
@@ -26,7 +39,53 @@ app
       next();
     });
 
+    server.use((_, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Headers', '*');
+      res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+      return next();
+    })
+
+    server.use(passport.initialize());
+
+    passport.serializeUser(function (user, cb) {
+      cb(null, user);
+    });
+
+    server.use('/auth', authRouter);
+    server.use('/user', userRouter);
+    server.use('/profile', profileRouter);
+    server.use('/diagrams', diagramsRouter);
+
+    server.post('/api/scrapedb', async (req, res, next) => {
+      console.log('in scrapedb')
+      // connect to db and verify connections
+      const pool = await connectToDB(req.body.URI);
+      if (pool instanceof Error) return next(dbData);
+      // query for db data and check for errors
+      const dbData = await asyncQuery(pool, dbDataQuery);
+      if (dbData instanceof Error) return next(dbData);
+      // convert [null] connections arrays to []
+      const tables = dbData.rows.map(obj => {
+        if (obj.connections[0] === null) obj.connections = [];
+        return obj;
+      });
+      // return data
+      res.status(200).json({ tables: tables });
+    });
+
     server.get('*', (req, res) => handle(req, res));
+
+    server.use((err, req, res, next) => {
+      const defaultErr = {
+        log: 'Express error handler caught unknown middleware error',
+        status: 500,
+        message: { err: 'An error occurred' },
+      };
+      const errorObj = Object.assign({}, defaultErr, err);
+      console.log(errorObj.log);
+      return res.status(errorObj.status).json(errorObj.message);
+    });
 
     server.listen(
       port,

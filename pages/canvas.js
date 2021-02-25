@@ -132,9 +132,6 @@ const Canvas = (props) => {
     if (!updated)
       return;
 
-    console.log(formattedTables);
-    console.log('is this entering');
-
     const body = {
       user: user._id,
       diagramId,
@@ -143,10 +140,10 @@ const Canvas = (props) => {
       tables: formattedTables
     };
 
-    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'https://giraffeql.io/api';
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
       .then(res => res.json())
-      .then(data => (setDiagramID(data.diagram._id), updateData(false), console.log('sucess')));
+      .then(data => (setDiagramID(data.diagram._id), updateData(false), console.log('success')));
 
   }, [updated]);
 
@@ -255,8 +252,6 @@ const Canvas = (props) => {
       setDiagramName(diagram.diagramName);
       if (diagram.hasOwnProperty('description'))
         setDescription(diagram.description);
-
-      console.log(diagram.diagramName);
 
       diagram.tables.forEach(table => {
         imports.push(table);
@@ -500,7 +495,7 @@ export async function getServerSideProps(ctx) {
     URI: query.data
   }
 
-  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000/api` : `https://giraffeql.io/api`;
+  const fetchURL = process.env.NODE_ENV === 'development' ? `http://localhost:3000` : `https://giraffeql.io`;
 
   const res = await fetch(`${fetchURL}/api/scrapedb`, {method: 'POST', headers: {'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
   
