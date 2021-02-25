@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "NODE_ENV=production node server.js -p $PORT",
     "test": "jest --setupFilesAfterEnv"
   },
   "jest": {
