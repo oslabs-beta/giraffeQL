@@ -335,8 +335,6 @@ const Home = (props) => {
             border: 1px solid white;
             border-radius: 4px;
 
-            font-family: 'Comfortaa', cursive;
-
             &:hover{
               background-color: rgba(255,255,255,.15);
               cursor: pointer;

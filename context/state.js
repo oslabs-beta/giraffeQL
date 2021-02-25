@@ -13,6 +13,7 @@ const Provider = (props) => {
 
   const logout = () => {
     setUser({});
+    setDiagrams([]);
   }
 
   const storeDiagrams = diagrams => {
