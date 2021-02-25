@@ -60,7 +60,7 @@ const DiagramModal = (props) => {
 
         <h3> - or - </h3>
 
-        <button id='newprojectbtn' onClick={props.newProject} disabled={props.name.length < 1 ? true : false} ><span>New Project</span></button>
+        <button id='newprojectbtn' onClick={props.newProject} disabled={props.name.length < 1 || props.URI.length > 0 ? true : false} ><span>Blank Diagram</span></button>
       
       </div>
 
