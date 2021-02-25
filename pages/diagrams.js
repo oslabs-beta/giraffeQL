@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image'
 import { useRouter } from 'next/router';
 
 import { useState, useEffect, useContext } from 'react';
@@ -28,7 +29,9 @@ const Diagrams = (props) => {
   const { user, storeUser, logout, diagrams, storeDiagrams } = useContext(UserContext);
 
   const [displayDiagrams, setDiagrams] = useState([])
+
   const [currentSortMode, setSortMode] = useState('newest');
+  const [currentSortDate, setSortDate] = useState('last updated');
 
   useEffect(() => {
     
@@ -59,12 +62,13 @@ const Diagrams = (props) => {
     const user = getUser(props.user.authorization)
       .then(data => storeDiagrams(data.user.diagrams));
 
-  }, [currentSortMode]);
+  }, [currentSortMode, currentSortDate]);
 
   useEffect(() => {
     if (currentSortMode === 'newest') setDiagrams(mostRecentDiagrams([...diagrams]))
     if (currentSortMode === 'oldest') setDiagrams(oldestDiagrams([...diagrams]))
     if (currentSortMode === 'favorites') setDiagrams(favoriteDiagrams([...diagrams]))    
+    if (currentSortMode === 'alphabetical') setDiagrams(alphabeticalDiagrams([...diagrams]))
   }, [diagrams]);
 
   const [newDiagram, setNewDiagram] = useState(false)
@@ -107,33 +111,43 @@ const Diagrams = (props) => {
     router.push(href, 'diagrams')
   }
 
-  const sortModes = ['newest', 'oldest', 'favorites'];
+  const sortModes = ['newest', 'oldest', 'favorites', 'alphabetical'];
+  const sortDates = ['last updated', 'created'];
 
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} name={name} setName={setName} description={description} setDescription={setDescription} URI={URI} setURI={setURI} checkURLStatus={checkURLStatus} newProject={newProject} /> : '';
    
   const mostRecentDiagrams = (arr) => { 
     return arr.slice().sort(function (a, b) {
-    if (a.updatedAt < b.updatedAt) return 1;
-    if (a.updatedAt > b.updatedAt) return -1;
-    return 0;
-  })
-}
 
-  const oldestDiagrams = (arr) => {
+      const datemodifier = currentSortDate === 'last updated' ? 'updatedAt' : 'createdAt';
 
-    return arr.slice().sort(function (a, b) {
-    if (a.updatedAt > b.updatedAt) return 1;
-    if (a.updatedAt < b.updatedAt) return -1;
-    return 0;
-  });
+      if (a[datemodifier] < b[datemodifier]) return 1;
+      if (a[datemodifier] > b[datemodifier]) return -1;
+      return 0;
+    })
   }
 
-  
-  const favoriteDiagrams = (arr) => {
+  const oldestDiagrams = (arr) => {
+    return arr.slice().sort(function (a, b) {
 
-    return arr.filter((diagram) => {
-    if (diagram.favorite) return diagram;
-  })
+      const datemodifier = currentSortDate === 'last updated' ? 'updatedAt' : 'createdAt';
+
+      if (a[datemodifier] > b[datemodifier]) return 1;
+      if (a[datemodifier] < b[datemodifier]) return -1;
+      return 0;
+    });
+  }
+
+  const favoriteDiagrams = (arr) => {
+      return arr.filter((diagram) => {
+      if (diagram.favorite) return diagram;
+    })
+  }
+
+  const alphabeticalDiagrams = (arr) => {
+    return arr.slice().sort(function (a, b) {
+        return (a.diagramName.toUpperCase() < b.diagramName.toUpperCase()) ? -1 : (a.diagramName.toUpperCase() > b.diagramName.toUpperCase()) ? 1 : 0;
+    });
   }
 
   return (
@@ -151,22 +165,27 @@ const Diagrams = (props) => {
         <div id='diagramoptions'>
           <div className='header' style={{borderTopLeftRadius: '8px', borderRight: '2px solid #7c81cf'}} >Options</div>
           <h1>Projects</h1>
-          <button onClick={() => setNewDiagram(!newDiagram)} style={{color: '#12b3ab'}} >New Diagram</button>
+          <button onClick={() => setNewDiagram(!newDiagram)} style={{color: '#12b3ab'}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image src='/plus.svg' width={10} height={10} /></div> New Diagram</div></button>
           <hr />
           <h1>Folders</h1>
-          <button >My Projects</button>
+          <button ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/folder.svg' width={10} height={10} /></div> My Projects</div></button>
           <hr />
           <h1>Quick Start</h1>
           <button >Template Diagrams</button>
-          <button onClick={() => router.push({ pathname: '/canvas', query: { data: ['postgres://lfawycfl:yc837PGh-S4jP4YIHJlv6Ldh7C7P2xJw@suleiman.db.elephantsql.com:5432/lfawycfl'], name, description } }, 'canvas')} >Example Databases</button>
+          <button onClick={() => router.push({ pathname: '/canvas', query: { data: ['postgres://lfawycfl:yc837PGh-S4jP4YIHJlv6Ldh7C7P2xJw@suleiman.db.elephantsql.com:5432/lfawycfl'], name: 'Star Wars Example', description: 'A long time ago, in a galaxy far away...' } }, 'canvas')} >Example Databases</button>
         </div>
 
         <div id='containerheader'>
           <div className='header' style={{borderTopRightRadius: '8px'}} >My Diagrams</div>
 
           <div id='sort' >Sort by:
+
             <select onChange={(e)=>setSortMode(e.target.value)} >
               {sortModes.map((sortMode, i) => <option key={`sortModes#${i}`} value={sortMode} >{sortMode}</option> )}
+            </select>
+
+            <select onChange={(e)=>setSortDate(e.target.value)} >
+              {sortDates.map((sortDate, i) => <option key={`sortDates#${i}`} value={sortDate} >{sortDate}</option> )}
             </select>
           </div>
 
@@ -274,6 +293,16 @@ const Diagrams = (props) => {
             width: 64px;
             border: none;
             background-color: transparent;
+          }
+
+          select{
+            // width: 64px;
+            border: none;
+            background-color: transparent;
+
+            &:active{
+              border: none;
+            }
           }
         }
 

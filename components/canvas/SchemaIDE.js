@@ -88,7 +88,7 @@ const SchemaIDE = (props) => {
 
         <div id='schemacontainer' >
 
-            <button className='schemabtn' onClick={() => showTable(!expand)} style={{ marginLeft: `${expand ? '-26.25%' : '0%'}` }} >{expand ? '>' : '<'}</button>
+            <button className='schemabtn' onClick={() => showTable(!expand)} style={{ marginLeft: `${expand ? '-25.6%' : '0%'}` }} >{expand ? '>' : '<'}</button>
 
             <div id='ide' style={{ opacity: `${expand ? '1' : '0'}` }} >
 

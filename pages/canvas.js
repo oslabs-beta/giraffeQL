@@ -135,7 +135,7 @@ const Canvas = (props) => {
     const body = {
       user: user._id,
       diagramId,
-      diagramName,
+      diagramName: diagramName === '' ? 'Untitled-database-diagram' : diagramName,
       description,
       tables: formattedTables
     };
