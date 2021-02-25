@@ -33,6 +33,11 @@ const Home = (props) => {
   const [scrollOpacity, setOpacity] = useState(1);
   const [logoOpacity, setLogoOpacity] = useState(1);
 
+  const [s1, triggers1] = useState(false);
+  const [s2, triggers2] = useState(false);
+  const [s3, triggers3] = useState(false);
+  const [s4, triggers4] = useState(false);
+
   useEffect(() => {
     const onScroll = e => {
       setScrollTop(e.target.documentElement.scrollTop);
@@ -40,6 +45,18 @@ const Home = (props) => {
       setLogoOpacity(1 - (scrollTop/400));
     };
     window.addEventListener("scroll", onScroll);
+
+    if (scrollTop > 300)
+      triggers1(true);
+
+    if (scrollTop > 800)
+      triggers2(true);
+
+    if (scrollTop > 1500)
+      triggers3(true);
+
+    if (scrollTop > 2000)
+      triggers4(true);
 
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollTop]);
@@ -84,7 +101,7 @@ const Home = (props) => {
         </section>
 
         <section id='one' className='box'>
-          <div className='content'>
+          <div className={`content ${s1 ? 'fade' : ''}`} >
 
             <div className='text'>
               <h2>Use giraffe<span style={{color: '#6d6ea8'}}>QL</span> to make schemas.</h2>
@@ -101,7 +118,7 @@ const Home = (props) => {
         </section>
 
         <section id='two' className='diagonal-box'>
-          <div className='content'>
+          <div className={`content ${s2 ? 'fade' : ''}`} >
 
             <div className='images' style={{marginLeft: '5%'}} >
               <Image src={'/frontpage/import.gif'} width={1448} height={795} />
@@ -117,7 +134,7 @@ const Home = (props) => {
         </section>
 
         <section id='three' className='box'>
-          <div className='content'>
+          <div className={`content ${s3 ? 'fade' : ''}`} >
 
             <div className='text'>
               <h2>Why GraphQL?</h2>
@@ -135,7 +152,7 @@ const Home = (props) => {
         </section>
 
         <section id='four' className='box'>
-          <div className='content'>
+          <div className={`content ${s4 ? 'fade' : ''}`} >
 
             <div className='images' style={{marginLeft: '5%'}} >
               <Image src={'/frontpage/createnew.gif'} width={1364} height={645} />
@@ -259,7 +276,7 @@ const Home = (props) => {
         .inner{
           transition: transform 1.5s ease,opacity 2s ease;
           transition-delay: .25s;
-          opacity: 0.85;
+          opacity: 1;
           position: relative;
           z-index: 0;
           animation: fadein 2s ease;
@@ -349,7 +366,7 @@ const Home = (props) => {
 
         @keyframes fadein {
           from { opacity: 0; transform: scale(1.1); }
-          to   { opacity: .85; transform: scale(1); }
+          to   { opacity: 1; transform: scale(1); }
         }
 
         .box{
@@ -422,6 +439,7 @@ const Home = (props) => {
           position: relative;
           z-index: 25;
           height: 100%;
+          opacity: 0;
 
           &::after {
             content: "";
@@ -462,6 +480,15 @@ const Home = (props) => {
             border: 4px solid #b2becc;
             border-radius: 4px;
           }
+        }
+
+        .content.fade{
+          animation: fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
 
         #aboutus{
