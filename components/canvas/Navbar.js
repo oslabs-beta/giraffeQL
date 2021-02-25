@@ -31,7 +31,7 @@ const Navbar = (props) => {
         <div className='navbar'>
 
             <Link href='/'>
-                <div className='homebtn' onClick={() => router.push('/', '', {shallow: true})} >
+                <div className='homebtn' onClick={() => router.push('/diagrams', 'diagrams', {shallow: true})} >
                     <Giraffe /> 
                     <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
                 </div>
