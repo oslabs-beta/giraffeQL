@@ -1,7 +1,8 @@
+import Image from 'next/image'
+
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
-import Image from 'next/image'
 import ProfileOptions from './ProfileOptions';
 
 import Carot from  './icons/Carot.js'
