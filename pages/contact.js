@@ -2,7 +2,6 @@ import Head from 'next/head';
 
 import { useState, useEffect } from 'react';
 
-import Header from '../components/icons/Header.js';
 import Navbar from '../components/Navbar.js';
 
 const Contact = (props) => {
@@ -17,7 +16,6 @@ const Contact = (props) => {
                 <link rel="shortcut icon" href="/favicon.png" />
             </Head>
 
-            <Header />
             <Navbar />
 
             <div id='contactmodal'>

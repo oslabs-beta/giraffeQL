@@ -72,7 +72,7 @@ const Home = (props) => {
                 <Image src={'/frontpage.svg'} width={640} height={640} />
                 {/*<h1>giraffe<span>QL</span></h1> <Image src={'/readme-logo.svg'} width={128} height={128} />*/}
               </div>
-              <p>easy graphQL code from your database</p>
+              {/*<p>easy graphQL code from your database</p>*/}
 
               <div id='btncontainer'>
                 <button id='mainbtn' onClick={loginStatus ? () => router.push('diagrams', 'diagrams', {shallow: true}) : () => toggleModal(true)} >Get Started</button>

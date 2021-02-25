@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_ENV=development node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js -p $PORT",
     "test": "jest --setupFilesAfterEnv"
@@ -23,6 +23,7 @@
     "@babel/preset-react": "^7.12.13",
     "@emotion/react": "^11.1.5",
     "@zeit/next-sass": "^1.0.1",
+    "cross-env": "^7.0.3",
     "dagre": "^0.8.5",
     "electron": "^11.2.1",
     "express": "^4.17.1",
