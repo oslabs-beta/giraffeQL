@@ -15,8 +15,8 @@ const DiagramPreview = (props) => {
     const colors=['#ff6b6b', '#f9844aff', '#fee440', '#02c39a', '#4361ee', '#9b5de5', '#f15bb5'];
 
     const toggleFavorite = () => {
-        const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql-api.herokuapp.com';
-        fetch(`${fetchURL}/diagrams/favorite/${props.id}`, {method: 'PUT'})
+        const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'https://giraffeql.io/api';
+        fetch(`${fetchURL}/diagrams/favorite/${props.id}`, {method: 'PUT', headers: {'Content-Type': 'application/json'}})
             .then(res => res.json())
             .then(data => setFavorite(data.diagram.favorite));
     }

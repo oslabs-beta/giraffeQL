@@ -59,8 +59,8 @@ const Diagrams = (props) => {
   }
 
   const deleteDiagram = (id) => {
-    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql-api.herokuapp.com'
-    fetch(`${fetchURL}/diagrams/${id}`, {method: 'DELETE'})
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'https://giraffeql.io/api'
+    fetch(`${fetchURL}/diagrams/${id}`, {method: 'DELETE', headers: {'Content-Type': 'application/json'}})
       .then(res => res.json())
       .then(data => storeDiagrams(data.diagrams));
   }
