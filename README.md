@@ -24,9 +24,10 @@ Users can create new tables, connect columns, and edit data while seeing their c
 - **Sign-in page**: Sign up for an account through GitHub OAuth, or just continue as a guest. Registered users enjoy additional project-saving functionality.
 
 - **Start a new diagram**: Upload an existing PostgreSQL URI to auto-populate your data or start from scratch.
-<img width="500" src="./public/readme/visualize_tables.gif">
+<img width="500" src="./public/frontpage/import.gif">
 
 - **Organize your tables**: Drag-and-drop your new nodes and organize your data to best visualize the architecture of your database.
+<img width="500" src="./public/readme/visualize_tables.gif">
 
 - **Search for nodes**: Search for tables by name to easily find data or relationships among large or cluttered databases.
 
@@ -38,7 +39,7 @@ Users can create new tables, connect columns, and edit data while seeing their c
 - **Add tables/columns**: Notice something missing or just want something new? Create new tables and columns easily.
 
 - **Export your code**: Easily copy your generated code to your clipboard or export as a Javascript file to add to your project.
-<img width="500" src="./public/readme/view_code.gif">
+<img width="500" src="./public/frontpage/codegenerate.gif">
 
 # <image width=30 align="center" src="./public/readme-logo.svg"> **Contributors**
 
