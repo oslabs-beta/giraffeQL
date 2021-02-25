@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 
 module.exports = {
   connectToDB: async (URI) => {
