@@ -1,6 +1,8 @@
 const express = require('express');
 const next = require('next');
 
+const port = parseInt(process.env.PORT, 10) || 3000
+
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 
@@ -27,10 +29,10 @@ app
     server.get('*', (req, res) => handle(req, res));
 
     server.listen(
-      4242,
+      port,
       error => {
         if (error) throw error;
-        console.error('Listening on port 4242');
+        console.error(`Listening on port ${port}`);
       }
     );
 
