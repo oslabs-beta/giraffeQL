@@ -29,16 +29,16 @@ Users can create new tables, connect columns, and edit data while seeing their c
 - **Organize your tables**: Drag-and-drop your new nodes and organize your data to best visualize the architecture of your database.
 
 - **Search for nodes**: Search for tables by name to easily find data or relationships among large or cluttered databases.
-<img width="500" src="./public/readme/search_table.gif">
 
 - **Create connections**: Visualize and modify constraints between column relationships by connecting nodes with one-click.
 
 - **Edit data**: Enter edit mode to change a table's names, fix a mistake, switch data types, or properties.
-<img width="500" src="./public/readme/live_edit.gif">
+<img width="500" src="./public/readme/edit_table.gif">
 
 - **Add tables/columns**: Notice something missing or just want something new? Create new tables and columns easily.
 
 - **Export your code**: Easily copy your generated code to your clipboard or export as a Javascript file to add to your project.
+<img width="500" src="./public/readme/view_code.gif">
 
 # <image width=30 align="center" src="./public/readme-logo.svg"> **Contributors**
 
