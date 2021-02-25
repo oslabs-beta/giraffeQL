@@ -42,10 +42,10 @@ const DiagramModal = (props) => {
       <div id='diagramcontainer'>
 
         <h3>Enter a name:</h3>
-        <input type='text' placeholder={`Name your new diagram!`} val={props.name} onChange={e => props.setName(e.target.value)} />
+        <input type='text' placeholder={`Name your new diagram!`} val={props.name} onChange={e => props.setName(e.target.value)} maxLength="20" />
 
         <h3>(Optional) Enter a description:</h3>
-        <input type='text' placeholder={`What's your database for?`} val={props.description} onChange={e => props.setDescription(e.target.value)} />
+        <input type='text' placeholder={`What's your database for?`} val={props.description} onChange={e => props.setDescription(e.target.value)} maxLength="40" />
 
         <h3 style={{color: '#f54c4c'}} >{props.error == 'access_denied' ? 'Could not verify user, continue as a guest.' : ''}</h3>
         <h3 style={{color: `${props.message === 'error' ? '#f54c4c' : '#2d3748'}`}} >{instructions}</h3>

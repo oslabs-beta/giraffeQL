@@ -1,7 +1,8 @@
+import Image from 'next/image'
+
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
-import Image from 'next/image'
 import ProfileOptions from './ProfileOptions';
 
 import Carot from  './icons/Carot.js'
@@ -25,6 +26,9 @@ const Profile = (props) => {
       return;
     }
     
+    if (!user.hasOwnProperty('displayName') || !user.hasOwnProperty('photos'))
+      return;
+
     if (user.displayName.length > 0) {
       setUsername(user.displayName.split(' ')[0]);
     } else {

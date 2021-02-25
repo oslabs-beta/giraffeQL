@@ -1,19 +1,19 @@
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import Profile from '../components/Profile.js';
 import Giraffe from '../components/icons/Giraffe.js'
 
 const Navbar = () => {
 
+  const router = useRouter();
+
   return (
     <div className='navbar'>
 
-      <Link href='/'>
-        <div className='homebtn'>
-            <Giraffe /> 
-            <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
-        </div>
-      </Link>
+      <div className='homebtn' onClick={() => router.push('/', '', {shallow: true})} >
+          <Giraffe /> 
+          <h1>giraffe<span style={{fontWeight: 'bold'}} >QL</span></h1>
+      </div>
 
       <Profile />
         
@@ -56,6 +56,7 @@ const Navbar = () => {
             height: 39px;
             padding: 8px;
             z-index: 9999999999999999999999999;
+            // box-shadow: 0 4px 5px -1px rgba(0,0,0,0.1), 0 2px 3px -1px rgba(0,0,0,0.06);
         }
 
         #profile{

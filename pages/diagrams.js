@@ -1,13 +1,16 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { useState, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
+
+import getUser from '../controller/getUser.js';
 
 import Navbar from '../components/Navbar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
 import DiagramPreview from '../components/diagrams/DiagramPreview.js';
 
+import { parseCookies } from 'nookies';
 import { css } from "@emotion/core";
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -21,7 +24,28 @@ const Diagrams = (props) => {
 
   const router = useRouter();
 
-  const { user } = useContext(UserContext);
+  const { user, storeUser, logout, diagrams, storeDiagrams } = useContext(UserContext);
+
+  useEffect(() => {
+    
+    //TODO: avoid re-render while still updating diagrams in state
+    if (props.user.hasOwnProperty('user')){
+      if (props.user.user.hasOwnProperty('diagrams')){
+        const newDiagrams = [...props.user.user.diagrams];
+        storeDiagrams(newDiagrams);
+      }
+    }
+
+    if (props.user.authorization === null) return logout();
+    if (props.user.user.username === user.username) return;
+    if (props.user) {
+      storeUser(props.user.user);
+      storeDiagrams(props.user.user.diagrams)
+    }
+    else logout();
+
+  }, []);
+
   const [newDiagram, setNewDiagram] = useState(false)
   const [pageLoading, setPageLoading] = useState(false);
 
@@ -36,7 +60,13 @@ const Diagrams = (props) => {
 
   const deleteDiagram = (id) => {
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql-api.herokuapp.com'
-    fetch(`${fetchURL}/diagrams/${id}`, {method: 'DELETE'});
+    fetch(`${fetchURL}/diagrams/${id}`, {method: 'DELETE'})
+      .then(res => res.json())
+      .then(data => storeDiagrams(data.diagrams));
+  }
+
+  const toggleEdit = (id) => {
+    console.log(id);
   }
 
   const checkURLStatus = () => {
@@ -78,11 +108,11 @@ const Diagrams = (props) => {
           <button onClick={() => setNewDiagram(!newDiagram)} style={{color: '#12b3ab'}} >New Diagram</button>
           <hr />
           <h1>Folders</h1>
-          <button onClick={() => setNewDiagram(!newDiagram)} >My Projects</button>
+          <button >My Projects</button>
           <hr />
           <h1>Quick Start</h1>
-          <button onClick={() => setNewDiagram(!newDiagram)} >Template Diagrams</button>
-          <button onClick={() => setNewDiagram(!newDiagram)} >Example Databases</button>
+          <button >Template Diagrams</button>
+          <button >Example Databases</button>
         </div>
 
         <div id='containerheader'>
@@ -94,7 +124,7 @@ const Diagrams = (props) => {
           </div>
 
           <div id='diagramcontainer'>
-            {!user.diagrams ? '' : user.diagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} />)}
+            {!diagrams.length ? '' : diagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
           </div>
 
         </div>
@@ -191,7 +221,9 @@ const Diagrams = (props) => {
 
         #sort{
 
+          font-size: 12px;
           float: right;
+          margin-right: 8%;
 
           input{
             width: 64px;
@@ -219,9 +251,14 @@ const Diagrams = (props) => {
 
 export default Diagrams;
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(ctx) {
 
   const props = {};
+  const query = ctx.query;
+
+  const { authorization } = parseCookies(ctx);
+  const { token } = ctx.query
+  props.user = await getUser(authorization || token);
   
   if (query.error)
     props.error = query.error;

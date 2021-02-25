@@ -5,14 +5,14 @@
 <h1 align="center">
 <a href='https://www.giraffeql.io'>giraffeql.io</a>
 <br/>
-<img alt="twitter" src="https://img.shields.io/twitter/follow/giraffeQL?label=%40giraffeQL&logoColor=%2357d3af&style=social"></h1>
+<a href='https://twitter.com/intent/follow?screen_name=giraffeQL'><img alt="twitter" src="https://img.shields.io/twitter/follow/giraffeQL?label=%40giraffeQL&logoColor=%2357d3af&style=social"></a></h1>
 </h1>
 
 <p align="center">
   <img alt="license" src="https://img.shields.io/github/license/oslabs-beta/giraffeQL?color=%2357d3af">
   <img alt="issues" src="https://img.shields.io/github/issues-raw/oslabs-beta/giraffeQL?color=yellow">
   <img alt="last commit" src="https://img.shields.io/github/last-commit/oslabs-beta/giraffeQL?color=%2357d3af">
-  <img alt="Repo stars" src="https://img.shields.io/github/stars/oslabs-beta/giraffeQL?logoColor=%2334495e&style=social"> 
+  <a href='https://github.com/oslabs-beta/giraffeQL/stargazers'><img alt="Repo stars" src="https://img.shields.io/github/stars/oslabs-beta/giraffeQL?logoColor=%2334495e&style=social"></a>
 </p>
 
 **giraffeQL** is an open source tool that visualizes your PostgreSQL relationships to easily configure your database for a GraphQL API. In other words, you can drag-and-drop colorful tables and export Javascript!

@@ -1,10 +1,9 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
-import { parseCookies, destroyCookie } from 'nookies';
+import { destroyCookie } from 'nookies';
 
 const ProfileModal = (props) => {
 
@@ -25,19 +24,15 @@ const ProfileModal = (props) => {
   }
 
   return (
-    <div className='optionscontainer' style={{opacity: `${props.expand ? '1' : '0'}`}}>
+    <div className='optionscontainer' style={{opacity: `${props.expand ? '1' : '0'}`, zIndex: `${props.expand ? '9999999999999999' : '-10'}`, pointerEvents: `${props.expand ? 'auto' : 'none'}`}}>
 
       <h1>Account</h1>
       <button>User Settings</button>
-      <Link href='diagrams' >
-        <button>My Diagrams</button>
-      </Link>
+      <button onClick={() => router.push('diagrams', 'diagrams', {shallow: true})} >My Diagrams</button>
       <hr />
       <h1>Support</h1>
       <button>Changelog</button>
-      <Link href='contact' >
-        <button>Contact Us</button>
-      </Link>
+      <button onClick={() => router.push('contact', 'contact', {shallow: true})} >Contact Us</button>
       <hr />
       <button style={{color: '#12b3ab'}} onClick={toggleLogin}>{props.loggedIn ? 'Log Out' : 'Sign In'}</button>
     

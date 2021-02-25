@@ -69,11 +69,12 @@ const NodeInspector = (data) =>{
     }
 
     // New column  
-    const newColumn = () => {
+    const newColumn = async () => {
+
         const column = {
-            name: 'newColumn',
+            name: `newColumn#${columns.length + 1}`,
             dataType: 'character varying',
-            required: true,
+            required: false,
             primaryKey: false
         };
 
@@ -82,11 +83,16 @@ const NodeInspector = (data) =>{
         newColumns.push(column);
 
         addColumns(newColumns);
+
+        const newNode = JSON.parse(JSON.stringify(activeNode))
+        newNode.data.label.props.children.props.columns.push(column);
         
+        await updateNode(newNode);
+
         const target = store.elements.filter(node => !node.id.includes('reactflow')).findIndex(node => node.id === activeNode.id);
 
         // Pushes columns into state. 
-        store.elements.filter(node => !node.id.includes('reactflow'))[target].data.label.props.children.props.columns.push(column)
+        await store.elements.filter(node => !node.id.includes('reactflow'))[target].data.label.props.children.props.columns.push(column)
         
         savechanges();
     }

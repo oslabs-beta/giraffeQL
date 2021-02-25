@@ -20,7 +20,7 @@ const SchemaIDE = (props) => {
 
     // Taking the data from all nodes/elements whenever there is a change and turning them back to original format. 
     useEffect(() => {
-
+        
         const newTables = [];
 
         const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -60,7 +60,7 @@ const SchemaIDE = (props) => {
     // If tables array is changed, outputted schema is refreshed
     useEffect(() => {
         refreshSchema();
-        props.resetUpdate(false);
+        // props.resetUpdate(false);
     }, [tables]);
 
     const refreshSchema = () => {
@@ -86,16 +86,11 @@ const SchemaIDE = (props) => {
 
     return (
 
-        <div style={{ width: '33%', margin: '0' }} >
+        <div id='schemacontainer' >
 
-            <button className='schemabtn' onClick={() => showTable(!expand)} style={{ marginLeft: `${expand ? '0%' : '24.8%'}` }} >{expand ? '>' : '<'}</button>
+            <button className='schemabtn' onClick={() => showTable(!expand)} style={{ marginLeft: `${expand ? '-26.25%' : '0%'}` }} >{expand ? '>' : '<'}</button>
 
             <div id='ide' style={{ opacity: `${expand ? '1' : '0'}` }} >
-
-                <ul>
-                    <li><button id='copy' onClick={() => navigator.clipboard.writeText(document.getElementById('unstyledcode').innerText)} >Copy</button></li>
-                    <li><button id='download' onClick={downloadCode} >Export</button></li>
-                </ul>
 
                 <button id='typedefs' onClick={() => toggleCode(true)} >TypeDefs</button>
                 <button id='resolvers' onClick={() => toggleCode(false)} >Resolvers</button>
@@ -105,13 +100,24 @@ const SchemaIDE = (props) => {
                         activeCode ? typeDefs : resolvers
                 }} /> </code></pre>
 
+                <ul>
+                    <li><button id='copy' onClick={() => navigator.clipboard.writeText(document.getElementById('unstyledcode').innerText)} >Copy</button></li>
+                    <li><button id='download' onClick={downloadCode} >Export</button></li>
+                </ul>
+
                 <pre style={{opacity: '0', width: '0', height: '0'}}><code id='unstyledcode'><div dangerouslySetInnerHTML={{__html: schema.join('') }} /></code></pre>
 
             </div>
 
             <style jsx>{`
 
+                #schemacontainer{
+                    // width: 33%;
+                    // margin: 0;
+                }
+
                 #ide {
+                    position: fixed;
                     height: 100vh;
                     padding: 0px 16px;
                     margin: 0;
@@ -244,7 +250,31 @@ const SchemaIDE = (props) => {
                     }
                 }
 
+                ::-webkit-scrollbar {
+                    width: 5px;
+                    height: 5px;
+                }
                 
+                ::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: #454954;
+                    border-radius: 16px;
+                    border-right: none;
+                    border-left: none;
+                }
+                
+                ::-webkit-scrollbar-track-piece:end {
+                    background: transparent;
+                    margin-bottom: 16px; 
+                }
+                
+                ::-webkit-scrollbar-track-piece:start {
+                    background: transparent;
+                    margin-top: 16px;
+                }
 
             `}</style>
 

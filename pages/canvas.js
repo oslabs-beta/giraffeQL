@@ -5,7 +5,7 @@ import ReactFlow, { removeElements, ReactFlowProvider, getConnectedEdges, isNode
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
-import dagre from 'dagre';
+import getUser from '../controller/getUser.js';
 
 import Node from '../components/canvas/Node.js';
 import NodeInspector from '../components/canvas/NodeInspector.js';
@@ -13,6 +13,9 @@ import DefaultInspector from '../components/canvas/DefaultInspector.js';
 import SchemaIDE from '../components/canvas/SchemaIDE.js';
 import Navbar from '../components/canvas/Navbar.js';
 import DeleteModal from '../components/canvas/DeleteModal.js';
+
+import dagre from 'dagre';
+import { parseCookies } from 'nookies';
 
 // Set our custom node component from Node.js
 const nodeTypes = {
@@ -29,7 +32,15 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const Canvas = (props) => {
 
-  const { user } = useContext(UserContext);
+  const { user, storeUser, logout, diagrams } = useContext(UserContext);
+
+  useEffect(() => {
+    if (props.user.authorization === null) return logout();
+    if (props.user.user.username === user.username) return;
+    if (props.user) storeUser(props.user.user);
+    else logout();
+  }, []);
+
   const [diagramId, setDiagramID] = useState(undefined);
   const [diagramName, setDiagramName] = useState('Untitled-database-diagram');
   const [description, setDescription] = useState(null);
@@ -53,7 +64,7 @@ const Canvas = (props) => {
   const [deleteWarning, toggleWarning] = useState(true);
 
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
-  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null), formatData(elements), updateData(true));
+  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null));
 
   const onElementsRemove = (elementsToRemove) => {
     if (deleteWarning)
@@ -68,7 +79,7 @@ const Canvas = (props) => {
   const createElement = () => {
 
     const defaultColumn = {
-      name: 'newColumn',
+      name: 'newColumn#1',
       dataType: 'character varying',
       required: true,
       primaryKey: true
@@ -97,8 +108,6 @@ const Canvas = (props) => {
     selectNode(column);
     
     setNodeCount(index + 1);
-    formatData(elements);
-    updateData(true);
 
   };
   
@@ -120,21 +129,24 @@ const Canvas = (props) => {
 
   useEffect(() => {
 
-    if (!updated || instance === null)
+    if (!updated)
       return;
+
+    console.log(formattedTables);
+    console.log('is this entering');
 
     const body = {
       user: user._id,
       diagramId,
-      diagramName: props.name,
-      description: props.description,
+      diagramName,
+      description,
       tables: formattedTables
     };
 
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
       .then(res => res.json())
-      .then(data => setDiagramID(data.diagram._id));
+      .then(data => (setDiagramID(data.diagram._id), updateData(false), console.log('sucess')));
 
   }, [updated]);
 
@@ -219,9 +231,6 @@ const Canvas = (props) => {
 
     newElements.splice(target, 1, node);
     setElements(newElements);
-
-    formatData(elements);
-    updateData(true);
   };
 
   //Runs only once when this page renders
@@ -238,14 +247,16 @@ const Canvas = (props) => {
 
     if (props.hasOwnProperty('diagramId')){
 
-      const diagram = user.diagrams[user.diagrams.findIndex(diagram => diagram._id === props.diagramId)];
+      const diagram = diagrams[diagrams.findIndex(diagram => diagram._id === props.diagramId)];
 
       toggleLayout(true);
 
       setDiagramID(props.diagramId)
       setDiagramName(diagram.diagramName);
-      if (props.hasOwnProperty('description'))
+      if (diagram.hasOwnProperty('description'))
         setDescription(diagram.description);
+
+      console.log(diagram.diagramName);
 
       diagram.tables.forEach(table => {
         imports.push(table);
@@ -323,11 +334,26 @@ const Canvas = (props) => {
     setElements([...newElements]);
     setNodeCount(imports.length);
 
-    updateData(true);
-
   }, []);
+
+  useEffect(() => {
+
+    if (!elements.length)
+      return;
+    
+    formatData(elements);
+
+  }, [elements]);
+
+  useEffect(() => {
+
+    if (!formattedTables.length)
+      return;
+
+    updateData(true);
+  }, [formattedTables]);
   
-  // Toggle betwween defaultInspector and nodeInspector when a node is selected.
+  // Toggle between defaultInspector and nodeInspector when a node is selected.
   const inspector =  !activeNode ? <DefaultInspector selectNode={selectNode} createNode={createElement} /> : <NodeInspector data={activeNode} nodeValueChange={nodeValueChange} startEdit={startEdit} toggleStartEdit={toggleStartEdit} />;
   const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} toggleWarning={toggleWarning} />;
 
@@ -445,17 +471,28 @@ const Canvas = (props) => {
 }
 
 //Runs on page load
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(ctx) {
 
-  if (!query.hasOwnProperty('diagram') && !query.hasOwnProperty('data'))
-    return {
-      props: {name: query.name, description: query.description}, 
-    }
+  const props = {};
+  const query = ctx.query;
+
+  const { authorization } = parseCookies(ctx);
+  const { token } = ctx.query
+  props.user = await getUser(authorization || token);
+
+  if (!query.hasOwnProperty('diagram') && !query.hasOwnProperty('data')){
+
+    if (query.hasOwnProperty('name')) props.name = query.name;
+    if (query.hasOwnProperty('description')) props.description = query.description;
+
+    return {props};
+  }
 
   if (query.hasOwnProperty('diagram')){
-    return {
-      props: {diagramId: query.diagram}, 
-    }
+
+    props.diagramId = query.diagram;
+
+    return {props};
   }
 
   //We grab the URI directly from the page's URL (in the context's query)
@@ -487,10 +524,12 @@ export async function getServerSideProps({ query }) {
     }
   }
 
-  return {
-    //The data we fetch from the database gets passed into our component as props
-    props: {data, name: query.name, description: query.description}, 
-  }
+  props.data = data;
+
+  if (query.hasOwnProperty('name')) props.name = query.name;
+  if (query.hasOwnProperty('description')) props.description = query.description;
+
+  return {props};
 }
 
 export default Canvas;

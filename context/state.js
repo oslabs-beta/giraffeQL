@@ -5,7 +5,7 @@ export const UserContext = createContext();
 const Provider = (props) => {
 
   const [user, setUser] = useState({});
-  const [diagram, setDiagram] = useState({});
+  const [diagrams, setDiagrams] = useState([]);
   
   const storeUser = user => {
     setUser(user);
@@ -15,12 +15,12 @@ const Provider = (props) => {
     setUser({});
   }
 
-  const loadDiagram = newDiagram => {
-    setDiagram(newDiagram);
+  const storeDiagrams = diagrams => {
+    setDiagrams(diagrams);
   }
 
   return (
-    <UserContext.Provider value={{ user, storeUser, logout, loadDiagram }} >
+    <UserContext.Provider value={{ user, storeUser, logout, diagrams, storeDiagrams }} >
       {props.children}
     </UserContext.Provider>
   );
