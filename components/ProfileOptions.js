@@ -28,7 +28,7 @@ const ProfileModal = (props) => {
     <div className='optionscontainer' style={{opacity: `${props.expand ? '1' : '0'}`, zIndex: `${props.expand ? '9999999999999999' : '-10'}`, pointerEvents: `${props.expand ? 'auto' : 'none'}`}}>
 
       <h1>Account</h1>
-      {user.hasOwnProperty('username') ? <button onClick={() => router.push('usersettings', `${user.username}`, {shallow: true})} >User Settings</button> : ''}
+      {user.hasOwnProperty('username') ? <button onClick={() => router.push('usersettings', 'usersettings', {shallow: true})} >User Settings</button> : ''}
       <button onClick={() => router.push('diagrams', 'diagrams', {shallow: true})} >My Diagrams</button>
       <hr />
       <h1>Support</h1>

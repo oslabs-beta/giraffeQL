@@ -15,8 +15,9 @@ import { css } from "@emotion/core";
 import BeatLoader from "react-spinners/BeatLoader";
 
 const override = css`
+  position: fixed;
   display: block;
-  margin-top: 10px;
+  bottom: 5%;
   border-color: #12b3ab;
 `;
 
@@ -75,7 +76,7 @@ const Diagrams = (props) => {
 
   const selectDiagram = (id) => {
     const href = {pathname: 'canvas', query: {diagram: id, name, description}};
-    router.push(href, 'canvas');
+    router.push(href, 'diagrams');
   }
 
   const deleteDiagram = (id) => {
@@ -98,12 +99,12 @@ const Diagrams = (props) => {
 
     const href = { pathname: '/canvas', query: { data: [path], name, description } }
 
-    router.push(href)
+    router.push(href, 'diagrams')
   }
 
   const newProject = () => {
     const href = { pathname: '/canvas', query: { name, description } }
-    router.push(href)
+    router.push(href, 'diagrams')
   }
 
   const sortModes = ['newest', 'oldest', 'favorites'];
@@ -157,7 +158,7 @@ const Diagrams = (props) => {
           <hr />
           <h1>Quick Start</h1>
           <button >Template Diagrams</button>
-          <button >Example Databases</button>
+          <button onClick={() => router.push({ pathname: '/canvas', query: { data: ['postgres://lfawycfl:yc837PGh-S4jP4YIHJlv6Ldh7C7P2xJw@suleiman.db.elephantsql.com:5432/lfawycfl'], name, description } }, 'canvas')} >Example Databases</button>
         </div>
 
         <div id='containerheader'>
@@ -282,7 +283,7 @@ const Diagrams = (props) => {
           justify-content: center;
           // background-color: #edf2f7;
           width: 98%;
-          height: 88%;
+          height: 85%;
           flex-wrap: wrap;
           overflow: auto;
         }
