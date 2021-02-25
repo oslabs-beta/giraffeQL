@@ -120,7 +120,10 @@ const SchemaIDE = (props) => {
                     position: fixed;
                     height: 100vh;
                     padding: 0px 16px;
-                    margin: 0;
+                    margin-right: -5px;
+                    margin-left: 0;
+                    margin-top: 0;
+                    margin-bottom: 0;
                     right: 0;
                     background-color: white;
                     z-index: 999999998;
@@ -154,22 +157,25 @@ const SchemaIDE = (props) => {
                     justify-content: space-around;
                     margin: 0;
 
+
                     li{
                         margin: 0;
                         
                         button{
                           transition: 0s;
                           position: relative;
-                          margin-top: 1.25em;
+                          margin-top: .5em;
+                          margin-left: -.75em;
                           border: none;
-                          height: auto;
-                          width: 7em;
+                          height: 3em;
+                          width: 11em;
                           color: white;
                           background-color: #12b3ab;
                           padding: 8px;
                           outline: none;
                           box-shadow: inset 0px -2px 0px darken(#12b3ab, 20%), 0px -1px 0px #12b3ab;
                           z-index: 99999999999999999999;
+                          border-radius: 8px;
                           
                           &:focus{
                             outline: none;
@@ -186,7 +192,9 @@ const SchemaIDE = (props) => {
                 #download {
                   background-color: #9b5de5;
                   box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5;
-                  margin-left: -1em;
+                  margin-left: 2em;
+                  margin-right: 1.2em;
+                  
     
                   &:hover{
                     box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%);
@@ -199,7 +207,7 @@ const SchemaIDE = (props) => {
                     border-radius: 8px;
                     overflow: auto;
                     height: 80vh;
-                    width: 333px;
+                    width: 350px;
                     display: block;
                     background: #1E1E1E;
                     font-size: 11px;
