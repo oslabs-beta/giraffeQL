@@ -29,9 +29,11 @@ const Diagrams = (props) => {
   useEffect(() => {
     
     //TODO: avoid re-render while still updating diagrams in state
-    if (props.user.user.hasOwnProperty('diagrams')){
-      const newDiagrams = [...props.user.user.diagrams];
-      storeDiagrams(newDiagrams);
+    if (props.user.hasOwnProperty('user')){
+      if (props.user.user.hasOwnProperty('diagrams')){
+        const newDiagrams = [...props.user.user.diagrams];
+        storeDiagrams(newDiagrams);
+      }
     }
 
     if (props.user.authorization === null) return logout();

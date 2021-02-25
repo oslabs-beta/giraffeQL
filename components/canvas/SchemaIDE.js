@@ -250,7 +250,31 @@ const SchemaIDE = (props) => {
                     }
                 }
 
+                ::-webkit-scrollbar {
+                    width: 5px;
+                    height: 5px;
+                }
                 
+                ::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: #454954;
+                    border-radius: 16px;
+                    border-right: none;
+                    border-left: none;
+                }
+                
+                ::-webkit-scrollbar-track-piece:end {
+                    background: transparent;
+                    margin-bottom: 16px; 
+                }
+                
+                ::-webkit-scrollbar-track-piece:start {
+                    background: transparent;
+                    margin-top: 16px;
+                }
 
             `}</style>
 

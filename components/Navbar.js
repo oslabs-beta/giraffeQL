@@ -56,6 +56,7 @@ const Navbar = () => {
             height: 39px;
             padding: 8px;
             z-index: 9999999999999999999999999;
+            // box-shadow: 0 4px 5px -1px rgba(0,0,0,0.1), 0 2px 3px -1px rgba(0,0,0,0.06);
         }
 
         #profile{
