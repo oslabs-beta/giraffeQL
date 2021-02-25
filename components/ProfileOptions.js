@@ -18,7 +18,7 @@ const ProfileModal = (props) => {
       logout();
       router.push('/');
     } else {
-      router.push(process.env.NODE_ENV === 'development' ? `http://localhost:3001/auth/github` : `https://giraffeql-api.herokuapp.com/auth/github`);
+      router.push(process.env.NODE_ENV === 'development' ? `http://localhost:3000/auth/github` : `https://giraffeql.io/auth/github`);
     }
 
   }

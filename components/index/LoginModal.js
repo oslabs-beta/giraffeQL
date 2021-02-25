@@ -18,7 +18,7 @@ const LoginModal = (props) => {
             <div id='homecontainer'>
 
                 <div id='btncontainer'>
-                    <Link href={process.env.NODE_ENV === 'development' ? `http://localhost:3001/auth/github` : `https://giraffeql-api.herokuapp.com/auth/github`}>
+                    <Link href={process.env.NODE_ENV === 'development' ? `http://localhost:3000/auth/github` : `https://giraffeql.io/auth/github`}>
                     <button><span>Sign in With GitHub<GitHub /></span></button>
                     </Link>
 
