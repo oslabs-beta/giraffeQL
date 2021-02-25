@@ -36,8 +36,6 @@ const DefaultInspector = (props) => {
 
             <style jsx>{`
 
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
-
                 *{
                     font-family: 'Inter', sans-serif;
                 }

@@ -202,6 +202,7 @@ const SchemaIDE = (props) => {
                     width: 333px;
                     display: block;
                     background: #1E1E1E;
+                    font-size: 11px;
                     // text-overflow: ellipsis;
                     // white-space: nowrap;
                 }

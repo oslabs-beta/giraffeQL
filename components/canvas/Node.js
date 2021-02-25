@@ -100,16 +100,10 @@ export default memo(({ data }) => {
 
             <style jsx>{`
 
-            @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
-            @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700&display=swap');
-
                 *{
                     font-size: 24px;
                     transition: all .6s ease;
                     font-family: 'Inter', sans-serif;
-                    // font-family: 'Lato', sans-serif;
-                    // font-family: 'Permanent Marker', cursive;
                 }
 
                 .node{

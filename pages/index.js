@@ -199,7 +199,6 @@ const Home = (props) => {
 
       <style jsx>{`
 
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500;700&display=swap');
 
         *{

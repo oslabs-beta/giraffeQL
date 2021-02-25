@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { useContext } from 'react';
@@ -27,12 +28,17 @@ const ProfileModal = (props) => {
     <div className='optionscontainer' style={{opacity: `${props.expand ? '1' : '0'}`, zIndex: `${props.expand ? '9999999999999999' : '-10'}`, pointerEvents: `${props.expand ? 'auto' : 'none'}`}}>
 
       <h1>Account</h1>
-      <button>User Settings</button>
+      <button onClick={() => router.push('settings', 'settings', {shallow: true})} >User Settings</button>
       <button onClick={() => router.push('diagrams', 'diagrams', {shallow: true})} >My Diagrams</button>
       <hr />
       <h1>Support</h1>
-      <button>Changelog</button>
-      <button onClick={() => router.push('contact', 'contact', {shallow: true})} >Contact Us</button>
+      <Link href='https://github.com/oslabs-beta/giraffeQL'>
+        <button>Changelog</button>
+      </Link>
+      <Link href='https://github.com/oslabs-beta/giraffeQL/issues'>
+        <button>Report an Issue</button>
+      </Link>
+      {/*<button onClick={() => router.push('contact', 'contact', {shallow: true})} >Contact Us</button>*/}
       <hr />
       <button style={{color: '#12b3ab'}} onClick={toggleLogin}>{props.loggedIn ? 'Log Out' : 'Sign In'}</button>
     

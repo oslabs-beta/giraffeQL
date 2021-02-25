@@ -88,8 +88,6 @@ const ColumnInspector = (props) => {
 
             <style jsx>{`
 
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
-
                 *{
                     font-size: 9px;
                     transition: all 0s;

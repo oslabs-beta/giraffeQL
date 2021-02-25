@@ -24,9 +24,10 @@ const Contact = (props) => {
                 
                 <div id='contactcontainer'>
 
-                    <input type='text' val={contactMessage} onChange={(e)=>writeMessage(e.target.value)} />
+                    <h2>Coming soon!</h2>    
 
-                    <button id='submitbtn'><span>Submit</span></button>
+                    {/*<input type='text' val={contactMessage} onChange={(e)=>writeMessage(e.target.value)} />*/}
+                    {/*<button id='submitbtn'><span>Submit</span></button>*/}
                     
                 </div>
 

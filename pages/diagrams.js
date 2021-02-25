@@ -55,7 +55,7 @@ const Diagrams = (props) => {
 
   const selectDiagram = (id) => {
     const href = {pathname: 'canvas', query: {diagram: id, name, description}};
-    router.push(href, 'diagrams');
+    router.push(href, 'canvas');
   }
 
   const deleteDiagram = (id) => {
@@ -136,8 +136,6 @@ const Diagrams = (props) => {
       {pageLoading ? <BeatLoader id='beatloader' css={override} color='#12b3ab' pageLoading={pageLoading} size={20} /> : null}
 
       <style jsx>{`
-
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap');
 
         *{
           font-family: 'Inter', sans-serif;
