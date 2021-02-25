@@ -33,20 +33,20 @@
     "highlight.js": "^10.6.0",
     "ignore-loader": "^0.1.2",
     "isomorphic-fetch": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mongoose": "^5.11.18",
     "next": "^10.0.6",
     "nookies": "^2.5.2",
     "passport": "^0.4.1",
+    "passport-github": "^1.1.0",
     "pg": "^8.5.1",
     "pluralize": "^8.0.0",
     "react": "^17.0.1",
     "react-dom": "17.0.1",
     "react-flow-renderer": "^8.7.0",
     "react-spinners": "^0.10.6",
-    "sass": "^1.32.6",
-    "jsonwebtoken": "^8.5.1",
-    "passport-github": "^1.1.0"
+    "sass": "^1.32.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",
