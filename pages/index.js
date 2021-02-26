@@ -73,11 +73,11 @@ const Home = (props) => {
         <link rel="shortcut icon" href="/favicon.png" />
       </Head>
 
-      {/*<div id='scroll' style={{opacity: scrollOpacity}}>scroll down for more<br/>˅</div>*/}
+      {/*<div id='scroll' className={` ${s1 ? 'scrollfade' : ''}`} >hint: scroll down for more</div>*/}
 
       {loginModal}
       
-      <div id='preventClick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${showModal ? '50' : '-10'}`, backgroundColor: `${showModal ? 'rgba(0,0,0,.5)' : 'transparent'}`}} />
+      <div id='preventClick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${showModal ? '50' : '-10'}`, backgroundColor: `${showModal ? 'rgba(0,0,0,.25)' : 'transparent'}`}} />
 
       <div id='blur' style={{filter: `${showModal ? 'blur(5px)' : ''}`}}>
       
@@ -235,9 +235,27 @@ const Home = (props) => {
           position: fixed;
           z-index: 5;
           color: white;
-          margin-left: 45%;
-          margin-top: 40%;
+          margin-left: 1%;
+          margin-top: 42%;
           user-select: none;
+          opacity: 0;
+
+          animation: scrollfadein 1s forwards;
+          animation-delay: 3s;
+        }
+
+        #scroll.scrollfade{
+          animation: scrollfadeout 1s forwards;
+        }
+
+        @keyframes scrollfadein {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+
+        @keyframes scrollfadeout {
+          from { opacity: 1; }
+          to   { opacity: 0; }
         }
 
         section{
@@ -522,6 +540,54 @@ const Home = (props) => {
           &:hover{
             transform: scale(1.1);
           }
+        }
+
+        @media screen and (max-width: 700px) {
+
+          #logo{
+            transform: scale(.75);
+          }
+
+          #btncontainer{
+            left: 33% !important;
+          }
+
+          #line{
+            opacity: 0 !important;
+          }
+
+          .text {
+
+            width: 80% !important;
+            text-align: center;
+            margin: 0% !important;
+            margin-top: 10% !important;
+            margin-left: 10% !important;
+
+            h2{
+              font-size: 24px !important;
+            }
+
+            h3{
+              font-size: 12px !important;
+            }
+          }
+
+          .images{
+            width: 80% !important;
+            margin: 0% !important;
+            margin-left: 10% !important;
+          }
+
+          #aboutus{
+            transform: scale(.75);
+          }
+  
+          .githubpic{
+            clip-path: circle(32px at center);
+            margin: 2px;
+          }
+
         }
 
       `}</style>

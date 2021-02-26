@@ -26,9 +26,10 @@ const DiagramPreview = (props) => {
     return (
         <div className='diagram'>
 
-            <button className='optionstoggle' onClick={()=> toggleOptions(!options)}>{`...`}</button>   <PreviewOptions toggleOptions={toggleOptions} id={props.id} toggleEdit={props.toggleEdit} deleteDiagram={props.deleteDiagram} expanded={options} />
+            <button className='optionstoggle' onClick={()=> toggleOptions(!options)}>{`...`}</button>
+            <PreviewOptions toggleOptions={toggleOptions} id={props.id} toggleEdit={props.toggleEdit} deleteDiagram={props.deleteDiagram} expanded={options} />
 
-            <div className='diagramname' style={{backgroundColor: `${colors[props.index % colors.length]}`}} onClick={() => props.selectDiagram(props.id)} ></div>
+            <div className='header' style={{backgroundColor: `${colors[props.index % colors.length]}`}} onClick={() => props.selectDiagram(props.id)} ></div>
 
             <div className='previewcontainer' onClick={() => props.selectDiagram(props.id)}>
                 <Image 
@@ -38,11 +39,13 @@ const DiagramPreview = (props) => {
                 />
             </div>
 
-            <div className='nameandstar' >
-                <div className='dgname'>{props.name}</div>
+            <div className='contents'>
+                <div className='nameandstar' >
+                    <div className='dgname'>{props.name}</div>
 
-                <div className='star' onClick={toggleFavorite} >
-                    <svg width={24} height={24} viewBox="0 0 24 24" ><path fill={`${favorite ? '#0373fc' : 'transparent' }`} d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>
+                    <div className='star' onClick={toggleFavorite} >
+                        <svg width={24} height={24} viewBox="0 0 24 24" ><path fill={`${favorite ? '#0373fc' : 'transparent' }`} d="M12 .587l3.668 7.568L24 9.306l-6.064 5.828 1.48 8.279L12 19.446l-7.417 3.967 1.481-8.279L0 9.306l8.332-1.151z" /></svg>
+                    </div>
                 </div>
             </div>
 
@@ -56,40 +59,37 @@ const DiagramPreview = (props) => {
                 }
 
                 .diagram{
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    position: relative;
                     width: 250px;
                     height: 200px;
-                    // background-color: #FAFAFA;
                     background-color: white;
                     border-radius: 8px;
                     border: 2px solid #edf2f7;
                     margin: 16px;
-                    // filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.15));
+                    position: relative;
 
                     &:hover{
-                        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.05));
+                        box-shadow: 0px 2px 8px -2px rgba(0,0,0,.15);
+                        cursor: pointer;
+                    }
+
+                    &:hover > .optionstoggle{
+                        opacity: 1;
                     }
                 }
 
-                .diagramname{
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                .header{
                     position: absolute;
-                    font-size: 16px;
-                    font-weight: 700;
-                    top: -1%;
-                    left: -1%;
-                    right: -1%;
+                    margin-top: -2px;
+                    margin-left: -2px;
+                    width: 246px;;
                     text-align: center;
                     padding: 4px;  
-                    color: black;
                     border-top-left-radius: 8px;
                     border-top-right-radius: 8px;
-                    // box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
+                }
+
+                .contents{
+                    margin-top: 5%;
                 }
 
                 .nameandstar{
@@ -104,7 +104,9 @@ const DiagramPreview = (props) => {
                     color: #2e3748;
                     margin: 0px 8px;
                     overflow: hidden;
-                    // word-wrap: break-word;
+                    text-overflow:ellipsis;
+                    white-space:nowrap;
+                    overflow: hidden;
                 }
 
                 .dgdesc{
@@ -113,8 +115,9 @@ const DiagramPreview = (props) => {
                     color: #6f8195;
                     margin: 0px 8px;
                     overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
+                    text-overflow:ellipsis;
+                    white-space:nowrap;
+                    overflow: hidden;
                 }
 
                 .previewcontainer{
@@ -127,11 +130,11 @@ const DiagramPreview = (props) => {
 
                 .optionstoggle{
                     display: flex;
-                    // align-items: center;
+                    line-height: 15px;
                     justify-content: center;
-                    position: fixed;
-                    top: 12px;
-                    right: 6px;
+                    position: absolute;
+                    margin-top: 8px;
+                    margin-left: 224px;
                     width: 24px;
                     height: 24px;
                     font-size: 16px;
@@ -142,6 +145,7 @@ const DiagramPreview = (props) => {
                     border-radius: 4px;
                     color: #fbfdfd;
                     cursor: pointer;
+                    opacity: 0;
                 }
 
                 .star{

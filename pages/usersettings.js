@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image'
+import { useRouter } from 'next/router';
 
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
@@ -8,9 +9,11 @@ import getUser from '../controller/getUser.js';
 
 import Navbar from '../components/Navbar.js';
 
-import { parseCookies } from 'nookies';
+import { parseCookies, destroyCookie } from 'nookies';
 
 const Settings = (props) => {
+
+    const router = useRouter();
 
     const { user, storeUser, logout } = useContext(UserContext);
 
@@ -46,6 +49,13 @@ const Settings = (props) => {
     
     }, [user]);
 
+    const deleteAccount = () => {
+        
+        destroyCookie({}, 'authorization');
+        logout();
+        router.push('/');
+    }
+
     return (
         <div id='settings'>
 
@@ -65,7 +75,7 @@ const Settings = (props) => {
                     <button className='settingsbtn' >Projects</button>
                     <hr className='seperator' />
                     <h4>PERMANENT</h4>
-                    <button className='settingsbtn' style={{color: '#ff6b6b'}} >Delete Account</button>
+                    <button onClick={deleteAccount} className='settingsbtn' style={{color: '#ff6b6b'}} >Delete Account</button>
                 </div>
 
                     <div className='settingsmodal'>

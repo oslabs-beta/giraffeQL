@@ -64,8 +64,9 @@ const Navbar = (props) => {
                 .homebtn{
                     display: flex;
                     width: 12.5%;
+
                     &:hover{
-                        background-color: #5f81e7;
+                        // background-color: #5f81e7;
                         cursor: pointer;
                     }
                 }

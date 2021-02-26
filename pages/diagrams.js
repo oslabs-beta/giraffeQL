@@ -160,7 +160,11 @@ const Diagrams = (props) => {
       
       <Navbar />
 
-      <div id='browsediagrams'>
+      {diagrammodal}
+
+      <div id='preventClick' onClick={() => setNewDiagram(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${newDiagram ? '9' : '-10'}`, backgroundColor: `${newDiagram ? 'rgba(0,0,0,.25)' : 'transparent'}`}} />
+
+      <div id='browsediagrams' style={{filter: `${newDiagram ? 'blur(5px)' : ''}`, transition: '0s'}} >
 
         <div id='diagramoptions'>
           <div className='header' style={{borderTopLeftRadius: '8px', borderRight: '2px solid #7c81cf'}} >Options</div>
@@ -197,8 +201,6 @@ const Diagrams = (props) => {
 
       </div>
 
-      {diagrammodal}
-
       {pageLoading ? <BeatLoader id='beatloader' css={override} color='#12b3ab' pageLoading={pageLoading} size={20} /> : null}
 
       <style jsx>{`
@@ -224,15 +226,13 @@ const Diagrams = (props) => {
           box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06), 0px 0px 16px 0px rgba(0,0,0,.1);
           border-radius: 8px;
           width: 80%;
-          height: 575px; 
+          height: 80%; 
           background-color: white;
-          z-index: 10;
           text-align: center;
           vertical-align: center;
         }
         
         #diagramoptions{
-          // background-color: red;
           width: 30%;
         }
 
@@ -296,7 +296,6 @@ const Diagrams = (props) => {
           }
 
           select{
-            // width: 64px;
             border: none;
             background-color: transparent;
 
