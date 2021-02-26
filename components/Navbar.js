@@ -24,7 +24,7 @@ const Navbar = () => {
           font-family: 'Inter', sans-serif;
           font-weight: 300;
           font-size: 16px;
-          transition: all .3s;
+          transition: all 0s;
         }
 
         h1 {
@@ -38,8 +38,9 @@ const Navbar = () => {
             width: 12.5%;
             color: #edf2f7;
             padding: 8px;
-                        &:hover{
-                background-color: #5f81e7;
+            
+            &:hover{
+                // background-color: #5f81e7;
                 cursor: pointer;
             }
         }

@@ -16,16 +16,14 @@ const PreviewOptions = (props) => {
                 .optioncontainer{
                     display: flex;
                     flex-direction: column;
-                    position: fixed;
-                    top: 0;
-                    right: 0;
+                    position: absolute;
+                    margin-left: 256px;
                     margin-right: -25%;
                     padding: 0px 4px;
                     width: 50px;
                     height: 40px;
                     border-radius: 4px;
                     background-color: #2d3748;
-                    z-index: 9999999999999999999999999999999999999999999999999999999999999999;
 
                     &:before {
                         content:"";
@@ -38,14 +36,12 @@ const PreviewOptions = (props) => {
                         border-color: transparent #2d3748 transparent transparent;
                         border-style: solid;
                     }
-
                 }
 
                 h1{
                     color: #a0afc0;
                     margin: 0;
                     margin-top: 2px;
-                    // margin-bottom: 8px;
                 }
 
                 button{
