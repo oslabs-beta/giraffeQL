@@ -33,6 +33,9 @@ const Diagrams = (props) => {
   const [currentSortMode, setSortMode] = useState('newest');
   const [currentSortDate, setSortDate] = useState('last updated');
 
+  const [showFolders, expandFolders] = useState(false);
+  const [folders, setFolders] = useState([1, 1, 1]);
+
   useEffect(() => {
     
     if (props.user.hasOwnProperty('user')){
@@ -170,10 +173,16 @@ const Diagrams = (props) => {
           <div className='header' style={{borderTopLeftRadius: '8px', borderRight: '2px solid #7c81cf'}} >Options</div>
           <h1>Projects</h1>
           <button onClick={() => setNewDiagram(!newDiagram)} style={{color: '#12b3ab'}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image src='/plus.svg' width={10} height={10} /></div> New Diagram</div></button>
+          
           <hr />
+
           <h1>Folders</h1>
-          <button ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/folder.svg' width={10} height={10} /></div> My Projects</div></button>
+          <button onClick={() => expandFolders(!showFolders)} style={{borderBottom: '1px solid #e1e8f0'}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/folder.svg' width={10} height={10} /></div> My Projects</div></button>
+          
+          {!showFolders ? '' : <ul id='folder'>{folders.map(folder => <li><button>Folder</button></li>)}<button style={{color: '#12b3ab'}}><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image src='/plus.svg' width={10} height={10} /></div> New Folder</div></button></ul>}
+
           <hr />
+
           <h1>Quick Start</h1>
           <button >Template Diagrams</button>
           <button onClick={() => router.push({ pathname: '/canvas', query: { data: ['postgres://lfawycfl:yc837PGh-S4jP4YIHJlv6Ldh7C7P2xJw@suleiman.db.elephantsql.com:5432/lfawycfl'], name: 'Star Wars Example', description: 'A long time ago, in a galaxy far away...' } }, 'canvas')} >Example Databases</button>
@@ -194,7 +203,7 @@ const Diagrams = (props) => {
           </div>
 
           <div id='diagramcontainer'>
-            {!diagrams.length ? '' : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
+            {!diagrams.length ? <h1>'Nothing here... yet!'</h1> : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
           </div>
 
         </div>
@@ -234,6 +243,38 @@ const Diagrams = (props) => {
         
         #diagramoptions{
           width: 30%;
+        }
+
+        #folder{
+          margin: 0;
+          max-height: 25%;
+          overflow: auto;
+
+          ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+          }
+          
+          ::-webkit-scrollbar-track {
+              background: transparent;
+          }
+          
+          ::-webkit-scrollbar-thumb {
+              background: #454954;
+              border-radius: 16px;
+              border-right: none;
+              border-left: none;
+          }
+          
+          ::-webkit-scrollbar-track-piece:end {
+              background: transparent;
+              margin-bottom: 16px; 
+          }
+          
+          ::-webkit-scrollbar-track-piece:start {
+              background: transparent;
+              margin-top: 16px;
+          }
         }
 
         .header{
