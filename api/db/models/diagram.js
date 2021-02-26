@@ -40,6 +40,15 @@ const diagramSchema = new Schema({
   ],
   favorite: {
     type: "Boolean"
+  },
+  imageUrl: {
+    type: "String"
+  },
+  folder: {
+    type: "String"
+  },
+  color: {
+    type: "String"
   }
 });
 

@@ -1,24 +1,6 @@
 const Diagram = require('../models/diagram');
 
 module.exports = {
-  addDiagram: (req, res, next) => {
-    try {
-      const { user, diagramName, tables, position, description } = req.body;
-      Diagram.create({
-        user: user,
-        diagramName: diagramName,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        reactFlowData: tables,
-        position: position
-      }).then((data) => {
-        res.locals.diagram = data;
-        return next();
-      });
-    } catch(err) {
-      return next(err);
-    } 
-  },
   getAllDiagrams: (req, res, next) => {
     try {
       let user;
@@ -48,17 +30,22 @@ module.exports = {
     }
     
   },
-  updateDiagram: (req, res, next) => {
+  addOrUpdateDiagram: (req, res, next) => {
     try {
-      const { diagramId, user, diagramName, tables, description } = req.body;
+      const { diagramId, user, diagramName, tables, description, imageUrl, folder, color } = req.body;
       if (diagramId) {
+        console.log(imageUrl);
         Diagram.findOneAndUpdate(
           { _id: diagramId },
           {
             user: user,
             diagramName: diagramName,
             updatedAt: Date.now(),
-            tables: tables
+            tables: tables,
+            description: description,
+            imageUrl: imageUrl,
+            folder: folder,
+            color: color
           },
           {
             new: true,
@@ -69,7 +56,8 @@ module.exports = {
             return next();
           })
       } else {
-        const { user, diagramName, tables, description } = req.body;
+        const { user, diagramName, tables, description, imageUrl, folder, color } = req.body;
+        console.log(imageUrl);
         Diagram.create({
           user: user,
           diagramName: diagramName,
@@ -77,7 +65,10 @@ module.exports = {
           createdAt: Date.now(),
           updatedAt: Date.now(),
           tables: tables,
-          favorite: false
+          favorite: false,
+          imageUrl: imageUrl || null,
+          folder: folder || null,
+          color: color || null
         }).then((data) => {
           res.locals.diagram = data;
           return next();
