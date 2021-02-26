@@ -42,4 +42,8 @@ router.get('/', async (req, res, next) => {
         res.status(200).json(data)
     });
 
+router.delete('/', 
+    userService.deleteUser,
+    (req, res) => res.sendStatus(200));
+
 module.exports = router;

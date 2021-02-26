@@ -22,5 +22,13 @@ module.exports = {
   },
   findById: async (id) => {
     return User.findOne({ oAuthId: id });
+  },
+  deleteUser: (req, res, next) => {
+    User.findOneAndDelete({ oAuthId: req.user.id })
+      .then((data) => {
+        if (!data) res.status(203).send('no user found')
+        return next();
+      })
+      .catch((err) => next(err))
   }
 };
