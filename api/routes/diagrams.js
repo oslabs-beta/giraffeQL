@@ -3,13 +3,6 @@ const diagramController = require('../db/services/diagrams');
 
 const router = express.Router();
 
-router.post('/',
-  diagramController.addDiagram,
-  (req, res) => res.status(200).json({
-    diagrams: res.locals.diagram
-  })
-)
-
 router.get('/:user',
   diagramController.getAllDiagrams,
   (req, res) => res.status(200).json({
@@ -30,7 +23,7 @@ router.put('/favorite/:diagramId',
   }));
 
 router.put('/',
-  diagramController.updateDiagram,
+  diagramController.addOrUpdateDiagram,
   (req, res) => res.status(200).json({
     diagram: res.locals.diagram
   }));
