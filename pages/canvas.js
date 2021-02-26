@@ -16,6 +16,7 @@ import DeleteModal from '../components/canvas/DeleteModal.js';
 
 import dagre from 'dagre';
 import { parseCookies } from 'nookies';
+import html2canvas from 'html2canvas';
 
 // Set our custom node component from Node.js
 const nodeTypes = {
@@ -389,7 +390,38 @@ const Canvas = (props) => {
 
     repackageData(newTables);
 
+    if (diagramId === undefined) return;
+
+    html2canvas(document.getElementById('rf')).then(function(canvas) {
+      // saveAs(canvas.toDataURL(), `${diagramId}.png`);
+    });
+
   }
+
+  const saveAs = (uri, filename) => {
+
+    var link = document.createElement('a');
+
+    if (typeof link.download === 'string') {
+
+        link.href = uri;
+        link.download = filename;
+
+        //Firefox requires the link to be in the body
+        document.body.appendChild(link);
+
+        //simulate click
+        link.click();
+
+        //remove the link when done
+        document.body.removeChild(link);
+
+    } else {
+
+        window.open(uri);
+
+    }
+}
 
   return (
     <div id='root'>
@@ -406,7 +438,7 @@ const Canvas = (props) => {
         <ReactFlowProvider>
           <Navbar search={selectNode} name={diagramName} />
           {inspector}
-          <ReactFlow
+          <ReactFlow id='rf'
               //default zoom properties
               minZoom={0.1}
               maxZoom={.75}
