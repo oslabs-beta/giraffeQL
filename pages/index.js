@@ -544,6 +544,10 @@ const Home = (props) => {
 
         @media screen and (max-width: 700px) {
 
+          home{
+            overflowX: hidden;
+          }
+
           #logo{
             transform: scale(.75);
           }
