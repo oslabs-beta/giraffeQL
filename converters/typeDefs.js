@@ -42,36 +42,6 @@ function mapConnection(connection) {
   return `${connection}: [${connectedObj}]`;
 }
 
-/* createPerson(
-      gender: String,
-      species_id: Int,
-      homeworld_id: Int,
-      height: Int,
-      mass: String,
-      hair_color: String,
-      skin_color: String,
-      eye_color: String,
-      name: String!,
-      birth_year: String,
-    ): Person!
-
-    updatePerson(
-      gender: String,
-      species_id: Int,
-      homeworld_id: Int,
-      height: Int,
-      _id: Int!,
-      mass: String,
-      hair_color: String,
-      skin_color: String,
-      eye_color: String,
-      name: String!,
-      birth_year: String,
-    ): Person!
-
-    deletePerson(_id: ID!): Person!
-    */
-
 function createObjMutations(table) {
   const objectName = capitalizeFirstLetter(singular(table.name));
   let create = `    create${objectName}(\n`;
@@ -110,22 +80,12 @@ function generateAllTypes(tables) {
     typeMutation += `${createObjMutations(table)}\n`;
     resolvers += `  ${generateResolverFunc(table.name)}\n`;
     mutationResolvers += `${generateMutationResolvers(table.name)}\n`;
-    // objectResolvers += generateObjectResolver();
     objectResolvers += `${generateObjectResolver(table, allJoinConnections[table.name])}\n`;
   });
   resolvers += objectResolvers + mutationResolvers + '  }\n' + '}';
   const exportText = `module.exports = {\n  typeDefs,\n  resolvers\n}`;
   return [allTypes + '\n' + tableQuery + '  }\n\n' + typeMutation + '  }\n' + '}`</span>\n\n', resolvers, '\n\n' + exportText];
 }
-
-/*
-  type Query {
-    people: [Person]
-    films: [Film]
-    species: [Species]
-    planets: [Planet]
-  }
-  */
 
 function generateMutationResolvers(tableName) {
   const mutations = ['create', 'update', 'delete'];
