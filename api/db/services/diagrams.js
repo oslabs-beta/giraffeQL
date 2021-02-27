@@ -33,8 +33,9 @@ module.exports = {
   addOrUpdateDiagram: (req, res, next) => {
     try {
       const { diagramId, user, diagramName, tables, description, imageUrl, folder, color } = req.body;
+      console.log(diagramId);
       if (diagramId) {
-        console.log(imageUrl);
+        console.log('updating existing diagram');
         Diagram.findOneAndUpdate(
           { _id: diagramId },
           {
@@ -57,7 +58,7 @@ module.exports = {
           })
       } else {
         const { user, diagramName, tables, description, imageUrl, folder, color } = req.body;
-        console.log(imageUrl);
+        console.log('creating new diagram');
         Diagram.create({
           user: user,
           diagramName: diagramName,
