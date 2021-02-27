@@ -7,8 +7,8 @@ const authRouter = require('./api/routes/auth');
 const userRouter = require('./api/routes/user');
 const profileRouter = require('./api/routes/profile');
 const diagramsRouter = require('./api/routes/diagrams');
-const { dbDataQuery } = require('./storage/query.js');
-const { connectToDB, asyncQuery } = require('./controller/controller.js');
+const scrapedbRouter = require('./api/db/services/scrapedb');
+
 
 const port = parseInt(process.env.PORT, 10) || 3000
 
@@ -39,13 +39,6 @@ app
       next();
     });
 
-    server.use((_, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Headers', '*');
-      res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-      return next();
-    })
-
     server.use(passport.initialize());
 
     passport.serializeUser(function (user, cb) {
@@ -57,22 +50,7 @@ app
     server.use('/profile', profileRouter);
     server.use('/diagrams', diagramsRouter);
 
-    server.post('/api/scrapedb', async (req, res, next) => {
-      console.log('in scrapedb')
-      // connect to db and verify connections
-      const pool = await connectToDB(req.body.URI);
-      if (pool instanceof Error) return next(dbData);
-      // query for db data and check for errors
-      const dbData = await asyncQuery(pool, dbDataQuery);
-      if (dbData instanceof Error) return next(dbData);
-      // convert [null] connections arrays to []
-      const tables = dbData.rows.map(obj => {
-        if (obj.connections[0] === null) obj.connections = [];
-        return obj;
-      });
-      // return data
-      res.status(200).json({ tables: tables });
-    });
+    server.post('/api/scrapedb', scrapedbRouter.scrapeDB);
 
     server.get('*', (req, res) => handle(req, res));
 
