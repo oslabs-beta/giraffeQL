@@ -127,16 +127,18 @@ const NodeInspector = (data) =>{
 
             <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{marginLeft: `${expand ? '25%' : '0%' }`}} >{expand ? '<' : '>'}</button>
 
-            <div className='inspector' style={{opacity: `${expand ? '1' : '0' }`}} onKeyDown={submit} >
+            <div className='inspector' style={{visibility: `${expand ? 'visible' : 'hidden' }`}} onKeyDown={submit} >
 
                 <div className='sidebar' >
 
-                    {/* Edit Button */}
-                    <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil id='pencil' editable={editable ? 1 : undefined} /></div>
+                    <div style={{display: 'grid'}} >
+                        {/* Tablename */}
+                        <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} onDoubleClick={() => toggleEdit(true)} >
+                            <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
+                        </div>
 
-                    {/* Tablename */}
-                    <div className='tablename' style={{borderLeft: `8px solid ${colors[props.nodeid % colors.length]}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} onDoubleClick={() => toggleEdit(true)} >
-                        <input className='tablenameinput' value={tableName} type='text' disabled={editable ? '' : 'disabled'} onChange={(e) => setTableName(e.target.value)} style={{color: `${editable ? '#4754bd' : 'black'}`, backgroundColor: `${editable ? '#c0dbfd' : 'white'}`}} />
+                        {/* Edit Button */}
+                        <div onClick={()=>{editable ? savechanges() : toggleEdit(!editable)}} ><Pencil id='pencil' editable={editable ? 1 : undefined} /></div>
                     </div>
 
                     <div id="tableofcontents">

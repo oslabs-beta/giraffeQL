@@ -63,6 +63,14 @@ const Diagrams = (props) => {
   }, []);
 
   useEffect(() => {
+    const handleStart = () => { setPageLoading(true); };
+    const handleComplete = () => { setPageLoading(false); };
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleComplete);
+  }, [router]);
+
+  useEffect(() => {
 
     if (!props.user.authorization)
       return;
@@ -220,7 +228,7 @@ const Diagrams = (props) => {
           <hr />
 
           <h1>Projects</h1>
-          <button onClick={() => setActiveFolder({name: ''})} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/showall.svg' width={10} height={10} /></div> All Projects</div></button>
+          <button onClick={() => setActiveFolder({name: ''})} style={{borderTop: `${activeFolder.name === '' ? '1px solid #0373fc' : '1px solid transparent'}`, borderBottom: `${activeFolder.name === '' ? '1px solid #0373fc' : '1px solid transparent'}`}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/showall.svg' width={10} height={10} /></div> All Projects</div></button>
           <button onClick={() => expandFolders(!showFolders)} style={{borderBottom: '1px solid #e1e8f0'}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/hamburger.svg' width={10} height={10} /></div> My Folders</div></button>
           
           {!showFolders ? '' : <ul id='folder' style={{backgroundColor: '#f1f6f9'}} >{folders.map((folder, i) => <li key={`folder#${i}`} style={{display: 'flex'}} ><button onClick={() => setActiveFolder({name: folder.name})} style={{borderTop: `${activeFolder.name === folder.name ? '1px solid #0373fc' : '1px solid transparent'}`, borderBottom: `${activeFolder.name === folder.name ? '1px solid #0373fc' : '1px solid transparent'}`}} ><div style={{marginRight: '8px'}} ><Image className='icon' src={activeFolder.name === folder.name ? '/openfolder.svg' : '/folder.svg'} width={10} height={10} /></div>{folder.name} <div onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); deleteFolder({name: folder.name});}} style={{position: 'absolute', right: '0', marginRight: '5%', display: 'flex', alignItems: 'center'}} ><Image className='icon' src='/delete.svg' width={18} height={18} /></div> </button> </li>)}    <button onClick={() => setNewFolder(true)} style={{color: '#12b3ab'}}><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image src='/plus.svg' width={10} height={10} /></div> New Folder</div></button>    </ul>}
@@ -246,8 +254,10 @@ const Diagrams = (props) => {
           </div>
 
           <div id='diagramcontainer'>
-            {!diagrams.length ? <h1>'Nothing here... yet!'</h1> : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} color={diagram.color} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
+            {!displayDiagrams.length ? <h1 style={{fontSize: '18px'}}>Nothing here... yet!</h1> : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} color={diagram.color} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
           </div>
+
+          <h1 id='currview' >Currently viewing {activeFolder.name === '' ? 'all' : activeFolder.name}.</h1>
 
         </div>
 
@@ -290,7 +300,7 @@ const Diagrams = (props) => {
 
         #folder{
           margin: 0;
-          max-height: 25%;
+          max-height: 35%;
           overflow: auto;
 
           ::-webkit-scrollbar {
@@ -388,6 +398,12 @@ const Diagrams = (props) => {
           height: 85%;
           flex-wrap: wrap;
           overflow: auto;
+        }
+
+        #currview{
+          margin-top: -1px;
+          margin-right: 1em;
+          float: right;
         }
 
       `}</style>
