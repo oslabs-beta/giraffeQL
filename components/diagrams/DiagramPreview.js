@@ -27,7 +27,7 @@ const DiagramPreview = (props) => {
         <div className='diagram'>
 
             <button className='optionstoggle' onClick={()=> toggleOptions(!options)}>{`...`}</button>
-            <PreviewOptions toggleOptions={toggleOptions} id={props.id} toggleEdit={props.toggleEdit} deleteDiagram={props.deleteDiagram} expanded={options} />
+            <PreviewOptions toggleOptions={toggleOptions} id={props.id} data={props.data} toggleEdit={props.toggleEdit} deleteDiagram={props.deleteDiagram} expanded={options} />
 
             <div className='header' style={{backgroundColor: `${props.color === null ? colors[props.index % colors.length] : props.color}`}} onClick={() => props.selectDiagram(props.id)} ></div>
 

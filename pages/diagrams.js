@@ -11,6 +11,7 @@ import Navbar from '../components/Navbar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
 import DiagramPreview from '../components/diagrams/DiagramPreview.js';
 import FolderModal from '../components/diagrams/FolderModal.js';
+import EditModal from '../components/diagrams/EditModal.js';
 
 import { parseCookies } from 'nookies';
 import { css } from "@emotion/core";
@@ -37,6 +38,7 @@ const Diagrams = (props) => {
   const [showFolders, expandFolders] = useState(false);
   const [folders, setFolders] = useState([]);
   const [activeFolder, setActiveFolder] = useState({name: ''});
+  const [activeDiagram, setActiveDiagram] = useState('');
 
   useEffect(() => {
     
@@ -93,6 +95,7 @@ const Diagrams = (props) => {
 
   const [newDiagram, setNewDiagram] = useState(false)
   const [newFolder, setNewFolder] = useState(false);
+  const [newEdit, setNewEdit] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
 
   const [name, setName] = useState('');
@@ -111,8 +114,10 @@ const Diagrams = (props) => {
       .then(data => storeDiagrams(data.diagrams));
   }
 
-  const toggleEdit = (id) => {
+  const toggleEdit = (data) => {
     // console.log(id);
+    setNewEdit(true);
+    setActiveDiagram(data);
   }
 
   const checkURLStatus = () => {
@@ -175,6 +180,23 @@ const Diagrams = (props) => {
     });
   }
 
+  const addToFolder = (folder, data) => {
+
+    const body = {
+      user: user._id,
+      diagramName: data.diagramName,
+      description: data.description,
+      diagramId: data.diagramId,
+      folder,
+      tables: data.tables
+    };
+
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
+    fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
+        .then(res => res.json())
+        .then(data => console.log(data));
+  }
+
   const createFolder = (folder) => {
 
     const body = {
@@ -203,6 +225,7 @@ const Diagrams = (props) => {
 
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} name={name} setName={setName} description={description} setDescription={setDescription} URI={URI} setURI={setURI} checkURLStatus={checkURLStatus} newProject={newProject} /> : '';
   const foldermodal = newFolder ? <FolderModal createFolder={createFolder} setNewFolder={setNewFolder} /> : ''; 
+  const editmodal = newEdit ? <EditModal folders={folders} diagram={activeDiagram} addToFolder={addToFolder} /> : '';
 
   return (
     <div id='diagram'>
@@ -216,10 +239,11 @@ const Diagrams = (props) => {
 
       {diagrammodal}
       {foldermodal}
+      {editmodal}
 
-      <div id='preventClick' onClick={() => {setNewDiagram(false); setNewFolder(false)}} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${newDiagram || newFolder ? '9' : '-10'}`, backgroundColor: `${newDiagram || newFolder ? 'rgba(0,0,0,.25)' : 'transparent'}`}} />
+      <div id='preventClick' onClick={() => {setNewDiagram(false); setNewFolder(false); setNewEdit(false)}} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${newDiagram || newFolder || newEdit ? '9' : '-10'}`, backgroundColor: `${newDiagram || newFolder || newEdit ? 'rgba(0,0,0,.25)' : 'transparent'}`}} />
 
-      <div id='browsediagrams' style={{filter: `${newDiagram || newFolder ? 'blur(5px)' : ''}`, transition: '0s'}} >
+      <div id='browsediagrams' style={{filter: `${newDiagram || newFolder || newEdit ? 'blur(5px)' : ''}`, transition: '0s'}} >
 
         <div id='diagramoptions'>
           <div className='header' style={{borderTopLeftRadius: '8px', borderRight: '2px solid #7c81cf'}} >Options</div>
@@ -242,11 +266,13 @@ const Diagrams = (props) => {
         <div id='containerheader'>
           <div className='header' style={{borderTopRightRadius: '8px'}} >My Diagrams</div>
 
-          <div id='sort' >Sort by:
+          <div id='sort' >Sort
 
             <select onChange={(e)=>setSortMode(e.target.value)} >
               {sortModes.map((sortMode, i) => <option key={`sortModes#${i}`} value={sortMode} >{sortMode}</option> )}
             </select>
+
+            by
 
             <select onChange={(e)=>setSortDate(e.target.value)} >
               {sortDates.map((sortDate, i) => <option key={`sortDates#${i}`} value={sortDate} >{sortDate}</option> )}
@@ -254,7 +280,7 @@ const Diagrams = (props) => {
           </div>
 
           <div id='diagramcontainer'>
-            {!displayDiagrams.length ? <h1 style={{fontSize: '18px'}}>Nothing here... yet!</h1> : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} color={diagram.color} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
+            {!displayDiagrams.length ? <h1 style={{fontSize: '18px'}}>Nothing here... yet!</h1> : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} color={diagram.color} id={diagram._id} key={`diagram#${diagram._id}`} data={diagram} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
           </div>
 
           <h1 id='currview' >Currently viewing {activeFolder.name === '' ? 'all' : activeFolder.name}.</h1>
@@ -382,6 +408,7 @@ const Diagrams = (props) => {
           select{
             border: none;
             background-color: transparent;
+            font-size: 12px;
 
             &:active{
               border: none;

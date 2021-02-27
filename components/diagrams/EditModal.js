@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 const EditModal = (props) => {
 
+    const [folderData, setFolderData] = useState(['none']);
+    const folders = [{_id: '', name: 'none'}, ...props.folders];
 
     return (
         <div id='editmodal'>
@@ -10,7 +12,11 @@ const EditModal = (props) => {
         
         <div id='editcontainer'>
 
-            <button id='submitbtn'><span>Done</span></button>
+            <select onChange={(e) => setFolderData([e.target.value, props.diagram])} >
+                {folders.map((folder, i) => <option key={`folderselect#${i}`} value={folder.name} >{folder.name}</option> )}
+            </select>
+
+            <button id='submitbtn' onClick={() => props.addToFolder(folderData[0],folderData[1])} disabled={folderData[0] === 'none' ? true : false} ><span>Done</span></button>
         
         </div>
 

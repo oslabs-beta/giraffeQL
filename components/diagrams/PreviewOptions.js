@@ -4,7 +4,7 @@ const PreviewOptions = (props) => {
         <div className='optioncontainer' style={{visibility: `${props.expanded ? 'visible' : 'hidden'}`}}>
 
             <h1>Options</h1>
-            <button onClick={() => {props.toggleOptions(false); props.toggleEdit(props.id)}} id='edit'>Edit</button>
+            <button onClick={() => {props.toggleOptions(false); props.toggleEdit(props.data)}} id='edit'>Edit</button>
             <button onClick={() => {props.toggleOptions(false); props.deleteDiagram(props.id)}} id='delete'>Delete</button>
 
             <style jsx>{`
