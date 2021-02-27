@@ -14,10 +14,16 @@ const userSchema = new Schema({
   profileUrl: {
     type: "String"
   },
+  email: {
+    type: "String"
+  },
   photos: [{
     value: {
       type: "String"
     }
+  }],
+  folders: [{
+    name: "String",
   }]
 });
 

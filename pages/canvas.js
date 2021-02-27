@@ -144,7 +144,7 @@ const Canvas = (props) => {
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
       .then(res => res.json())
-      .then(data => (setDiagramID(data.diagram._id), updateData(false), console.log('success')));
+      .then(data => (setDiagramID(data.diagram._id), updateData(false)));
 
   }, [updated]);
 
@@ -393,12 +393,12 @@ const Canvas = (props) => {
     if (diagramId === undefined) return;
 
     html2canvas(document.getElementById('rf')).then(function(canvas) {
-      // saveAs(canvas.toDataURL(), `${diagramId}.png`);
+      saveImage(canvas.toDataURL(), `${diagramId}.png`);
     });
 
   }
 
-  const saveAs = (uri, filename) => {
+  const saveImage = (uri, filename) => {
 
     var link = document.createElement('a');
 
@@ -411,7 +411,7 @@ const Canvas = (props) => {
         document.body.appendChild(link);
 
         //simulate click
-        link.click();
+        // link.click();
 
         //remove the link when done
         document.body.removeChild(link);

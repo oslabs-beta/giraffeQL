@@ -52,10 +52,10 @@ const Home = (props) => {
     if (scrollTop > 800)
       triggers2(true);
 
-    if (scrollTop > 1500)
+    if (scrollTop > 1400)
       triggers3(true);
 
-    if (scrollTop > 2000)
+    if (scrollTop > 1800)
       triggers4(true);
 
     return () => window.removeEventListener("scroll", onScroll);
@@ -347,7 +347,7 @@ const Home = (props) => {
             margin: 0;
             position: absolute;
             top: 100%;
-            left: 45%;
+            left: 44%;
 
             animation: reveal 1s forwards;
             animation-delay: 1s;

@@ -21,7 +21,25 @@ module.exports = {
     }
   },
   findById: async (id) => {
-    return User.findOne({ oAuthId: id });
+    return await User.findOne({ oAuthId: id });
+  },
+  updateUser: (req, res, next) => {
+    try{
+      const { oAuthId, displayName, email } = req.body;
+      User.findOneAndUpdate(
+        {oAuthId},
+        {displayName, email},
+        {
+          new: true,
+          upsert: true
+        })
+        .then((data) => {
+          res.locals.user = data;
+          return next();
+        })
+    } catch(err) {
+      return next(err);
+    }
   },
   deleteUser: (req, res, next) => {
     User.findOneAndDelete({ oAuthId: req.user.id })
@@ -30,5 +48,41 @@ module.exports = {
         return next();
       })
       .catch((err) => next(err))
+  },
+  createFolder: (req, res, next) => {
+    try{
+      const { oAuthId, folder } = req.body;
+      User.findOneAndUpdate(
+        {oAuthId},
+        {"$push": { folders: folder }},
+        {
+          new: true,
+          upsert: true
+        })
+        .then((data) => {
+          res.locals.folders = data.folders;
+          return next();
+        })
+    } catch(err) {
+      return next(err);
+    }
+  },
+  deleteFolder: (req, res, next) => {
+    try{
+      const { oAuthId, folder } = req.body;
+      User.findOneAndUpdate(
+        {oAuthId},
+        {"$pull": { folders: folder }},
+        {
+          new: true,
+          upsert: true
+        })
+        .then((data) => {
+          res.locals.folders = data.folders;
+          return next();
+        })
+    } catch(err) {
+      return next(err);
+    }
   }
 };

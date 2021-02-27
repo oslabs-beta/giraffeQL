@@ -25,13 +25,14 @@ const DefaultInspector = (props) => {
 
             <button className='inspectorbtn' onClick={()=>showTable(!expand)} style={{marginLeft: `${expand ? '25%' : '0%' }`}} >{expand ? '<' : '>'}</button>
 
-            <div className='inspector' style={{opacity: `${expand ? '1' : '0' }`}}>
+            <div className='inspector' style={{visibility: `${expand ? 'visible' : 'hidden' }`}}>
 
                 <div id='header' >Tables <button id='createbtn' onClick={props.createNode} >+</button></div>
 
                 {/* Populate panel with all the nodes */}
-                {allNodes.map((node, i) => <div className='tablename' key={`defaultnode#${i}`} onClick={()=>(setSelectedElements(node), props.selectNode(node))} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)}
+                <div id='namecontainer'>{allNodes.map((node, i) => <div className='tablename' key={`defaultnode#${i}`} onClick={()=>(setSelectedElements(node), props.selectNode(node))} style={{borderLeft: `8px solid ${colors[node.id % colors.length]}`}} >{node.data.label.props.children.props.tablename}</div>)}</div>
 
+                <div id='buffer' />
             </div>
 
             <style jsx>{`
@@ -48,6 +49,19 @@ const DefaultInspector = (props) => {
                     background-color: white;
                     z-index: 999999998;
                     box-shadow: 3px 0px 3px rgba(0,0,0,.05);
+                }
+
+                #namecontainer{
+                    position: relative;
+                    height: 80%;
+                    overflow: auto;
+                }
+
+                #buffer{
+                    position: relative;
+                    height: 20%;
+                    box-shadow: 0px -2px 4px -1px rgba(0,0,0,.15);
+                    z-index: 9999999999999999999999999999999999;
                 }
 
                 .inspectorbtn{

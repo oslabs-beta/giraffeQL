@@ -44,16 +44,52 @@ const Settings = (props) => {
         } else {
           setUsername(user.username);
         }
+
+        if (user.hasOwnProperty('email'))
+            user.email === '' ? 'example@email.com' : setNewEmail(user.email);
         
         setImage(user.photos[0].value);
     
     }, [user]);
 
+    const updateInfo = () => {
+        
+        const authorization = props.user.authorization;
+        const oAuthId = props.user.user.oAuthId;
+
+        if (!authorization)
+            return;
+
+        const body = {
+            oAuthId,
+            displayName: username,
+            email
+        }
+
+        const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
+        fetch(`${fetchURL}/user`, {method: 'POST', headers: { authorization, 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
+            .then(res => res.json())
+            .then(data => storeUser(data.user));
+    }
+
     const deleteAccount = () => {
         
+        const authorization = props.user.authorization;
+
+        if (!authorization)
+            return;
+
         destroyCookie({}, 'authorization');
         logout();
         router.push('/');
+
+        // const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
+        // fetch(`${fetchURL}/user`, {method: 'DELETE', headers: { authorization }})
+        //     .then(() => {
+        //         destroyCookie({}, 'authorization');
+        //         logout();
+        //         router.push('/');
+        //     });
     }
 
     return (
@@ -70,9 +106,9 @@ const Settings = (props) => {
 
                 <div id='settingsoptions'>
                     <div className='header'>SETTINGS</div>
-                    <button className='settingsbtn' >Account</button>
-                    <button className='settingsbtn' >Security</button>
-                    <button className='settingsbtn' >Projects</button>
+                    <button className='settingsbtn' ><div style={{marginRight: '8px'}} ><Image className='icon' src='/profile.svg' width={10} height={10} /></div> Account</button>
+                    <button className='settingsbtn' ><div style={{marginRight: '8px'}} ><Image className='icon' src='/lock.svg' width={10} height={10} /></div> Security</button>
+                    <button className='settingsbtn' ><div style={{marginRight: '8px'}} ><Image className='icon' src='/folder.svg' width={10} height={10} /></div> Projects</button>
                     <hr className='seperator' />
                     <h4>PERMANENT</h4>
                     <button onClick={deleteAccount} className='settingsbtn' style={{color: '#ff6b6b'}} >Delete Account</button>
@@ -113,7 +149,7 @@ const Settings = (props) => {
 
                             <div className='row' >
                                 <div className='column'><div/></div>
-                                <div className='column'><button id='updatebtn' >Update</button></div>
+                                <div className='column'><button id='updatebtn' onClick={updateInfo} >Update</button></div>
                             </div>
                             <p style={{fontSize: '9px', float: 'right', marginRight: '16px'}}>(at the moment, user information cannot be changed... sorry!)</p>
                         </div>

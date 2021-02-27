@@ -29,7 +29,7 @@ const DiagramPreview = (props) => {
             <button className='optionstoggle' onClick={()=> toggleOptions(!options)}>{`...`}</button>
             <PreviewOptions toggleOptions={toggleOptions} id={props.id} toggleEdit={props.toggleEdit} deleteDiagram={props.deleteDiagram} expanded={options} />
 
-            <div className='header' style={{backgroundColor: `${colors[props.index % colors.length]}`}} onClick={() => props.selectDiagram(props.id)} ></div>
+            <div className='header' style={{backgroundColor: `${props.color === null ? colors[props.index % colors.length] : props.color}`}} onClick={() => props.selectDiagram(props.id)} ></div>
 
             <div className='previewcontainer' onClick={() => props.selectDiagram(props.id)}>
                 <Image 

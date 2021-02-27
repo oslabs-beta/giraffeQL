@@ -1,7 +1,7 @@
 const Pencil = (props) => {
   return (
-    <div>
-        <svg width={800} height={600} >
+    <div id='pencilcontainer' >
+        <svg width={600} height={480} >
             <path id='pencil'
                 strokeWidth={1.5}
                 stroke="#000"
@@ -16,20 +16,16 @@ const Pencil = (props) => {
             />
         </svg>
 
-        <h1 id='submith1' style={{transform: `${props.editable === 1 ? 'translateX(-28px)' : 'translateX(0px)'}`}}>{props.editable === 1 ? 'Submit' : 'Edit'}</h1>
+        <h1 style={{transform: `${props.editable === 1 ? 'translateX(-16px)' : 'translateX(0px)'}`}}>{props.editable === 1 ? 'Submit' : 'Edit'}</h1>
 
         <style jsx>{`
 
-            #submith1 {
-                transition: all .3s;
-                position: fixed;
-                font-size: 18px;
-                margin-top: 21px;
-                color: transparent;
-                user-select: none;
-                z-index: 9999;
-
-                margin-left: 22%;
+            #pencilcontainer{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: -36px;
+                margin-left: 80%;
             }
 
             svg {
@@ -38,9 +34,6 @@ const Pencil = (props) => {
 
                 z-index: 10000;
 
-                margin-top: -269px;
-                margin-left: -3%;
-
                 &:hover{
                     cursor: pointer;
                 }
@@ -48,7 +41,7 @@ const Pencil = (props) => {
                 &:hover ~ h1 {
                     transition: .6s;
                     color: #ababab;
-                    margin-left: 19%;
+                    margin-left: -4%;
                 }
 
                 &:hover > #pencilbg{
@@ -58,6 +51,16 @@ const Pencil = (props) => {
                 &:active > #pencil{
                     fill:  #e4eaf1;
                 }
+            }
+
+            h1 {
+                transition: all .3s;
+                position: fixed;
+                font-size: 18px;
+                margin-top: 21px;
+                color: transparent;
+                user-select: none;
+                z-index: 9999;
             }
 
         `}</style>

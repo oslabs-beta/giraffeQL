@@ -88,53 +88,69 @@ const SchemaIDE = (props) => {
 
         <div id='schemacontainer' >
 
-            <button className='schemabtn' onClick={() => showTable(!expand)} style={{ marginLeft: `${expand ? '-25.6%' : '0%'}` }} >{expand ? '>' : '<'}</button>
+            <button className='schemabtn' onClick={() => showTable(!expand)} >{expand ? '>' : '<'}</button>
 
-            <div id='ide' style={{ opacity: `${expand ? '1' : '0'}` }} >
+            {!expand ? '' : <div>
+            
+                <div id='ide' >
 
-                <button id='typedefs' onClick={() => toggleCode(true)} >TypeDefs</button>
-                <button id='resolvers' onClick={() => toggleCode(false)} >Resolvers</button>
-                
-                <pre style={{position: 'relative', width: '90%'}}><code className='hljs'> <div dangerouslySetInnerHTML={{
-                    __html:
-                        activeCode ? typeDefs : resolvers
-                }} /> </code></pre>
+                    <div id='toggles'>
+                        <button id='typedefs' onClick={() => toggleCode(true)} >TypeDefs</button>
+                        <button id='resolvers' onClick={() => toggleCode(false)} >Resolvers</button>
+                    </div>
+                    
+                    <pre style={{position: 'relative', width: '90%'}}><code className='hljs'> <div dangerouslySetInnerHTML={{
+                        __html:
+                            activeCode ? typeDefs : resolvers
+                    }} /> </code></pre>
 
-                <ul>
-                    <li><button id='copy' onClick={() => navigator.clipboard.writeText(document.getElementById('unstyledcode').innerText)} >Copy</button></li>
-                    <li><button id='download' onClick={downloadCode} >Export</button></li>
-                </ul>
+                    <div id='export'>
+                        <button onClick={() => navigator.clipboard.writeText(document.getElementById('unstyledcode').innerText)} >Copy</button>
+                        <button onClick={downloadCode} >Export</button>
+                    </div>
 
-                <pre style={{opacity: '0', width: '0', height: '0'}}><code id='unstyledcode'><div dangerouslySetInnerHTML={{__html: schema.join('') }} /></code></pre>
+                    <pre style={{opacity: '0', width: '0', height: '0'}}><code id='unstyledcode'><div dangerouslySetInnerHTML={{__html: schema.join('') }} /></code></pre>
 
-            </div>
+                </div>
+
+                <div id='buffer' />
+
+            </div>}
 
             <style jsx>{`
 
                 #schemacontainer{
-                    // width: 33%;
-                    // margin: 0;
+                    position: fixed;
+                    right: 0;
+                    display: flex;
+                    z-index: 99999999999999999999999999999;
+                    pointer-events: none;
                 }
 
                 #ide {
-                    position: fixed;
-                    height: 100vh;
+                    height: 100%;
+                    width:100%;
                     padding: 0px 16px;
                     margin-right: -5px;
-                    margin-left: 0;
-                    margin-top: 0;
-                    margin-bottom: 0;
-                    right: 0;
                     background-color: white;
                     z-index: 999999998;
-                    overflow: hidden;
                     box-shadow: -3px 0px 3px rgba(0,0,0,.05);
+                    pointer-events: auto;
+                }
+
+                #buffer{
+                    position: relative;
+                    height: 20%;
+                    box-shadow: 0px -2px 4px -1px rgba(0,0,0,.15);
+                    z-index: 9999999999999999999999999999999999;
+                    background-color: white;
                 }
 
                 .schemabtn{
                     font-size: 24px;
                     font-family: 'Inter', sans-serif;
-                    position: fixed;
+                    right: 0;
+                    height: 37px;
                     padding: 4px 8px;
                     border-bottom-left-radius: 8px;
                     color: #6f8195;
@@ -143,7 +159,8 @@ const SchemaIDE = (props) => {
                     outline: none;
                     cursor: pointer;
                     z-index: 999999999999999999999999999999999999;
-                    transform: translateX(-32px);
+                    // transform: translateX(-32px);
+                    pointer-events: auto;
 
                     &:hover{
                         color: #12b3ab;
@@ -151,56 +168,30 @@ const SchemaIDE = (props) => {
                     }
                 }
 
-                ul{
-                    list-style-type: none;
+                #export{
                     display: flex;
-                    justify-content: space-around;
+                    justify-content: center;
                     margin: 0;
 
-
-                    li{
-                        margin: 0;
-                        
-                        button{
-                          transition: 0s;
-                          position: relative;
-                          margin-top: .5em;
-                          margin-left: -.75em;
-                          border: none;
-                          height: 3em;
-                          width: 11em;
-                          color: white;
-                          background-color: #12b3ab;
-                          padding: 8px;
-                          outline: none;
-                          box-shadow: inset 0px -2px 0px darken(#12b3ab, 20%), 0px -1px 0px #12b3ab;
-                          z-index: 99999999999999999999;
-                          border-radius: 8px;
-                          
-                          &:focus{
-                            outline: none;
-                          }
-            
-                          &:hover{
+                    button{
+                        transition: 0s;
+                        position: relative;
+                        border: none;
+                        margin-right: 2em;
+                        height: 3em;
+                        width: 11em;
+                        color: white;
+                        background-color: #12b3ab;
+                        padding: 8px;
+                        outline: none;
+                        box-shadow: inset 0px -2px 0px darken(#12b3ab, 20%), 0px -1px 0px #12b3ab;
+                        z-index: 99999999999999999999;
+        
+                        &:hover{
                             box-shadow: inset 0px -1px 0px darken(#12b3ab, 20%);
                             cursor: pointer;
-                          }
                         }
                     }
-                }
-
-                #download {
-                  background-color: #9b5de5;
-                  box-shadow: inset 0px -2px 0px darken(#9b5de5, 20%), 0px -1px 0px #9b5de5;
-                  margin-left: 2em;
-                  margin-right: 1.2em;
-                  
-    
-                  &:hover{
-                    box-shadow: inset 0px -1px 0px darken(#9b5de5, 20%);
-                    cursor: pointer;
-                    top: 1px;
-                  }
                 }
                 
                 .hljs {
@@ -214,18 +205,22 @@ const SchemaIDE = (props) => {
                     font-weight: 300;
                 }
                         
+                #toggles{
+                    display: flex;
+                    position: fixed;
+                    z-index: 9999999;
+                    right: 0;
+                    margin: 8px 32px;
+                }
+
                 #typedefs{
                     font-size: 10px;
-                    transition: all .2s linear;
-                    position: fixed;
                     border: 1px solid #12b3ab;
                     border-radius: 4px;
                     padding: 8px;
                     outline: none;
                     color: #12b3ab;
                     background-color: transparent;
-                    margin-top: 1.5%;
-                    margin-left: 13%;
                     z-index: 99999999999999999999999999999999999999999999999;
                     opacity: .5;
 
@@ -238,17 +233,14 @@ const SchemaIDE = (props) => {
 
                 #resolvers{
                     font-size: 10px;
-                    transition: all .2s linear;
-                    position: fixed;
                     border: 1px solid #9b5de5;
                     border-radius: 4px;
                     padding: 8px;
                     outline: none;
                     color: #9b5de5;
                     background-color: transparent;
-                    margin-top: 1.5%;
-                    margin-left: 17.75%;
                     z-index: 99999999999999999999999999999999999999999999999;
+                    margin-left: 8px;
                     opacity: .5;
 
                     &:hover{
