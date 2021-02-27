@@ -27,6 +27,18 @@ router.use((req, res, next) => {
     })
 })
 
+router.put('/folders',
+  userService.createFolder,
+  (req, res) => res.status(200).json({
+    folders: res.locals.folders
+  }));
+
+router.delete('/folders',
+  userService.deleteFolder,
+  (req, res) => res.status(200).json({
+    folders: res.locals.folders
+  }));
+
 router.get('/', async (req, res, next) => {
         res.locals.user = await userService.findById(req.user.id)
         return next();

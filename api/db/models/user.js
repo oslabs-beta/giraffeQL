@@ -18,6 +18,9 @@ const userSchema = new Schema({
     value: {
       type: "String"
     }
+  }],
+  folders: [{
+    name: "String",
   }]
 });
 

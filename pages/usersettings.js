@@ -51,9 +51,22 @@ const Settings = (props) => {
 
     const deleteAccount = () => {
         
+        const authorization = props.user.authorization;
+
+        if (!authorization)
+            return;
+
         destroyCookie({}, 'authorization');
         logout();
         router.push('/');
+
+        // const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
+        // fetch(`${fetchURL}/user`, {method: 'DELETE', headers: { authorization }})
+        //     .then(() => {
+        //         destroyCookie({}, 'authorization');
+        //         logout();
+        //         router.push('/');
+        //     });
     }
 
     return (

@@ -10,6 +10,7 @@ import getUser from '../controller/getUser.js';
 import Navbar from '../components/Navbar.js';
 import DiagramModal from '../components/diagrams/DiagramModal.js';
 import DiagramPreview from '../components/diagrams/DiagramPreview.js';
+import FolderModal from '../components/diagrams/FolderModal.js';
 
 import { parseCookies } from 'nookies';
 import { css } from "@emotion/core";
@@ -34,7 +35,8 @@ const Diagrams = (props) => {
   const [currentSortDate, setSortDate] = useState('last updated');
 
   const [showFolders, expandFolders] = useState(false);
-  const [folders, setFolders] = useState([1, 1, 1]);
+  const [folders, setFolders] = useState([]);
+  const [activeFolder, setActiveFolder] = useState({name: ''});
 
   useEffect(() => {
     
@@ -44,14 +46,17 @@ const Diagrams = (props) => {
         storeDiagrams(newDiagrams);
         setDiagrams(newDiagrams);
       }
+      if (props.user.user.hasOwnProperty('folders'))
+        setFolders(props.user.user.folders);
     }
-
-    if (props.user.authorization === null) return logout();
+    
+    if (props.user.authorization === null || !props.user.hasOwnProperty('user')) return logout();
     if (props.user.user.username === user.username) return;
     if (props.user) {
       storeUser(props.user.user);
       storeDiagrams(props.user.user.diagrams);
       setDiagrams(props.user.user.diagrams);
+      setFolders(props.user.user.folders);
     }
     else logout();
 
@@ -65,16 +70,21 @@ const Diagrams = (props) => {
     const user = getUser(props.user.authorization)
       .then(data => storeDiagrams(data.user.diagrams));
 
-  }, [currentSortMode, currentSortDate]);
+  }, [currentSortMode, currentSortDate, activeFolder]);
 
   useEffect(() => {
+
+    if (activeFolder.name !== '') return setDiagrams(folderDiagrams([...diagrams])) 
+
     if (currentSortMode === 'newest') setDiagrams(mostRecentDiagrams([...diagrams]))
     if (currentSortMode === 'oldest') setDiagrams(oldestDiagrams([...diagrams]))
     if (currentSortMode === 'favorites') setDiagrams(favoriteDiagrams([...diagrams]))    
     if (currentSortMode === 'alphabetical') setDiagrams(alphabeticalDiagrams([...diagrams]))
+
   }, [diagrams]);
 
   const [newDiagram, setNewDiagram] = useState(false)
+  const [newFolder, setNewFolder] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
 
   const [name, setName] = useState('');
@@ -117,8 +127,6 @@ const Diagrams = (props) => {
   const sortModes = ['newest', 'oldest', 'favorites', 'alphabetical'];
   const sortDates = ['last updated', 'created'];
 
-  const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} name={name} setName={setName} description={description} setDescription={setDescription} URI={URI} setURI={setURI} checkURLStatus={checkURLStatus} newProject={newProject} /> : '';
-   
   const mostRecentDiagrams = (arr) => { 
     return arr.slice().sort(function (a, b) {
 
@@ -147,11 +155,46 @@ const Diagrams = (props) => {
     })
   }
 
+  const folderDiagrams = (arr) => {
+    return arr.filter((diagram) => {
+    if (diagram.folder === activeFolder.name) return diagram;
+    })
+  }
+
   const alphabeticalDiagrams = (arr) => {
     return arr.slice().sort(function (a, b) {
         return (a.diagramName.toUpperCase() < b.diagramName.toUpperCase()) ? -1 : (a.diagramName.toUpperCase() > b.diagramName.toUpperCase()) ? 1 : 0;
     });
   }
+
+  const createFolder = (folder) => {
+
+    const body = {
+      oAuthId: props.user.user.oAuthId,
+      folder
+    };
+    
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
+    fetch(`${fetchURL}/user/folders`, {method: 'PUT', headers: { authorization: props.user.authorization, 'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
+        .then(res => res.json())
+        .then(data => setFolders(data.folders));
+  }
+
+  const deleteFolder = (folder) => {
+
+    const body = {
+      oAuthId: props.user.user.oAuthId,
+      folder
+    };
+    
+    const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
+    fetch(`${fetchURL}/user/folders`, {method: 'DELETE', headers: { authorization: props.user.authorization, 'Content-Type': 'Application/JSON'}, body: JSON.stringify(body)})
+        .then(res => res.json())
+        .then(data => setFolders(data.folders));
+  }
+
+  const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} name={name} setName={setName} description={description} setDescription={setDescription} URI={URI} setURI={setURI} checkURLStatus={checkURLStatus} newProject={newProject} /> : '';
+  const foldermodal = newFolder ? <FolderModal createFolder={createFolder} setNewFolder={setNewFolder} /> : ''; 
 
   return (
     <div id='diagram'>
@@ -164,28 +207,28 @@ const Diagrams = (props) => {
       <Navbar />
 
       {diagrammodal}
+      {foldermodal}
 
-      <div id='preventClick' onClick={() => setNewDiagram(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${newDiagram ? '9' : '-10'}`, backgroundColor: `${newDiagram ? 'rgba(0,0,0,.25)' : 'transparent'}`}} />
+      <div id='preventClick' onClick={() => {setNewDiagram(false); setNewFolder(false)}} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${newDiagram || newFolder ? '9' : '-10'}`, backgroundColor: `${newDiagram || newFolder ? 'rgba(0,0,0,.25)' : 'transparent'}`}} />
 
-      <div id='browsediagrams' style={{filter: `${newDiagram ? 'blur(5px)' : ''}`, transition: '0s'}} >
+      <div id='browsediagrams' style={{filter: `${newDiagram || newFolder ? 'blur(5px)' : ''}`, transition: '0s'}} >
 
         <div id='diagramoptions'>
           <div className='header' style={{borderTopLeftRadius: '8px', borderRight: '2px solid #7c81cf'}} >Options</div>
-          <h1>Projects</h1>
           <button onClick={() => setNewDiagram(!newDiagram)} style={{color: '#12b3ab'}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image src='/plus.svg' width={10} height={10} /></div> New Diagram</div></button>
           
           <hr />
 
-          <h1>Folders</h1>
-          <button onClick={() => expandFolders(!showFolders)} style={{borderBottom: '1px solid #e1e8f0'}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/folder.svg' width={10} height={10} /></div> My Projects</div></button>
+          <h1>Projects</h1>
+          <button onClick={() => setActiveFolder({name: ''})} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/showall.svg' width={10} height={10} /></div> All Projects</div></button>
+          <button onClick={() => expandFolders(!showFolders)} style={{borderBottom: '1px solid #e1e8f0'}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/hamburger.svg' width={10} height={10} /></div> My Folders</div></button>
           
-          {!showFolders ? '' : <ul id='folder'>{folders.map(folder => <li><button>Folder</button></li>)}<button style={{color: '#12b3ab'}}><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image src='/plus.svg' width={10} height={10} /></div> New Folder</div></button></ul>}
+          {!showFolders ? '' : <ul id='folder' style={{backgroundColor: '#f1f6f9'}} >{folders.map((folder, i) => <li key={`folder#${i}`} style={{display: 'flex'}} ><button onClick={() => setActiveFolder({name: folder.name})} style={{borderTop: `${activeFolder.name === folder.name ? '1px solid #0373fc' : '1px solid transparent'}`, borderBottom: `${activeFolder.name === folder.name ? '1px solid #0373fc' : '1px solid transparent'}`}} ><div style={{marginRight: '8px'}} ><Image className='icon' src={activeFolder.name === folder.name ? '/openfolder.svg' : '/folder.svg'} width={10} height={10} /></div>{folder.name} <div onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); deleteFolder({name: folder.name});}} style={{position: 'absolute', right: '0', marginRight: '5%', display: 'flex', alignItems: 'center'}} ><Image className='icon' src='/delete.svg' width={18} height={18} /></div> </button> </li>)}    <button onClick={() => setNewFolder(true)} style={{color: '#12b3ab'}}><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image src='/plus.svg' width={10} height={10} /></div> New Folder</div></button>    </ul>}
 
           <hr />
 
           <h1>Quick Start</h1>
-          <button >Template Diagrams</button>
-          <button onClick={() => router.push({ pathname: '/canvas', query: { data: ['postgres://lfawycfl:yc837PGh-S4jP4YIHJlv6Ldh7C7P2xJw@suleiman.db.elephantsql.com:5432/lfawycfl'], name: 'Star Wars Example', description: 'A long time ago, in a galaxy far away...' } }, 'canvas')} >Example Databases</button>
+          <button onClick={() => router.push({ pathname: '/canvas', query: { data: ['postgres://lfawycfl:yc837PGh-S4jP4YIHJlv6Ldh7C7P2xJw@suleiman.db.elephantsql.com:5432/lfawycfl'], name: 'Star Wars Example', description: 'A long time ago, in a galaxy far away...' } }, 'canvas')} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/starwars.svg' width={12} height={12} /></div> Example Database</div></button>
         </div>
 
         <div id='containerheader'>
@@ -203,7 +246,7 @@ const Diagrams = (props) => {
           </div>
 
           <div id='diagramcontainer'>
-            {!diagrams.length ? <h1>'Nothing here... yet!'</h1> : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
+            {!diagrams.length ? <h1>'Nothing here... yet!'</h1> : displayDiagrams.map((diagram, i) => <DiagramPreview name={diagram.diagramName} description={!diagram.description ? '' : diagram.description} updated={diagram.updatedAt} favorite={diagram.favorite} color={diagram.color} id={diagram._id} key={`diagram#${diagram._id}`} index={i} selectDiagram={selectDiagram} deleteDiagram={deleteDiagram} toggleEdit={toggleEdit} />)}
           </div>
 
         </div>
@@ -264,16 +307,6 @@ const Diagrams = (props) => {
               border-radius: 16px;
               border-right: none;
               border-left: none;
-          }
-          
-          ::-webkit-scrollbar-track-piece:end {
-              background: transparent;
-              margin-bottom: 16px; 
-          }
-          
-          ::-webkit-scrollbar-track-piece:start {
-              background: transparent;
-              margin-top: 16px;
           }
         }
 
