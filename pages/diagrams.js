@@ -115,7 +115,6 @@ const Diagrams = (props) => {
   }
 
   const toggleEdit = (data) => {
-    // console.log(id);
     setNewEdit(true);
     setActiveDiagram(data);
   }
@@ -182,8 +181,6 @@ const Diagrams = (props) => {
 
   const updateDiagram = (data) => {
 
-    console.log(data);
-
     const body = {
       user: user._id,
       diagramName: data.diagramName,
@@ -196,7 +193,13 @@ const Diagrams = (props) => {
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
         .then(res => res.json())
-        .then(data => console.log(data));
+        .then(data => {
+          const newDiagrams = [...displayDiagrams];
+          const target = newDiagrams.findIndex(diagram => diagram.diagramName === data.diagramName);
+
+          newDiagrams.splice(target, 1, data.diagram);
+          setDiagrams(newDiagrams);
+        });
   }
 
   const createFolder = (folder) => {

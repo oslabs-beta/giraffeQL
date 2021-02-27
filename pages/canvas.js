@@ -376,6 +376,7 @@ const Canvas = (props) => {
 
             const targetNode = elements.findIndex(target => target.id === connection.target.toString());
 
+            //TODO: Fix error'ing out when deleteing a table.
             newConnection.originKey = node.data.label.props.children.props.columns[alphabet.indexOf(connection.sourceHandle)].name;
             newConnection.destinationTable = elements[targetNode].data.label.props.children.props.tablename;
             newConnection.destinationKey = elements[targetNode].data.label.props.children.props.columns[alphabet.indexOf(connection.targetHandle)].name;
