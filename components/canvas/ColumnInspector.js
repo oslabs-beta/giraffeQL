@@ -71,10 +71,13 @@ const ColumnInspector = (props) => {
 
             <input type='text' value={name} className='column1' onChange={(e)=>setName(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#5e6f7a'}`}} />
 
-            <input type='text' list='types' placeholder={type} className='column2' onChange={(e)=>setType(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
+            {/* <input type='text' list='types' placeholder={type} className='column2' onChange={(e)=>setType(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} /> */}
                 {/* List of data-types */}
                 {/* TODO: Make this work!! Gets overwritten once a value is selected. */}
-                <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist>
+                {/* <datalist id='types'>{dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype} /> )}</datalist> */}
+            <select className='column2' defaultValue={type} onChange={(e) => setType(e.target.value)} disabled={props.editable ? '' : 'disabled'} style={{ color: `${props.editable ? '#4754bd' : '#cccccc'}`}}>
+                {dataTypes.map((datatype, i) => <option key={`datatype#${i}`} value={datatype}>{datatype}</option> )}
+            </select>
 
             <input type='checkbox' disabled={props.editable ? '' : 'disabled'} checked={required} onChange={()=> setRequired(!required)} className='column3' style={{color: `${props.editable ? '#4754bd' : '#cccccc'}`}} />
 
@@ -150,6 +153,12 @@ const ColumnInspector = (props) => {
                         color: #12b3ab;
                         cursor: pointer;
                     }
+                }
+                select {
+                    border: none;
+                    background-image:none;
+                    background-color:transparent;
+                    outline: none;
                 }
 
                 input{
