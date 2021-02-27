@@ -180,14 +180,16 @@ const Diagrams = (props) => {
     });
   }
 
-  const addToFolder = (folder, data) => {
+  const updateDiagram = (data) => {
+
+    console.log(data);
 
     const body = {
       user: user._id,
       diagramName: data.diagramName,
       description: data.description,
-      diagramId: data.diagramId,
-      folder,
+      diagramId: data._id,
+      folder: data.folder,
       tables: data.tables
     };
 
@@ -225,7 +227,7 @@ const Diagrams = (props) => {
 
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} name={name} setName={setName} description={description} setDescription={setDescription} URI={URI} setURI={setURI} checkURLStatus={checkURLStatus} newProject={newProject} /> : '';
   const foldermodal = newFolder ? <FolderModal createFolder={createFolder} setNewFolder={setNewFolder} /> : ''; 
-  const editmodal = newEdit ? <EditModal folders={folders} diagram={activeDiagram} addToFolder={addToFolder} /> : '';
+  const editmodal = newEdit ? <EditModal folders={folders} diagram={activeDiagram} updateDiagram={updateDiagram} /> : '';
 
   return (
     <div id='diagram'>
@@ -252,7 +254,7 @@ const Diagrams = (props) => {
           <hr />
 
           <h1>Projects</h1>
-          <button onClick={() => setActiveFolder({name: ''})} style={{borderTop: `${activeFolder.name === '' ? '1px solid #0373fc' : '1px solid transparent'}`, borderBottom: `${activeFolder.name === '' ? '1px solid #0373fc' : '1px solid transparent'}`}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/showall.svg' width={10} height={10} /></div> All Projects</div></button>
+          <button onClick={() => setActiveFolder({name: ''})} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/showall.svg' width={10} height={10} /></div> All Projects</div></button>
           <button onClick={() => expandFolders(!showFolders)} style={{borderBottom: '1px solid #e1e8f0'}} ><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image className='icon' src='/hamburger.svg' width={10} height={10} /></div> My Folders</div></button>
           
           {!showFolders ? '' : <ul id='folder' style={{backgroundColor: '#f1f6f9'}} >{folders.map((folder, i) => <li key={`folder#${i}`} style={{display: 'flex'}} ><button onClick={() => setActiveFolder({name: folder.name})} style={{borderTop: `${activeFolder.name === folder.name ? '1px solid #0373fc' : '1px solid transparent'}`, borderBottom: `${activeFolder.name === folder.name ? '1px solid #0373fc' : '1px solid transparent'}`}} ><div style={{marginRight: '8px'}} ><Image className='icon' src={activeFolder.name === folder.name ? '/openfolder.svg' : '/folder.svg'} width={10} height={10} /></div>{folder.name} <div onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); deleteFolder({name: folder.name});}} style={{position: 'absolute', right: '0', marginRight: '5%', display: 'flex', alignItems: 'center'}} ><Image className='icon' src='/delete.svg' width={18} height={18} /></div> </button> </li>)}    <button onClick={() => setNewFolder(true)} style={{color: '#12b3ab'}}><div style={{display: 'flex'}} ><div style={{marginRight: '8px'}} ><Image src='/plus.svg' width={10} height={10} /></div> New Folder</div></button>    </ul>}

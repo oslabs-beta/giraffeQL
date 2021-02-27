@@ -44,6 +44,8 @@
     "pg": "^8.5.1",
     "pluralize": "^8.0.0",
     "react": "^17.0.1",
+    "react-dnd": "^13.1.1",
+    "react-dnd-html5-backend": "^12.1.1",
     "react-dom": "17.0.1",
     "react-flow-renderer": "^8.7.0",
     "react-spinners": "^0.10.6",

@@ -34,7 +34,7 @@ module.exports = {
     try {
       const { diagramId, user, diagramName, tables, description, imageUrl, folder, color } = req.body;
       console.log(diagramId);
-      if (diagramId !== null) {
+      if (diagramId) {
         console.log('updating existing diagram');
         Diagram.findOneAndUpdate(
           { _id: diagramId },

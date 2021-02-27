@@ -1,9 +1,30 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useEffect } from 'react/cjs/react.development';
+import { UserContext } from '../../context/state.js';
 
 const EditModal = (props) => {
 
-    const [folderData, setFolderData] = useState(['none']);
+    const { user } = useContext(UserContext);
+
     const folders = [{_id: '', name: 'none'}, ...props.folders];
+
+    const [name, setName] = useState(props.diagram.diagramName);
+    const [description, setDescription] = useState(props.diagram.description);
+    const [folder, setFolder] = useState(props.diagram.folder);
+
+    const editDiagramData = () => {
+
+        const newDiagram = {
+            user: user._id,
+            diagramName: name,
+            description,
+            _id: props.diagram._id,
+            folder,
+            tables: props.diagram.tables
+        };
+
+        props.updateDiagram(newDiagram)
+    }
 
     return (
         <div id='editmodal'>
@@ -12,11 +33,17 @@ const EditModal = (props) => {
         
         <div id='editcontainer'>
 
-            <select onChange={(e) => setFolderData([e.target.value, props.diagram])} >
-                {folders.map((folder, i) => <option key={`folderselect#${i}`} value={folder.name} >{folder.name}</option> )}
-            </select>
+            <h3>Rename:</h3>
+            <input type='text' placeholder={name} val={name} onChange={e => setName(e.target.value)} maxLength="20" />
 
-            <button id='submitbtn' onClick={() => props.addToFolder(folderData[0],folderData[1])} disabled={folderData[0] === 'none' ? true : false} ><span>Done</span></button>
+            <h3>Change your description:</h3>
+            <input type='text' placeholder={description} val={description} onChange={e => setDescription(e.target.value)} maxLength="40" />
+
+            <div style={{display: 'flex'}}> Folder:  <select value={props.diagram.folder === null ? 'none' : folder} onChange={(e) => setFolder(e.target.value)} >
+                {folders.map((folder, i) => <option key={`folderselect#${i}`} value={folder.name} >{folder.name}</option> )}
+            </select> </div>
+
+            <button id='submitbtn' onClick={editDiagramData} ><span>Done</span></button>
         
         </div>
 
@@ -32,7 +59,7 @@ const EditModal = (props) => {
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
             border-radius: 8px;
             width: 30%;
-            height: 18%; 
+            height: 30%; 
             background-color: white;
             z-index: 10;
             position: fixed;
