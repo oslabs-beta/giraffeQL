@@ -65,7 +65,12 @@ const Canvas = (props) => {
   const [deleteWarning, toggleWarning] = useState(true);
 
   // Function that gets called when an element is removed. Sets activeNode to null and decrements element array length and removes element from state
-  const confirmRemoveElement = (elementsToRemove) => setElements((els) => (selectNode(null), setNodeCount(index - 1), removeElements(elementsToRemove, els)), selectDelete(null));
+  const confirmRemoveElement = async (elementsToRemove) => {
+    selectNode(null);
+    setNodeCount(index - 1);
+
+    setElements((els) =>  removeElements(elementsToRemove, els));
+  };
 
   const onElementsRemove = (elementsToRemove) => {
     if (deleteWarning)
@@ -144,7 +149,7 @@ const Canvas = (props) => {
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
       .then(res => res.json())
-      .then(data => (setDiagramID(data.diagram._id), updateData(false)));
+      .then(data => (setDiagramID(data.diagram._id), updateData(false), console.log('save succesful')));
 
   }, [updated]);
 
@@ -336,10 +341,18 @@ const Canvas = (props) => {
 
     if (!elements.length)
       return;
-    
+
+    selectDelete(null);
     formatData(elements);
 
   }, [elements]);
+
+  useEffect(() => {
+    if (deleteNode !== null)
+      return;
+
+    formatData(elements);
+  }, [deleteNode]);
 
   useEffect(() => {
 
@@ -354,6 +367,9 @@ const Canvas = (props) => {
   const deleteModal = !deleteNode ? <div/> : <DeleteModal deleteNode={deleteNode} selectDelete={selectDelete} confirmRemoveElement={confirmRemoveElement} toggleWarning={toggleWarning} />;
 
   const formatData = (elements) => {
+
+    if (deleteNode !== null)
+      return;
 
     const newTables = [];
 
@@ -377,7 +393,14 @@ const Canvas = (props) => {
             const targetNode = elements.findIndex(target => target.id === connection.target.toString());
 
             //TODO: Fix error'ing out when deleteing a table.
-            newConnection.originKey = node.data.label.props.children.props.columns[alphabet.indexOf(connection.sourceHandle)].name;
+            try{
+              newConnection.originKey = node.data.label.props.children.props.columns[alphabet.indexOf(connection.sourceHandle)].name;
+            } catch(err){
+              console.log(connection.sourceHandle);
+              console.log(node);
+              console.log(node.data.label.props.children.props);
+            }
+            
             newConnection.destinationTable = elements[targetNode].data.label.props.children.props.tablename;
             newConnection.destinationKey = elements[targetNode].data.label.props.children.props.columns[alphabet.indexOf(connection.targetHandle)].name;
 
