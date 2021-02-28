@@ -192,14 +192,14 @@ const Diagrams = (props) => {
 
     const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
     fetch(`${fetchURL}/diagrams`, { method: 'PUT', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body)})
-        .then(res => res.json())
-        .then(data => {
-          const newDiagrams = [...displayDiagrams];
-          const target = newDiagrams.findIndex(diagram => diagram.diagramName === data.diagramName);
+      .then(res => res.json())
+      .then(data => {
+        const newDiagrams = [...diagrams];
+        const target = newDiagrams.findIndex(diagram => diagram._id === data._id);
 
-          newDiagrams.splice(target, 1, data.diagram);
-          setDiagrams(newDiagrams);
-        });
+        newDiagrams.splice(target, 1, data.diagram);
+        storeDiagrams(newDiagrams);
+      });
   }
 
   const createFolder = (folder) => {
@@ -230,7 +230,7 @@ const Diagrams = (props) => {
 
   const diagrammodal = newDiagram ? <DiagramModal message={props.message} setPageLoading={setPageLoading} name={name} setName={setName} description={description} setDescription={setDescription} URI={URI} setURI={setURI} checkURLStatus={checkURLStatus} newProject={newProject} /> : '';
   const foldermodal = newFolder ? <FolderModal createFolder={createFolder} setNewFolder={setNewFolder} /> : ''; 
-  const editmodal = newEdit ? <EditModal folders={folders} diagram={activeDiagram} updateDiagram={updateDiagram} /> : '';
+  const editmodal = newEdit ? <EditModal folders={folders} diagram={activeDiagram} updateDiagram={updateDiagram} setNewEdit={setNewEdit} /> : '';
 
   return (
     <div id='diagram'>
@@ -412,6 +412,7 @@ const Diagrams = (props) => {
 
           select{
             border: none;
+            outline: none;
             background-color: transparent;
             font-size: 12px;
 

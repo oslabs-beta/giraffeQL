@@ -37,6 +37,7 @@ const Home = (props) => {
   const [s2, triggers2] = useState(false);
   const [s3, triggers3] = useState(false);
   const [s4, triggers4] = useState(false);
+  const [s5, triggers5] = useState(false);
 
   useEffect(() => {
     const onScroll = e => {
@@ -57,6 +58,9 @@ const Home = (props) => {
 
     if (scrollTop > 1800)
       triggers4(true);
+
+    if (scrollTop > 2300)
+      triggers5(true);
 
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollTop]);
@@ -167,6 +171,17 @@ const Home = (props) => {
           </div>
         </section>
 
+        {/*<section id='five' className='box'>
+          <div className={`content ${s5 ? 'fade' : ''}`} >
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}} >
+              <h1 style={{margin: '0'}} >Supports PostgreSQL DBMS</h1>
+              <div className='images' style={{border: 'none', display: 'flex'}} >
+                <div><Image src={'/frontpage/postgresql.svg'} width={214} height={188} /></div>
+              </div>
+            </div>
+          </div>
+        </section>*/}
+
         <section id='us' className='end-box'>
 
           <h4>Meet the Team!</h4>
@@ -225,9 +240,8 @@ const Home = (props) => {
         }
 
         #home{
-          width: 100vw;
-          // height: 16000px;
-          background: linear-gradient(to top, #edf2f7, white);
+          width: 100%;
+          background: linear-gradient(to top, #edf2f7 30%, white);
         }
 
         #scroll{
@@ -285,6 +299,10 @@ const Home = (props) => {
 
         #four{
           height: 75vh;
+        }
+
+        #five{
+          height: 25vh;
         }
 
         #us{
@@ -497,6 +515,11 @@ const Home = (props) => {
             margin: 7% 0%;
             border: 4px solid #b2becc;
             border-radius: 4px;
+            // filter: saturate(.5);
+
+            // &:hover{
+            //   filter: saturate(1);
+            // }
           }
         }
 
@@ -544,12 +567,17 @@ const Home = (props) => {
 
         @media screen and (max-width: 700px) {
 
+          *{
+            margin-right: 0 !important;
+          }
+
           home{
-            overflowX: hidden;
+            overflowX: hidden !important;
+            margin-right: 0 !important;
           }
 
           #logo{
-            transform: scale(.75);
+            transform: scale(.75) !important;
           }
 
           #btncontainer{
@@ -563,7 +591,7 @@ const Home = (props) => {
           .text {
 
             width: 80% !important;
-            text-align: center;
+            text-align: center !important;
             margin: 0% !important;
             margin-top: 10% !important;
             margin-left: 10% !important;
@@ -583,13 +611,20 @@ const Home = (props) => {
             margin-left: 10% !important;
           }
 
+          #two{
+            .content{
+              .images{
+                margin-top: 10% !important;
+              }
+            }
+          }
+
           #aboutus{
-            transform: scale(.75);
+            transform: scale(.75) !important;
           }
   
           .githubpic{
-            clip-path: circle(32px at center);
-            margin: 2px;
+            clip-path: circle(32px at center) !important;
           }
 
         }
