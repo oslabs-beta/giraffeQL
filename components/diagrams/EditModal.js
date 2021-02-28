@@ -43,7 +43,7 @@ const EditModal = (props) => {
                 {folders.map((folder, i) => <option key={`folderselect#${i}`} value={folder.name} >{folder.name}</option> )}
             </select> </div>
 
-            <button id='submitbtn' onClick={editDiagramData} ><span>Done</span></button>
+            <button id='submitbtn' onClick={() => {editDiagramData(); props.setNewEdit(false)}} ><span>Done</span></button>
         
         </div>
 
