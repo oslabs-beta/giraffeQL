@@ -51,7 +51,7 @@ Users can create new tables, connect columns, and edit data while seeing their c
 
 [Eric Peng](https://www.linkedin.com/in/eric-peng-40b37b13b/) [@ericpengJoJo](https://github.com/ericpengJoJo)
 
-Dawid Stasiński [@StasinskiPL](https://github.com/StasinskiPL)
+[Dawid Stasiński @StasinskiPL](https://github.com/StasinskiPL)
 
 ___
 
