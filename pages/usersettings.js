@@ -6,6 +6,7 @@ import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/state.js';
 
 import getUser from '../controller/getUser.js';
+import {emailValidation} from "../helpers/emailValidation.js"
 
 import Navbar from '../components/Navbar.js';
 
@@ -18,7 +19,7 @@ const Settings = (props) => {
     const { user, storeUser, logout } = useContext(UserContext);
 
     const [username, setUsername] = useState('Anonymous');
-    const [email, setNewEmail] = useState('example@email.com');
+    const [email, setNewEmail] = useState('');
     const [image, setImage] = useState('/tempuser.png');
 
     useEffect(() => {
@@ -45,8 +46,9 @@ const Settings = (props) => {
           setUsername(user.username);
         }
 
-        if (user.hasOwnProperty('email'))
-            user.email === '' ? 'example@email.com' : setNewEmail(user.email);
+        if (user.hasOwnProperty('email')){
+            emailValidation(user.email) && setNewEmail(user.email)
+        }
         
         setImage(user.photos[0].value);
     
@@ -57,13 +59,16 @@ const Settings = (props) => {
         const authorization = props.user.authorization;
         const oAuthId = props.user.user.oAuthId;
 
+        // set email as "" if user entry invalid value 
+        const newEmail =  emailValidation(email) ? email : "";
+
         if (!authorization)
             return;
 
         const body = {
             oAuthId,
             displayName: username,
-            email
+            email:newEmail,
         }
 
         const fetchURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://giraffeql.io';
@@ -144,7 +149,7 @@ const Settings = (props) => {
 
                             <div className='row' >
                                 <div className='column'><h1>Email Address</h1></div>
-                                <div className='column'><input type='text' val={email} placeholder={email} onChange={(e) => setNewEmail(e.target.value)} /></div>
+                                <div className='column'><input type='text' val={email} placeholder="example@email.com" onChange={(e) => setNewEmail(e.target.value)} /></div>
                             </div>
 
                             <div className='row' >
